@@ -337,6 +337,9 @@ export default function Header() {
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
+          <StyledExternalLink id={`trade-nav-link`} href={'https://dex.smartdex.app'}>
+            Trade
+          </StyledExternalLink>
           <StyledNavLink
             id={`pool-nav-link`}
             to={'/pool'}
@@ -351,12 +354,12 @@ export default function Header() {
             {t('pool')}
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/niox'}>
-            NIOX
+            Farm
           </StyledNavLink>
           {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             Vote
           </StyledNavLink> */}
-          <StyledExternalLink id={`stake-nav-link`} href={'https://info.smartdex.app'}>
+          <StyledExternalLink id={`charts-nav-link`} href={'https://info.smartdex.app'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>

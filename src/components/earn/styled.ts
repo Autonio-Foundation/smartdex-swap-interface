@@ -55,7 +55,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardNoise = styled.span`
-  background: url(${noise});
+  /* background: url(${noise}); */
   background-size: cover;
   mix-blend-mode: overlay;
   border-radius: 12px;

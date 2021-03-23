@@ -432,12 +432,14 @@ const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);
 `
 
 const StyledBottomCard = styled(DataCard) <{ dim: any }>`
-  background: ${({ theme }) => theme.bg3};
+  /* background: ${({ theme }) => theme.bg3}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #1A1F28 0%, #2F3641 100%);
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
   padding: 0 1.25rem 1rem 1.25rem;
@@ -453,7 +455,8 @@ const PoolData = styled(DataCard)`
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  /* background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%); */
+  background: radial-gradient(121.78% 497.4% at 0% -243.23%, #7C9632 0%, #070C12 100%);
   overflow: hidden;
 `
 
@@ -752,7 +755,7 @@ export default function Manage({
           <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
             <CardSection>
               <CardBGImage desaturate />
-              <CardNoise />
+              {/* <CardNoise /> */}
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
@@ -771,8 +774,8 @@ export default function Manage({
             </CardSection>
           </StyledDataCard>
           <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
-            <CardBGImage desaturate />
-            <CardNoise />
+            {/* <CardBGImage desaturate />
+            <CardNoise /> */}
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
