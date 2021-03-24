@@ -4,7 +4,7 @@ import Settings from '../Settings'
 import Row, { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Button, Text } from 'rebass/styled-components'
-import { MouseoverTooltip } from '../../components/Tooltip'
+import MenuHelper from 'components/MenuHelper'
 
 const StyledSwapHeader = styled.div`
   padding: 12px 1rem 0px 1.5rem;
@@ -14,9 +14,7 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-const StyledModelButton = styled(Button)<{
-  active?: boolean
-}>`
+const StyledModelButton = styled(Button)<{active?: boolean}>`
   padding: 7px 11px;
   background-color: ${({ active }) => (active ? '#1A1F28' : 'transparent')};
   border-radius: 7px;
@@ -38,11 +36,11 @@ export default function SwapHeader() {
           <StyledModelButton active={true}>
             <Text fontSize={14}>market</Text>
           </StyledModelButton>
-          <MouseoverTooltip text="Coming Soon">
+          <MenuHelper text="coming soon">
             <StyledModelButton disabled={true}>
-                <Text fontSize={14}>limit</Text>
+              <Text fontSize={14}>limit</Text>
             </StyledModelButton>
-          </MouseoverTooltip>
+          </MenuHelper>
         </Row>
         <Settings />
       </RowBetween>
