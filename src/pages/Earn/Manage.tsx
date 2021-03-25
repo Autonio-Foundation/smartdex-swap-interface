@@ -669,7 +669,7 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {stakingInfo?.name && stakingInfo?.name !== '' ? stakingInfo?.name : ((currencyA?.symbol ? currencyA?.symbol : '') + '-' + (currencyB?.symbol ? currencyB?.symbol : ''))} Liquidity Mining
+          {stakingInfo?.name && stakingInfo?.name !== '' ? stakingInfo?.name : ((currencyA?.symbol ? currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol : '') + '-' + (currencyB?.symbol ? currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol : ''))} Liquidity Mining
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -709,7 +709,7 @@ export default function Manage({
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {(stakingInfo?.name && stakingInfo?.name !== "" ? stakingInfo.name : "SmartdexPair") + " tokens are required. Once you've added liquidity to the " + currencyA?.symbol + "-" + currencyB?.symbol + " pool you can stake your liquidity tokens on " + (stakingInfo?.lp && stakingInfo?.lp !== "" ? "the Aavegotchi page" : "this page.")}
+                  {(stakingInfo?.name && stakingInfo?.name !== "" ? stakingInfo.name : "SmartdexPair") + " tokens are required. Once you've added liquidity to the " + currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol + "-" + currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol + " pool you can stake your liquidity tokens on " + (stakingInfo?.lp && stakingInfo?.lp !== "" ? "the Aavegotchi page" : "this page.")}
 
                 </TYPE.white>
               </RowBetween>
@@ -720,7 +720,7 @@ export default function Manage({
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
-                {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
+                {`Add ${currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol}-${currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol} liquidity`}
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
@@ -767,7 +767,7 @@ export default function Manage({
                       : `${valueOfMyStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} MATIC`}
                   </TYPE.white>
                   <TYPE.white>
-                    {stakingInfo?.name && stakingInfo?.name && stakingInfo.name !== '' ? stakingInfo.name : 'SmartdexPair ' + ((currencyA?.symbol !== undefined ? currencyA?.symbol : '') + '-' + (currencyB?.symbol !== undefined ? currencyB?.symbol : ''))}
+                    {stakingInfo?.name && stakingInfo?.name && stakingInfo.name !== '' ? stakingInfo.name : 'SmartdexPair ' + ((currencyA?.symbol !== undefined ? currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol : '') + '-' + (currencyB?.symbol !== undefined ? currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol : ''))}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
