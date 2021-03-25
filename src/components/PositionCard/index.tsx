@@ -125,8 +125,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                     </Text>
                   </RowFixed>
                 ) : (
-                    '-'
-                  )}
+                  '-'
+                )}
               </FixedHeightRow>
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={500}>
@@ -139,23 +139,23 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                     </Text>
                   </RowFixed>
                 ) : (
-                    '-'
-                  )}
+                  '-'
+                )}
               </FixedHeightRow>
             </AutoColumn>
           </AutoColumn>
         </GreyCard>
       ) : (
-          <LightCard>
-            <TYPE.subHeader style={{ textAlign: 'center' }}>
-              <span role="img" aria-label="wizard-icon">
-                ⭐️
+        <LightCard>
+          <TYPE.subHeader style={{ textAlign: 'center' }}>
+            <span role="img" aria-label="wizard-icon">
+              ⭐️
             </span>{' '}
             By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the pool.
             Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
           </TYPE.subHeader>
-          </LightCard>
-        )}
+        </LightCard>
+      )}
     </>
   )
 }
@@ -217,11 +217,11 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
-                  <>
-                    Manage
+                <>
+                  Manage
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                  </>
-                )}
+                </>
+              )}
             </ButtonEmpty>
           </RowFixed>
         </FixedHeightRow>
@@ -260,8 +260,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
-                  '-'
-                )}
+                '-'
+              )}
             </FixedHeightRow>
 
             <FixedHeightRow>
@@ -278,8 +278,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
-                  '-'
-                )}
+                '-'
+              )}
             </FixedHeightRow>
 
             <FixedHeightRow>
@@ -328,7 +328,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
-                to={`/niox/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool

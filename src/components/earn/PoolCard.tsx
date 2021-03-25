@@ -116,10 +116,10 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <TopSection>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
           <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {currency0.symbol}-{currency1.symbol}
+            {currency0.symbol === "ETH" ? "MATIC" : currency0.symbol}-{currency1.symbol === "ETH" ? "MATIC" : currency1.symbol}
           </TYPE.white>
 
-          <StyledInternalLink to={`/niox/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
+          <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
             <ButtonPrimary padding="8px" borderRadius="8px">
               {isStaking ? 'Manage' : 'Deposit'}
             </ButtonPrimary>
