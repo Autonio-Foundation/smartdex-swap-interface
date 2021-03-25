@@ -46,7 +46,8 @@ export const PinkCard = styled(Card)`
 `
 
 const BlueCardStyled = styled(Card)`
-  background-color: ${({ theme }) => theme.primary5};
+  /* background-color: ${({ theme }) => theme.primary5}; */
+  background-color: rgba(172, 202, 39, .2);
   color: ${({ theme }) => theme.primary1};
   border-radius: 12px;
   width: fit-content;

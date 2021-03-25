@@ -72,6 +72,8 @@ export function colors(darkMode: boolean): Colors {
 
     // color text
     primaryText1: darkMode ? '#FFFFFF' : '#FFFFFF',
+    //autonio ui change 25-03-2021
+    primaryText2: darkMode ? 'rgba(172,202,39,.65)' : 'rgba(172,202,39,.65)',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
