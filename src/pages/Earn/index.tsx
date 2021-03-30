@@ -13,6 +13,12 @@ import { useActiveWeb3React } from '../../hooks'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
 
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import { StyledInternalLink } from '../../theme'
+import { ButtonPrimary } from '../../components/Button'
+import { Break } from '../../components/earn/styled'
+import { NIOX, ETHER } from '../../constants'
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
@@ -38,11 +44,72 @@ flex-direction: column;
 `};
 `
 
+// for pool card
+const StatContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  display: none;
+`};
+`
+
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+  border-radius: 12px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);
+  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+
+  ${({ showBackground }) =>
+    showBackground &&
+    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);`}
+`
+
+const TopSectionPc = styled.div`
+  display: grid;
+  grid-template-columns: 48px 1fr 120px;
+  grid-gap: 0px;
+  align-items: center;
+  padding: 1rem;
+  z-index: 1;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-columns: 48px 1fr 96px;
+  `};
+`
+
+const BottomSection = styled.div<{ showBackground: boolean }>`
+  padding: 12px 16px;
+  opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  z-index: 1;
+`
+// const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
+
+// const ETH = new Token(137, "0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96", 4, "NIOX", "Autonio");
+
+// const NIOX = new Token(137, "0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96", 4, "NIOX", "Autonio");
+
 export default function Earn() {
   const { chainId } = useActiveWeb3React()
   // console.log("chainid", chainId);
   // staking info for connected account
   const stakingInfos = useStakingInfo()
+
+  const isStakingLP = true;
 
   /**
    * only show staking cards with balance
@@ -55,6 +122,7 @@ export default function Earn() {
   // console.log("akash")
   // console.log("stakingInfos", stakingInfos)
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
+
   return (
     <PageWrapper gap="lg" justify="center">
       <TopSection gap="md">
@@ -91,6 +159,72 @@ export default function Earn() {
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
         {/* // working section staking */}
+        {/* //static eth-niox pool card */}
+        <Wrapper showBackground={false} bgColor='#2172E5'>
+          <CardBGImage desaturate />
+          <CardNoise />
+
+          <TopSectionPc>
+            <DoubleCurrencyLogo currency0={ETHER} currency1={NIOX} size={24} />
+            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+              {"ETH"}-{"NIOX"}
+            </TYPE.white>
+
+            <StyledInternalLink to={`/farmNIOXUniLP`} style={{ width: '100%' }}>
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStakingLP ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          </TopSectionPc>
+
+          <StatContainer>
+            <RowBetween>
+              <TYPE.white> Total deposited</TYPE.white>
+              <TYPE.white>
+                $100
+                {/* {valueOfTotalStakedAmountInUSDC
+                  ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                  : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
+              </TYPE.white>
+            </RowBetween>
+            <RowBetween>
+              <TYPE.white> Pool rate </TYPE.white>
+              <TYPE.white>
+                {/* {`${stakingInfo.totalRewardRate
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toFixed(0, { groupSeparator: ',' })} */}
+                100 NIOX / day
+                 {/* } */}
+              </TYPE.white>
+            </RowBetween>
+          </StatContainer>
+
+          {isStakingLP && (
+            <>
+              <Break />
+              <BottomSection showBackground={true}>
+                <TYPE.black color={'white'} fontWeight={500}>
+                  <span>*Uniswap NIOX LP Pool</span>
+                </TYPE.black>
+
+                <TYPE.black style={{ textAlign: 'right', display: 'none' }} color={'white'} fontWeight={500}>
+                  <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                    ⚡
+              </span>
+                  {/* {`${stakingInfo.rewardRate
+                    ?.multiply(`${60 * 60 * 24}`)
+                    ?.toSignificant(4, { groupSeparator: ',' })} */}
+                     NIOX / day`
+                     {/* } */}
+                </TYPE.black>
+              </BottomSection>
+            </>
+          )}
+        </Wrapper>
+
+        {/* //static eth-niox pool card end  */}
+
+
         <PoolSection>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
