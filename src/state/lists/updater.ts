@@ -9,7 +9,7 @@ import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { AppDispatch } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
-import { useAllInactiveTokens } from 'hooks/Tokens'
+// import { useAllInactiveTokens } from 'hooks/Tokens'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
@@ -21,7 +21,7 @@ export default function Updater(): null {
   const activeListUrls = useActiveListUrls()
 
   // initiate loading
-  useAllInactiveTokens()
+  // useAllInactiveTokens()
 
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {

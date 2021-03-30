@@ -180,27 +180,29 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
-  const addMaticToMetamask = () => {
+  const addRopstenToMetamask = () => {
     if (ethereum) {
       // @ts-ignore
       ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
-          "chainId": "0x89",
-          "chainName": "Matic Network",
-          "rpcUrls": ["https://rpc-mainnet.maticvigil.com/"],
+          "chainId": "0x3",
+          "chainName": "Ropsten Network",
+          "rpcUrls": [
+            "https://ropsten.infura.io/v3/4ee71c3a70404cf8b1241df95bbc1347",
+          ],
           "iconUrls": [
             "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png"
           ],
           "blockExplorerUrls": [
-            "https://explorer-mainnet.maticvigil.com/"
+            "https://ropsten.etherscan.io/"
           ],
           "nativeCurrency": {
-            "name": "Matic Token",
-            "symbol": "MATIC",
+            "name": "ETHER Token",
+            "symbol": "ETH",
             "decimals": 18
           }
-        }], // you must have access to the specified account
+        }]
       })
         .then((result: any) => {
         })
@@ -224,11 +226,11 @@ function Web3StatusInner() {
             <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
           </RowBetween>
         ) : (
-            <>
-              {hasSocks ? SOCK : null}
-              <Text>{ENSName || shortenAddress(account)}</Text>
-            </>
-          )}
+          <>
+            {hasSocks ? SOCK : null}
+            <Text>{ENSName || shortenAddress(account)}</Text>
+          </>
+        )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
       </Web3StatusConnected>
     )
@@ -244,16 +246,16 @@ function Web3StatusInner() {
           </Web3StatusError>
         }
         {
-          error instanceof UnsupportedChainIdError && (ethereum && ethereum.isMetaMask) && <Web3StatusConnect id="connect-wallet" onClick={addMaticToMetamask} faded={!account}>
-            <Text>{t('Switch to Matic')}</Text>
+          error instanceof UnsupportedChainIdError && (ethereum && ethereum.isMetaMask) && <Web3StatusConnect id="connect-wallet" onClick={addRopstenToMetamask} faded={!account}>
+            <Text>{t('Switch to Ropsten ')}</Text>
           </Web3StatusConnect>
         }
       </div>
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={(ethereum && ethereum.isMetaMask) ? addMaticToMetamask : toggleWalletModal} faded={!account}>
-        <Text>{(ethereum && ethereum.isMetaMask) ? t('Switch to Matic') : t('Connect to a wallet')}</Text>
+      <Web3StatusConnect id="connect-wallet" onClick={(ethereum && ethereum.isMetaMask) ? addRopstenToMetamask : toggleWalletModal} faded={!account}>
+        <Text>{(ethereum && ethereum.isMetaMask) ? t('Switch to Ropsten ') : t('Connect to a wallet')}</Text>
       </Web3StatusConnect>
     )
   }
