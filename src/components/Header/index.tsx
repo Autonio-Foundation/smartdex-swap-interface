@@ -1,7 +1,6 @@
 import { ChainId, TokenAmount } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
-// import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 
@@ -202,47 +201,19 @@ const UniIcon = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-// const StyledNavLink = styled(NavLink).attrs({
-//   activeClassName
-// })`
-//   ${({ theme }) => theme.flexRowNoWrap}
-//   align-items: left;
-//   border-radius: 3rem;
-//   outline: none;
-//   cursor: pointer;
-//   text-decoration: none;
-//   color: ${({ theme }) => theme.text2};
-//   font-size: 1rem;
-//   width: fit-content;
-//   margin: 0 12px;
-//   font-weight: 500;
-
-//   &.${activeClassName} {
-//     border-radius: 12px;
-//     font-weight: 600;
-//     color: ${({ theme }) => theme.text1};
-//   }
-
-//   :hover,
-//   :focus {
-//     color: ${({ theme }) => darken(0.1, theme.text1)};
-//   }
-// `
-
-const StyledExternalLink = styled(ExternalLink).attrs({
+const StyledNavText = styled(Text).attrs({
   activeClassName
-}) <{ isActive?: boolean, isExternal?: boolean }>`
+}) <{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
-  // display: none
-  border-radius: 3rem;
+  border-radius: ${({ isActive }) => isActive ? '12px' : '3rem'};
   outline: none;
   cursor: pointer;
   text-decoration: none;
   color: ${({ theme, isActive }) => isActive ? theme.text1 : theme.text2};
   font-size: 1rem;
   width: fit-content;
-  margin: 0 12px;
+  margin: 0 12px !important;
   font-weight: ${({ isActive }) => isActive ? 600 : 500};
 
   &.${activeClassName} {
@@ -254,7 +225,34 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
-    text-decoration: ${({ isExternal }) => isExternal ? 'underline': 'none'}
+  }
+`
+
+const StyledExternalLink = styled(ExternalLink).attrs({
+  activeClassName
+}) <{ isActive?: boolean }>`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  // display: none
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
+
+  &.${activeClassName} {
+    border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text1};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -300,8 +298,6 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: 'Kovan'
 }
 
-const originalLinkPrefix = 'https://farming.drfr40rkroay9.amplifyapp.com/#/';
-
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -324,6 +320,10 @@ export default function Header() {
   const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
+  const redirectToParentPage = (page: string) => {
+    window.top.postMessage(`redirect to ${page}`, '*');
+  }
+
   return (
     <HeaderFrame>
       <ClaimModal />
@@ -337,27 +337,22 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledExternalLink id={`swap-nav-link`} href={originalLinkPrefix + 'swap'} target="_self">
+          <StyledNavText id={`swap-nav-link`} onClick={() => redirectToParentPage('swap')}>
             {t('swap')}
-          </StyledExternalLink>
-          <StyledExternalLink id={`trade-nav-link`} href={'https://dex.smartdex.app'} isExternal={true}>
+          </StyledNavText>
+          <StyledExternalLink id={`trade-nav-link`} href={'https://dex.smartdex.app'}>
             Trade
           </StyledExternalLink>
-          <StyledExternalLink
-            id={`pool-nav-link`}
-            href={originalLinkPrefix + 'pool'}
-            target="_self"
-          >
+          <StyledNavText id={`pool-nav-link`} onClick={() => redirectToParentPage('pool')}>
             {t('pool')}
-          </StyledExternalLink>
-          <StyledExternalLink id={`stake-nav-link`} href={originalLinkPrefix + 'farm'} target="_self"
-            isActive={true}>
+          </StyledNavText>
+          <StyledNavText id={`stake-nav-link`} onClick={() => redirectToParentPage('farm')} isActive={true}>
             Farm
-          </StyledExternalLink>
+          </StyledNavText>
           {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             Vote
           </StyledNavLink> */}
-          <StyledExternalLink id={`charts-nav-link`} href={'https://info.smartdex.app'} isExternal={true}>
+          <StyledExternalLink id={`charts-nav-link`} href={'https://info.smartdex.app'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>
