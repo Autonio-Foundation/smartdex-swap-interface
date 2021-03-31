@@ -24,6 +24,19 @@ const StyledModelButton = styled(Button)<{active?: boolean}>`
   &:hover {
     background-color: ${({ disabled }) => (disabled ? 'transparent' : '#1A1F28')};
     opacity: ${({ disabled }) => (disabled ? 0.5 : 0.8)};
+    cursor: pointer;
+  }
+`
+
+const StyledModelText = styled(Text)<{active?: boolean}>`
+  padding: 7px 11px;
+  background-color: ${({ active }) => (active ? '#1A1F28' : 'transparent')};
+  border-radius: 7px;
+  margin: 0 4px;
+
+  
+  &:hover {
+    cursor: pointer;
   }
 `
 
@@ -37,9 +50,9 @@ export default function SwapHeader() {
             <Text fontSize={14}>market</Text>
           </StyledModelButton>
           <MenuHelper text="coming soon">
-            <StyledModelButton disabled={true}>
-              <Text fontSize={14}>limit</Text>
-            </StyledModelButton>
+            {/* <StyledModelButton disabled={true}> */}
+              <StyledModelText fontSize={14} disabled={true}>limit</StyledModelText>
+            {/* </StyledModelButton> */}
           </MenuHelper>
         </Row>
         <Settings />

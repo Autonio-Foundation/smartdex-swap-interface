@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import React, { Suspense, useEffect } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
@@ -37,6 +37,7 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
@@ -74,7 +75,23 @@ function TopLevelModals() {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
-export default function App() {
+function App(props: any) {
+  useEffect(() => {
+    window.onmessage = function(e:any){
+      if (e.data === 'redirect to swap') {
+          props.history.push('/swap');
+      }
+
+      if (e.data === 'redirect to pool') {
+        props.history.push('/pool');
+      }
+      
+      if (e.data === 'redirect to farm') {
+        props.history.push('/farm');
+      }
+  } ;
+  }, [props.history]);
+
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
@@ -122,3 +139,5 @@ export default function App() {
     </Suspense>
   )
 }
+
+export default withRouter(App);

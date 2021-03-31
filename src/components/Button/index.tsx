@@ -5,6 +5,7 @@ import { darken, lighten } from 'polished'
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import { rgba } from 'polished'
 
 const Base = styled(RebassButton) <{
   padding?: string
@@ -66,27 +67,22 @@ export const ButtonPrimary = styled(Base)`
 `
 
 export const ButtonLight = styled(Base)`
-  // background-color: ${({ theme }) => theme.primary5};
-  // color: ${({ theme }) => theme.primaryText1};
-  background-color: rgba(172, 202, 39, 0.2);
-      color: #acca27;
+  background-color: ${({ theme }) => rgba(theme.primary5, 0.2)};
+  color: ${({ theme }) => theme.primary5};
   font-size: 16px;
   font-weight: 500;
-  &:focus {
-    // box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
-    // background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
-    background-color: rgba(172, 202, 39, 0.1);
-    border: 1px solid #acca27;
-    color:  #acca27;
-  }
   &:hover {
-    // background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
-    background-color: rgba(172, 202, 39, 0.1);
+    background-color: ${({ theme }) => rgba(theme.primary5, 0.1)};
+    border: ${({ theme }) => `1px solid ${rgba(theme.primary5, 0.5)}`};
   }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
-  }
+  /* &:focus {
+    background-color: ${({ theme }) => rgba(theme.primary5, 0.1)};
+    border: ${({ theme }) => `1px solid ${rgba(theme.primary5, 0.5)}`};
+  } */
+  /* &:active {
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.2, theme.primary5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.2, theme.primary5)};
+  } */
   :disabled {
     opacity: 0.4;
     :hover {
