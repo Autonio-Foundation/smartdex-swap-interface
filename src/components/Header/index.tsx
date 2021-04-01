@@ -40,7 +40,7 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -214,11 +214,10 @@ const StyledNavText = styled(Text).attrs({
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px !important;
-  font-weight: ${({ isActive }) => isActive ? 600 : 500};
+  font-weight: 600;
 
   &.${activeClassName} {
     border-radius: 12px;
-    font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
 
@@ -242,11 +241,10 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 500;
+  font-weight: 600;
 
   &.${activeClassName} {
     border-radius: 12px;
-    font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
 
