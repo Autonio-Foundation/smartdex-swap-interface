@@ -97,6 +97,13 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   justify-content: space-between;
   z-index: 1;
 `
+
+const ComingSoonWrapper = styled.div`
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 // const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
 
 // const ETH = new Token(137, "0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96", 4, "NIOX", "Autonio");
@@ -110,6 +117,7 @@ export default function Earn() {
   const stakingInfos = useStakingInfo()
 
   const isStakingLP = true;
+  const isInLiveMode = false;
 
   /**
    * only show staking cards with balance
@@ -122,6 +130,70 @@ export default function Earn() {
   // console.log("akash")
   // console.log("stakingInfos", stakingInfos)
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
+
+  const staticLpPool = () => (
+    <Wrapper showBackground={false} bgColor='#2172E5'>
+      <CardBGImage desaturate />
+      <CardNoise />
+
+      <TopSectionPc>
+        <DoubleCurrencyLogo currency0={ETHER} currency1={NIOX} size={24} />
+        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+          {"ETH"}-{"NIOX"}
+        </TYPE.white>
+
+        <StyledInternalLink to={`/farmNIOXUniLP`} style={{ width: '100%' }}>
+          <ButtonPrimary padding="8px" borderRadius="8px">
+            {isStakingLP ? 'Manage' : 'Deposit'}
+          </ButtonPrimary>
+        </StyledInternalLink>
+      </TopSectionPc>
+
+      <StatContainer>
+        <RowBetween>
+          <TYPE.white> Total deposited</TYPE.white>
+          <TYPE.white>
+            $100
+            {/* {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
+          </TYPE.white>
+        </RowBetween>
+        <RowBetween>
+          <TYPE.white> Pool rate </TYPE.white>
+          <TYPE.white>
+            {/* {`${stakingInfo.totalRewardRate
+            ?.multiply(`${60 * 60 * 24}`)
+            ?.toFixed(0, { groupSeparator: ',' })} */}
+            100 NIOX / day
+              {/* } */}
+          </TYPE.white>
+        </RowBetween>
+      </StatContainer>
+
+      {isStakingLP && (
+        <>
+          <Break />
+          <BottomSection showBackground={true}>
+            <TYPE.black color={'white'} fontWeight={500}>
+              <span>*Uniswap NIOX LP Pool</span>
+            </TYPE.black>
+
+            <TYPE.black style={{ textAlign: 'right', display: 'none' }} color={'white'} fontWeight={500}>
+              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                ⚡
+          </span>
+              {/* {`${stakingInfo.rewardRate
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toSignificant(4, { groupSeparator: ',' })} */}
+                  NIOX / day`
+                  {/* } */}
+            </TYPE.black>
+          </BottomSection>
+        </>
+      )}
+    </Wrapper>
+  )
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -156,87 +228,36 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+          {isInLiveMode && <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />}
         </DataRow>
         {/* // working section staking */}
         {/* //static eth-niox pool card */}
-        <Wrapper showBackground={false} bgColor='#2172E5'>
-          <CardBGImage desaturate />
-          <CardNoise />
-
-          <TopSectionPc>
-            <DoubleCurrencyLogo currency0={ETHER} currency1={NIOX} size={24} />
-            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-              {"ETH"}-{"NIOX"}
-            </TYPE.white>
-
-            <StyledInternalLink to={`/farmNIOXUniLP`} style={{ width: '100%' }}>
-              <ButtonPrimary padding="8px" borderRadius="8px">
-                {isStakingLP ? 'Manage' : 'Deposit'}
-              </ButtonPrimary>
-            </StyledInternalLink>
-          </TopSectionPc>
-
-          <StatContainer>
-            <RowBetween>
-              <TYPE.white> Total deposited</TYPE.white>
-              <TYPE.white>
-                $100
-                {/* {valueOfTotalStakedAmountInUSDC
-                  ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                  : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
-              </TYPE.white>
-            </RowBetween>
-            <RowBetween>
-              <TYPE.white> Pool rate </TYPE.white>
-              <TYPE.white>
-                {/* {`${stakingInfo.totalRewardRate
-                ?.multiply(`${60 * 60 * 24}`)
-                ?.toFixed(0, { groupSeparator: ',' })} */}
-                100 NIOX / day
-                 {/* } */}
-              </TYPE.white>
-            </RowBetween>
-          </StatContainer>
-
-          {isStakingLP && (
-            <>
-              <Break />
-              <BottomSection showBackground={true}>
-                <TYPE.black color={'white'} fontWeight={500}>
-                  <span>*Uniswap NIOX LP Pool</span>
-                </TYPE.black>
-
-                <TYPE.black style={{ textAlign: 'right', display: 'none' }} color={'white'} fontWeight={500}>
-                  <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                    ⚡
-              </span>
-                  {/* {`${stakingInfo.rewardRate
-                    ?.multiply(`${60 * 60 * 24}`)
-                    ?.toSignificant(4, { groupSeparator: ',' })} */}
-                     NIOX / day`
-                     {/* } */}
-                </TYPE.black>
-              </BottomSection>
-            </>
-          )}
-        </Wrapper>
+        
+        {isInLiveMode && staticLpPool()}
 
         {/* //static eth-niox pool card end  */}
 
+        {isInLiveMode && (
+          <PoolSection>
+            {stakingRewardsExist && stakingInfos?.length === 0 ? (
+              <Loader style={{ margin: 'auto' }} />
+            ) : !stakingRewardsExist ? (
+              'No active rewards'
+            ) : (
+              stakingInfos?.map(stakingInfo => {
+                // need to sort by added liquidity here
+                return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+              })
+            )}
+          </PoolSection>
+        )}
+        
+        {!isInLiveMode && (
+          <ComingSoonWrapper>
+            <TYPE.white>Coming Soon</TYPE.white>
+          </ComingSoonWrapper>
+        )}
 
-        <PoolSection>
-          {stakingRewardsExist && stakingInfos?.length === 0 ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : !stakingRewardsExist ? (
-            'No active rewards'
-          ) : (
-            stakingInfos?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-            })
-          )}
-        </PoolSection>
         {/* till here akash */}
         {/* <PoolSection>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
