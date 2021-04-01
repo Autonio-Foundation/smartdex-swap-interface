@@ -5,7 +5,7 @@ import styled, {
   css,
   DefaultTheme
 } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
+// import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
@@ -68,9 +68,13 @@ export function colors(darkMode: boolean): Colors {
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     //autonio ui change 27-02-2021
     primary5: darkMode ? '#ACCA27' : '#ACCA27',
+    //autonio ui change 31-03-2021
+    primary6: darkMode ? '#7C9632' : '#7C9632',
 
     // color text
     primaryText1: darkMode ? '#FFFFFF' : '#FFFFFF',
+    //autonio ui change 25-03-2021
+    primaryText2: darkMode ? 'rgba(172,202,39,.65)' : 'rgba(172,202,39,.65)',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -122,7 +126,8 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
+  // const darkMode = useIsDarkMode()
+  const darkMode = false;
 
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
