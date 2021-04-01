@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo1 from '../../assets/svg/logo1.svg'
+import Logo from '../../assets/svg/logo_new.svg'
 // import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -253,6 +253,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -333,7 +334,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'100px'} src={darkMode ? Logo1 : Logo1} alt="logo" />
+            <img width={45} src={darkMode ? Logo : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
