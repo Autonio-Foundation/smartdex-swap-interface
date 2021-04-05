@@ -116,8 +116,8 @@ export default function Earn() {
   // staking info for connected account
   const stakingInfos = useStakingInfo()
 
-  const isStakingLP = true;
-  const isInLiveMode = false;
+  const isStakingLP = false;
+  const isInLiveMode = true;
 
   /**
    * only show staking cards with balance
@@ -153,7 +153,7 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            $100
+            -
             {/* {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
@@ -165,7 +165,7 @@ export default function Earn() {
             {/* {`${stakingInfo.totalRewardRate
             ?.multiply(`${60 * 60 * 24}`)
             ?.toFixed(0, { groupSeparator: ',' })} */}
-            100 NIOX / day
+            17,500 NIOX / day
               {/* } */}
           </TYPE.white>
         </RowBetween>
@@ -232,7 +232,7 @@ export default function Earn() {
         </DataRow>
         {/* // working section staking */}
         {/* //static eth-niox pool card */}
-        
+
         {isInLiveMode && staticLpPool()}
 
         {/* //static eth-niox pool card end  */}
@@ -242,7 +242,8 @@ export default function Earn() {
             {stakingRewardsExist && stakingInfos?.length === 0 ? (
               <Loader style={{ margin: 'auto' }} />
             ) : !stakingRewardsExist ? (
-              'No active rewards'
+              ''
+              // 'No active rewards'
             ) : (
               stakingInfos?.map(stakingInfo => {
                 // need to sort by added liquidity here
@@ -251,7 +252,7 @@ export default function Earn() {
             )}
           </PoolSection>
         )}
-        
+
         {!isInLiveMode && (
           <ComingSoonWrapper>
             <TYPE.white>Coming Soon</TYPE.white>

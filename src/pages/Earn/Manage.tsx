@@ -823,7 +823,7 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          When you withdraw, the contract will automagically claim NIOX on your behalf!
+          When you withdraw, the contract will automatically claim NIOX on your behalf!
         </TYPE.main>
 
         {!showAddLiquidityButton && (
