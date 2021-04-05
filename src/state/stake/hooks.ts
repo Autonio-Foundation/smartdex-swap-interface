@@ -32,7 +32,7 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MATIC]: [//TODO: MATIC mainnet
     {
       tokens: [WMATIC, USDC],
-      stakingRewardAddress: '0x3b8e0fe3c6332c8834b59f63af390ca2e85885d3',
+      stakingRewardAddress: '0xf40324f73991d02c7672f6ee6b1eb94b3eb3e40c',
       ended: false,
 
       name: '',
@@ -42,7 +42,7 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [NIOX, USDC],
-      stakingRewardAddress: '0x7e48f826dd105ec323dd25402daf02d84a84cbe4',
+      stakingRewardAddress: '0xa54db7a2ce0b1d802552c655b36672bcfe2c538d',
       ended: false,
 
       name: '',
