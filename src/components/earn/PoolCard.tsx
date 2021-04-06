@@ -14,6 +14,7 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { useApy } from 'data/Apy'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const StatContainer = styled.div`
@@ -107,6 +108,8 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
+  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC);
+
   return (
     show ?
       <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -150,6 +153,10 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             <TYPE.white>{`${stakingInfo.totalRewardRate
               ?.multiply(`${60 * 60 * 24}`)
               ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
+          </RowBetween>
+          <RowBetween>
+            <TYPE.white> APY </TYPE.white>
+            <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
           </RowBetween>
         </StatContainer>
 
