@@ -21,6 +21,6 @@ export function useApy(dailyRewards: Fraction, totalLiquidity: CurrencyAmount | 
         const dailyRewardsInUSD = parseInt(dailyRewards.toFixed(0)) * currentPrice;
         const totalLiquidityInUSD = totalLiquidity ? parseInt(totalLiquidity?.toFixed(0)) : 0;
 
-        return (dailyRewardsInUSD / totalLiquidityInUSD * 365);
+        return (dailyRewardsInUSD / totalLiquidityInUSD * 36500);
   }, [dailyRewards, totalLiquidity, currentPrice])
 }
