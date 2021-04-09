@@ -29,14 +29,14 @@ const TopSection = styled(AutoColumn)`
   width: 100%;
 `
 
-const PoolSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
-  width: 100%;
-  justify-self: center;
-`
+// const PoolSection = styled.div`
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   column-gap: 10px;
+//   row-gap: 15px;
+//   width: 100%;
+//   justify-self: center;
+// `
 
 const DataRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -109,6 +109,24 @@ const ComingSoonWrapper = styled.div`
 // const ETH = new Token(137, "0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96", 4, "NIOX", "Autonio");
 
 // const NIOX = new Token(137, "0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96", 4, "NIOX", "Autonio");
+
+// const CustomDataRow = styled(RowBetween)`
+//   flex-direction: 'row-reverse';
+//   margin-bottom: '24px';
+
+//   @media (max-width: 720px) {
+//     flex-direction: column;
+//   }
+// `
+
+const CustomDataRow = styled(DataRow)`
+   flex-direction: row-reverse;
+   margin-bottom: 24px;
+
+   @media (max-width: 720px) {
+     flex-direction: initial;
+   }
+`
 
 export default function Earn() {
   const { chainId } = useActiveWeb3React()
@@ -228,7 +246,7 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          {isInLiveMode && <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />}
+          {isInLiveMode && <Countdown />}
         </DataRow>
         {/* // working section staking */}
         {/* //static eth-niox pool card */}
@@ -238,19 +256,24 @@ export default function Earn() {
         {/* //static eth-niox pool card end  */}
 
         {isInLiveMode && (
-          <PoolSection>
+          <>
             {stakingRewardsExist && stakingInfos?.length === 0 ? (
               <Loader style={{ margin: 'auto' }} />
             ) : !stakingRewardsExist ? (
               ''
               // 'No active rewards'
             ) : (
-              stakingInfos?.map(stakingInfo => {
+              stakingInfos?.map(stakingInfo => (
                 // need to sort by added liquidity here
-                return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-              })
+                  <div key={stakingInfo.stakingRewardAddress}>
+                    <CustomDataRow>
+                      {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14}/>}
+                    </CustomDataRow>
+                    <PoolCard stakingInfo={stakingInfo} />
+                  </div>
+              ))
             )}
-          </PoolSection>
+          </>
         )}
 
         {!isInLiveMode && (

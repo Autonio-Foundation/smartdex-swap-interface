@@ -16,7 +16,7 @@ import { tryParseAmount } from '../swap/hooks'
 
 export const STAKING_GENESIS = 1617647400;
 
-export const REWARDS_DURATION_DAYS = 7;
+export const REWARDS_DURATION_DAYS = 5;
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
