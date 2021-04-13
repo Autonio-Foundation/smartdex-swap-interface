@@ -8,7 +8,7 @@ import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 
 export const getTokenLogoURL = (address: string) => {
-  let uri;
+  let uri
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
     uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/ethereum-logo.png'
   }
@@ -111,7 +111,8 @@ export const getTokenLogoURL = (address: string) => {
   }
 
   if (address?.toLowerCase() === '0x104592a158490a9228070E0A8e5343B499e125D0'.toLowerCase()) {
-    uri = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955aCEf822Db058eb8505911ED77F175b99e/logo.png'
+    uri =
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955aCEf822Db058eb8505911ED77F175b99e/logo.png'
   }
 
   if (address?.toLowerCase() === '0xab0b2ddB9C7e440fAc8E140A89c0dbCBf2d7Bbff'.toLowerCase()) {
@@ -198,11 +199,21 @@ export const getTokenLogoURL = (address: string) => {
     address = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
   }
 
-  if (!uri) {
-    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+  if (address?.toLowerCase() === '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/14048/small/aloha.png?1615527835'
+  }
+  if (address?.toLowerCase() === '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/14474/small/graphlinq_logo.jpg?1616397109'
+  }
+  if (address?.toLowerCase() === '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/2138/small/singularitynet.png?1548609559'
   }
 
-  return uri;
+  if (!uri) {
+    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  }
+
+  return uri
 }
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
@@ -213,7 +224,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   background-color: ${({ theme }) => theme.white};
 `
 
-const StyledLogo = styled(Logo) <{ size: string }>`
+const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};

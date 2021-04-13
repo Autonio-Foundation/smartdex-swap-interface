@@ -7,9 +7,9 @@ import {
   // DEV,
   XENO,
   ADDY,
-  WMATIC,
-  ALOHA,
-  GLQ,
+  WMATIC
+  // ALOHA,
+  // GLQ
   // AGI
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
@@ -17,9 +17,9 @@ import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-export const STAKING_GENESIS = 1617647400;
+export const STAKING_GENESIS = 1617647400
 
-export const REWARDS_DURATION_DAYS = 5;
+export const REWARDS_DURATION_DAYS = 5
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -32,27 +32,28 @@ export const STAKING_REWARDS_INFO: {
     baseToken: Token
   }[]
 } = {
-  [ChainId.MATIC]: [//TODO: MATIC mainnet
-    {
-      tokens: [ALOHA, USDC],
-      stakingRewardAddress: '0x01b87fe46817f93202b39d6c7cc749ca28f0e893',
-      ended: false,
-      // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
-    },
-    {
-      tokens: [GLQ, USDC],
-      stakingRewardAddress: '0x6a219a1f794fa10311e19ced19fae5ceedede254',
-      ended: false,
-      // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
-    },
+  [ChainId.MATIC]: [
+    //TODO: MATIC mainnet
+    // {
+    //   tokens: [ALOHA, USDC],
+    //   stakingRewardAddress: '0x01b87fe46817f93202b39d6c7cc749ca28f0e893',
+    //   ended: false,
+    //   // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    // },
+    // {
+    //   tokens: [GLQ, USDC],
+    //   stakingRewardAddress: '0x6a219a1f794fa10311e19ced19fae5ceedede254',
+    //   ended: false,
+    //   // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    // },
     // {
     //   tokens: [AGI, USDC],
     //   stakingRewardAddress: '',
@@ -82,10 +83,10 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: USDC
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    },
-
+    }
   ],
-  [ChainId.ROPSTEN]: [//TODO: ropsten
+  [ChainId.ROPSTEN]: [
+    //TODO: ropsten
     {
       tokens: [XENO, ADDY],
       stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
@@ -95,8 +96,7 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: XENO
       //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
-    },
-
+    }
   ]
 }
 
@@ -140,13 +140,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -210,11 +210,14 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           rewardRateState.error ||
           periodFinishState.error
         ) {
-          console.log("addy", balanceState?.error,
+          console.log(
+            'addy',
+            balanceState?.error,
             earnedAmountState?.error,
             totalSupplyState.error,
             rewardRateState.error,
-            periodFinishState.error)
+            periodFinishState.error
+          )
           console.error('Failed to load staking rewards info')
           return memo
         }
@@ -224,10 +227,16 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
 
         // check for account, if no account set to 0
-        const lp = info[index].lp;
+        const lp = info[index].lp
 
-        const stakedAmount = new TokenAmount(lp && lp !== '' ? new Token(137, lp, 18, "SLP", "Staked LP") : dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(lp && lp !== '' ? new Token(137, lp, 18, "SLP", "Staked LP") : dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+        const stakedAmount = new TokenAmount(
+          lp && lp !== '' ? new Token(137, lp, 18, 'SLP', 'Staked LP') : dummyPair.liquidityToken,
+          JSBI.BigInt(balanceState?.result?.[0] ?? 0)
+        )
+        const totalStakedAmount = new TokenAmount(
+          lp && lp !== '' ? new Token(137, lp, 18, 'SLP', 'Staked LP') : dummyPair.liquidityToken,
+          JSBI.BigInt(totalSupplyState.result?.[0])
+        )
         const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
