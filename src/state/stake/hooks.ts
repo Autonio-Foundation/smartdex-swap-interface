@@ -7,7 +7,10 @@ import {
   // DEV,
   XENO,
   ADDY,
-  WMATIC
+  WMATIC,
+  ALOHA,
+  GLQ,
+  // AGI
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -31,6 +34,36 @@ export const STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MATIC]: [//TODO: MATIC mainnet
     {
+      tokens: [ALOHA, USDC],
+      stakingRewardAddress: '0x01b87fe46817f93202b39d6c7cc749ca28f0e893',
+      ended: false,
+      // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+    {
+      tokens: [GLQ, USDC],
+      stakingRewardAddress: '0x6a219a1f794fa10311e19ced19fae5ceedede254',
+      ended: false,
+      // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+    // {
+    //   tokens: [AGI, USDC],
+    //   stakingRewardAddress: '',
+    //   ended: false,
+
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    // },
+    {
       tokens: [WMATIC, USDC],
       stakingRewardAddress: '0xf40324f73991d02c7672f6ee6b1eb94b3eb3e40c',
       ended: false,
@@ -50,53 +83,6 @@ export const STAKING_REWARDS_INFO: {
       baseToken: USDC
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
     },
-    //test 
-    // {
-    //   tokens: [NIOX, USDC],
-    //   // stakingRewardAddress: '0x817cb2bfd78ec89f223476c2975aecd723483970',
-    //   stakingRewardAddress: '0xb7369c866aca7a2e216fdb9787618821b715b696',
-    //   ended: false,
-
-    //   name: '',
-    //   lp: '',
-    //   // lp: '0xF4c10794E8789ACbc134c043a0e222ce586256EF',
-    //   baseToken: USDC
-    //   //STAKINGREWARDSFACTORY- 0x193421c8cB46C3f8CcBFBda72863e395E05A002A
-    // },
-    // {
-    //   tokens: [NIOX, DEV],
-    //   stakingRewardAddress: '0xe4c7a21995c017d43236d03b7253b86faff9219a',
-    //   ended: false,
-
-    //   name: 'test',
-    //   lp: '',
-    //   baseToken: DEV
-    //   //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
-    // },
-
-    // {
-    //   tokens: [NIOX, USDC],
-    //   // stakingRewardAddress: '0x817cb2bfd78ec89f223476c2975aecd723483970',
-    //   stakingRewardAddress: '0x201bd0fd1bcedbff453cc2d0b66d0fbbe9453643',
-    //   ended: false,
-
-    //   name: '',
-    //   lp: '',
-    //   // lp: '0xF4c10794E8789ACbc134c043a0e222ce586256EF',
-    //   baseToken: USDC
-    //   //STAKINGREWARDSFACTORY- 0x3F50aE525c46ab692e5F174f81C9EB5a3e3578D6
-    // },
-    // {
-    //   tokens: [WMATIC, DEV],
-    //   stakingRewardAddress: '0x7112b0951cfb90b330ede1647dd41cae35a82cd5',
-    //   ended: false,
-
-    //   name: '',
-    //   lp: '0xaE83008e1e146F0b28eA81b23904cda2b9CFE9F1',
-    //   // lp: '0xF4c10794E8789ACbc134c043a0e222ce586256EF',
-    //   baseToken: DEV
-    //   //STAKINGREWARDSFACTORY- 0x3F50aE525c46ab692e5F174f81C9EB5a3e3578D6
-    // },
 
   ],
   [ChainId.ROPSTEN]: [//TODO: ropsten
