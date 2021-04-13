@@ -164,11 +164,7 @@ export const getTokenLogoURL = (address: string) => {
   }
 
   if (address?.toLowerCase() === '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96'.toLowerCase()) {
-    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/2151.png'
-  }
-
-  if (address?.toLowerCase() === '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96'.toLowerCase()) {
-    address = '0xc813EA5e3b48BEbeedb796ab42A30C5599b01740'
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/autonio-token-symbol.png'
   }
 
   if (address?.toLowerCase() === '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39'.toLowerCase()) {
