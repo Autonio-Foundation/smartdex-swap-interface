@@ -7,10 +7,11 @@ import {
   // DEV,
   XENO,
   ADDY,
-  WMATIC
-  // ALOHA,
-  // GLQ
-  // AGI
+  WMATIC,
+  ALOHA,
+  GLQ,
+  // AGI,
+  ETHER
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -83,6 +84,26 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: USDC
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
+    },
+    {
+      tokens: [ALOHA, NIOX],
+      stakingRewardAddress: '0x7e1c71c123aedd1c6a0300fc88955c0fd6c296d7',
+      ended: false,
+      // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
+      name: '',
+      lp: '',
+      baseToken: NIOX
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+    {
+      tokens: [GLQ, ETHER],
+      stakingRewardAddress: '0x9fd5dd6b89795ef5fc4ad582c73463693f576619',
+      ended: false,
+      // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
+      name: '',
+      lp: '',
+      baseToken: ETHER
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
     }
   ],
   [ChainId.ROPSTEN]: [

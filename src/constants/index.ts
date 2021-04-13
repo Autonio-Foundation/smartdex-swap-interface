@@ -18,11 +18,23 @@ export const FXS = new Token(ChainId.MATIC, '0x3e121107F6F22DA4911079845a470757a
 export const NIOX = new Token(ChainId.MATIC, '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96', 4, 'NIOX', 'Autonio')
 export const USDC = new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin (PoS)')
 export const DEV = new Token(ChainId.MATIC, '0xdd667bf15e34b126eaa53198c207e5390374bc1a', 4, 'DEV', 'Developer')
-export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
-export const WMATIC = new Token(ChainId.MATIC, '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', 18, 'WMATIC', 'Wrapped Matic')
+export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'WETH', 'Wrapped Ether')
+export const WMATIC = new Token(
+  ChainId.MATIC,
+  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  18,
+  'WMATIC',
+  'Wrapped Matic'
+)
 export const ALOHA = new Token(ChainId.MATIC, '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b', 18, 'ALOHA', 'ALOHA')
 export const GLQ = new Token(ChainId.MATIC, '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0', 18, 'GLQ', 'GraphLinq')
-export const AGI = new Token(ChainId.MATIC, '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8', 8, 'AGI', 'SingularityNET Token')
+export const AGI = new Token(
+  ChainId.MATIC,
+  '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8',
+  8,
+  'AGI',
+  'SingularityNET Token'
+)
 // export const MRBAL = new Token(ChainId.MATIC, '0x66768ad00746aC4d68ded9f64886d55d5243f5Ec', 18, 'mRBAL', 'Matic Rebalance Token')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 // export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
@@ -93,7 +105,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDT, WBTC],
-  [ChainId.MATIC]: [WMATIC],
+  [ChainId.MATIC]: [WMATIC]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -108,7 +120,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     //   new Token(ChainId.MATIC, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
     //   new Token(ChainId.MATIC, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
     // ],
-    [USDC, NIOX],
+    [USDC, NIOX]
     // [ETH, USDC]
   ]
 }
