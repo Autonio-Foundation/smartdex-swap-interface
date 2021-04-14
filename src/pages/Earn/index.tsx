@@ -58,7 +58,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -120,12 +120,12 @@ const ComingSoonWrapper = styled.div`
 // `
 
 const CustomDataRow = styled(DataRow)`
-   flex-direction: row-reverse;
-   margin-bottom: 24px;
+  flex-direction: row-reverse;
+  margin-bottom: 24px;
 
-   @media (max-width: 720px) {
-     flex-direction: initial;
-   }
+  @media (max-width: 720px) {
+    flex-direction: initial;
+  }
 `
 
 export default function Earn() {
@@ -134,8 +134,8 @@ export default function Earn() {
   // staking info for connected account
   const stakingInfos = useStakingInfo()
 
-  const isStakingLP = false;
-  const isInLiveMode = true;
+  const isStakingLP = false
+  const isInLiveMode = true
 
   /**
    * only show staking cards with balance
@@ -150,14 +150,14 @@ export default function Earn() {
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
 
   const staticLpPool = () => (
-    <Wrapper showBackground={false} bgColor='#2172E5'>
+    <Wrapper showBackground={false} bgColor="#2172E5">
       <CardBGImage desaturate />
       <CardNoise />
 
       <TopSectionPc>
         <DoubleCurrencyLogo currency0={ETHER} currency1={NIOX} size={24} />
         <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-          {"ETH"}-{"NIOX"}
+          {'ETH'}-{'NIOX'}
         </TYPE.white>
 
         <StyledInternalLink to={`/farmNIOXUniLP`} style={{ width: '100%' }}>
@@ -183,8 +183,8 @@ export default function Earn() {
             {/* {`${stakingInfo.totalRewardRate
             ?.multiply(`${60 * 60 * 24}`)
             ?.toFixed(0, { groupSeparator: ',' })} */}
-            17,500 NIOX / day
-              {/* } */}
+            9,996 NIOX / day
+            {/* } */}
           </TYPE.white>
         </RowBetween>
       </StatContainer>
@@ -200,12 +200,12 @@ export default function Earn() {
             <TYPE.black style={{ textAlign: 'right', display: 'none' }} color={'white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
-          </span>
+              </span>
               {/* {`${stakingInfo.rewardRate
                 ?.multiply(`${60 * 60 * 24}`)
                 ?.toSignificant(4, { groupSeparator: ',' })} */}
-                  NIOX / day`
-                  {/* } */}
+              NIOX / day`
+              {/* } */}
             </TYPE.black>
           </BottomSection>
         </>
@@ -225,15 +225,9 @@ export default function Earn() {
                 <TYPE.white fontWeight={600}>Smartdex liquidity mining</TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive NIOX.
-                </TYPE.white>
+                <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
               </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href=""
-                target="_blank"
-              >
+              <ExternalLink style={{ color: 'white', textDecoration: 'underline' }} href="" target="_blank">
                 {/* <TYPE.white fontSize={14}>Coming Soon</TYPE.white> */}
               </ExternalLink>
             </AutoColumn>
@@ -261,16 +255,16 @@ export default function Earn() {
               <Loader style={{ margin: 'auto' }} />
             ) : !stakingRewardsExist ? (
               ''
-              // 'No active rewards'
             ) : (
+              // 'No active rewards'
               stakingInfos?.map(stakingInfo => (
                 // need to sort by added liquidity here
-                  <div key={stakingInfo.stakingRewardAddress}>
-                    <CustomDataRow>
-                      {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14}/>}
-                    </CustomDataRow>
-                    <PoolCard stakingInfo={stakingInfo} />
-                  </div>
+                <div key={stakingInfo.stakingRewardAddress}>
+                  <CustomDataRow>
+                    {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
+                  </CustomDataRow>
+                  <PoolCard stakingInfo={stakingInfo} />
+                </div>
               ))
             )}
           </>
