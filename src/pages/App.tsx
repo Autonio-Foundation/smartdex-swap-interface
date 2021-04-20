@@ -18,8 +18,10 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
+import OldEarn from './OldEarn'
 import EarnFarm from './EarnFarm'
 import Manage from './Earn/Manage'
+import OldManage from './OldEarn/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
@@ -77,19 +79,19 @@ function TopLevelModals() {
 
 function App(props: any) {
   useEffect(() => {
-    window.onmessage = function(e:any){
+    window.onmessage = function (e: any) {
       if (e.data === 'redirect to swap') {
-          props.history.push('/swap');
+        props.history.push('/swap');
       }
 
       if (e.data === 'redirect to pool') {
         props.history.push('/pool');
       }
-      
+
       if (e.data === 'redirect to farm') {
         props.history.push('/farm');
       }
-  } ;
+    };
   }, [props.history]);
 
   return (
@@ -114,6 +116,7 @@ function App(props: any) {
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/farm" component={Earn} />
+              <Route exact strict path="/archive" component={OldEarn} />
               <Route exact strict path="/farmNIOXUniLP" component={EarnFarm} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
@@ -129,6 +132,7 @@ function App(props: any) {
               <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/farm/:currencyIdA/:currencyIdB/:rewardsAddress" component={Manage} />
+              <Route exact strict path="/archive/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>

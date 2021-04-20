@@ -1,7 +1,7 @@
 import React from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { OLD_STAKING_REWARDS_INFO, useOldStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { RowBetween } from '../../components/Row'
@@ -128,11 +128,11 @@ const CustomDataRow = styled(DataRow)`
   }
 `
 
-export default function Earn() {
+export default function OldEarn() {
   const { chainId } = useActiveWeb3React()
   // console.log("chainid", chainId);
   // staking info for connected account
-  const stakingInfos = useStakingInfo()
+  const stakingInfos = useOldStakingInfo()
 
   const isStakingLP = false
   const isInLiveMode = true
@@ -144,7 +144,7 @@ export default function Earn() {
   // const stakingInfosWithBalance = stakingInfos?.filter(s => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO))
 
   // toggle copy if rewards are inactive
-  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (OLD_STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
   // console.log("akash")
   // console.log("stakingInfos", stakingInfos)
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
@@ -228,16 +228,16 @@ export default function Earn() {
                 <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
               </RowBetween>{' '}
               <RowBetween>
-                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/archive'} >
+                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/farm'} >
 
                   <ButtonPrimary padding="8px" borderRadius="8px">
-                    Archived Pools
+                    New Pools
                   </ButtonPrimary>
                 </ExternalLink>
               </RowBetween>
-              {/* <ExternalLink style={{ color: 'white', textDecoration: 'underline' }} href={'http://swap.smartdex.app/#/archive'} target="_blank">
-                <TYPE.white fontSize={14}>Coming Soon</TYPE.white>
-              </ExternalLink> */}
+              <ExternalLink style={{ color: 'white', textDecoration: 'underline' }} href="" target="_blank">
+                {/* <TYPE.white fontSize={14}>Coming Soon</TYPE.white> */}
+              </ExternalLink>
             </AutoColumn>
           </CardSection>
           <CardBGImage />
