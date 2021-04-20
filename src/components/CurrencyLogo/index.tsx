@@ -10,7 +10,7 @@ import Logo from '../Logo'
 export const getTokenLogoURL = (address: string) => {
   let uri
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/ethereum-logo.png'
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/ethereum-logo.png'
   }
   if (address?.toLowerCase() === '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063') {
     address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
