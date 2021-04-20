@@ -271,7 +271,7 @@ export default function OldEarn() {
                   <CustomDataRow>
                     {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
                   </CustomDataRow>
-                  <PoolCard stakingInfo={stakingInfo} />
+                  <PoolCard stakingInfo={stakingInfo} isOld={true} />
                 </div>
               ))
             )}

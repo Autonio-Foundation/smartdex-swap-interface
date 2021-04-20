@@ -70,7 +70,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingInfo, isOld: Boolean }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
@@ -121,12 +121,20 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
             {currency0.symbol === "ETH" ? "MATIC" : currency0.symbol}-{currency1.symbol === "ETH" ? "MATIC" : currency1.symbol}
           </TYPE.white>
-
-          <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
-            <ButtonPrimary padding="8px" borderRadius="8px">
-              {isStaking ? 'Manage' : 'Deposit'}
-            </ButtonPrimary>
-          </StyledInternalLink>
+          {isOld ? (
+            <StyledInternalLink to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          ) : (
+            <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          )
+          }
         </TopSection>
 
         <StatContainer>
