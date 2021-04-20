@@ -247,7 +247,7 @@ export default function OldEarn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Archived pools</TYPE.mediumHeader>
           {/* {isInLiveMode && <Countdown />} */}
         </DataRow>
         {/* // working section staking */}
