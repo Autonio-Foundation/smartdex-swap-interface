@@ -19,6 +19,8 @@ import { ButtonPrimary } from '../../components/Button'
 import { Break } from '../../components/earn/styled'
 import { NIOX, ETHER } from '../../constants'
 
+const nioxethdate = new Date(1622048690000);
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
@@ -150,6 +152,8 @@ export default function Earn() {
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
 
   const staticLpPool = () => (
+    // <div>
+
     <Wrapper showBackground={false} bgColor="#2172E5">
       <CardBGImage desaturate />
       <CardNoise />
@@ -211,6 +215,7 @@ export default function Earn() {
         </>
       )}
     </Wrapper>
+    // </div>
   )
 
   return (
@@ -246,13 +251,16 @@ export default function Earn() {
       </TopSection>
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           {/* {isInLiveMode && <Countdown />} */}
         </DataRow>
         {/* // working section staking */}
         {/* //static eth-niox pool card */}
-
+        <CustomDataRow>
+          <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={14} />
+        </CustomDataRow>
         {isInLiveMode && staticLpPool()}
 
         {/* //static eth-niox pool card end  */}
@@ -269,6 +277,7 @@ export default function Earn() {
                 // need to sort by added liquidity here
                 <div key={stakingInfo.stakingRewardAddress}>
                   <CustomDataRow>
+                    {console.log('stakingInfo.periodFinis', stakingInfo.periodFinish)}
                     {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
                   </CustomDataRow>
                   <PoolCard stakingInfo={stakingInfo} isOld={false} />

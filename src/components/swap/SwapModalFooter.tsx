@@ -103,7 +103,7 @@ export default function SwapModalFooter({
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + (trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol) : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
