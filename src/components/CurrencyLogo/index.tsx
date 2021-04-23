@@ -2,7 +2,7 @@ import { Currency, ETHER, Token } from '@uniswap/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import WMaticLogo from '../../assets/images/wmatic.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
@@ -10,7 +10,7 @@ import Logo from '../Logo'
 export const getTokenLogoURL = (address: string) => {
   let uri
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/ethereum-logo.png'
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/wmatic.png'
   }
   if (address?.toLowerCase() === '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063') {
     address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -252,7 +252,7 @@ export default function CurrencyLogo({
   }, [currency, uriLocations])
 
   if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+    return <StyledEthereumLogo src={WMaticLogo} size={size} style={style} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

@@ -17,22 +17,24 @@ export const UNSUPPORTED_LIST_URLS: string[] = []
 // const CMC_STABLECOIN = 'stablecoin.cmc.eth'
 // const KLEROS_LIST = 't2crtokens.eth'
 // const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
+const SMARTDEX_LIST = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/niox.tokenList.json'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
-//   COMPOUND_LIST,
-//   AAVE_LIST,
-//   SYNTHETIX_LIST,l
-//   UMA_LIST,
-//   WRAPPED_LIST,
-//   SET_LIST,
-//   OPYN_LIST,
-//   ROLL_LIST,
-//   COINGECKO_LIST,
-//   CMC_ALL_LIST,
-//   CMC_STABLECOIN,
-//   KLEROS_LIST,
-//   GEMINI_LIST,
+  //   COMPOUND_LIST,
+  //   AAVE_LIST,
+  //   SYNTHETIX_LIST,l
+  //   UMA_LIST,
+  //   WRAPPED_LIST,
+  //   SET_LIST,
+  //   OPYN_LIST,
+  //   ROLL_LIST,
+  //   COINGECKO_LIST,
+  //   CMC_ALL_LIST,
+  //   CMC_STABLECOIN,
+  //   KLEROS_LIST,
+  //   GEMINI_LIST,
+  SMARTDEX_LIST,
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 
