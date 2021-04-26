@@ -72,7 +72,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
   // const pairContract = usePairContract(dummyPair.liquidityToken.address)
-  const pairContract = usePairContract(stakingInfo.lp && stakingInfo.lp !== '' ? stakingInfo.lp : dummyPair.liquidityToken.address)
+  const pairContract = usePairContract(
+    stakingInfo.lp && stakingInfo.lp !== '' ? stakingInfo.lp : dummyPair.liquidityToken.address
+  )
 
   // approval data for stake
   const deadline = useTransactionDeadline()
@@ -84,7 +86,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   async function onStake() {
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
-      console.log("ApprovalState.APPROVED", approval, ApprovalState.APPROVED);
+      console.log('ApprovalState.APPROVED', approval, ApprovalState.APPROVED)
       if (approval === ApprovalState.APPROVED) {
         // console.log("if", parsedAmount.raw.toString(16))
         await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })

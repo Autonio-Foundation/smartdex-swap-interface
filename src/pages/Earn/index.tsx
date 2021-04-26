@@ -19,7 +19,7 @@ import { ButtonPrimary } from '../../components/Button'
 import { Break } from '../../components/earn/styled'
 import { NIOX, ETHER } from '../../constants'
 
-const nioxethdate = new Date(1622048690000);
+const nioxethdate = new Date(1622050200000)
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -60,7 +60,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -233,8 +233,7 @@ export default function Earn() {
                 <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
               </RowBetween>{' '}
               <RowBetween>
-                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/archive'} >
-
+                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/archive'}>
                   <ButtonPrimary padding="8px" borderRadius="8px">
                     Archived Pools
                   </ButtonPrimary>
@@ -251,7 +250,6 @@ export default function Earn() {
       </TopSection>
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           {/* {isInLiveMode && <Countdown />} */}
@@ -259,7 +257,7 @@ export default function Earn() {
         {/* // working section staking */}
         {/* //static eth-niox pool card */}
         <CustomDataRow>
-          <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={14} />
+          <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={42} />
         </CustomDataRow>
         {isInLiveMode && staticLpPool()}
 

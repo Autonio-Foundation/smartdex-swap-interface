@@ -86,7 +86,9 @@ export function useApproveCallback(
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.currency.symbol,
+          summary:
+            'Approve ' +
+            (amountToApprove.currency.symbol === 'UNI-V2' ? 'Smartdex-V2' : amountToApprove.currency.symbol),
           approval: { tokenAddress: token.address, spender: spender }
         })
       })

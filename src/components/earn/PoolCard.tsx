@@ -30,7 +30,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -70,7 +70,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingInfo, isOld: Boolean }) {
+export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingInfo; isOld: Boolean }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
@@ -102,52 +102,57 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
       )
     )
   }
-  var show = isStaking || !stakingInfo.ended;
+  var show = isStaking || !stakingInfo.ended
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC);
+  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC)
 
-  return (
-    show ?
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-        <CardBGImage desaturate />
-        <CardNoise />
+  return show ? (
+    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+      <CardBGImage desaturate />
+      <CardNoise />
 
-        <TopSection>
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {currency0.symbol === "ETH" ? "MATIC" : currency0.symbol}-{currency1.symbol === "ETH" ? "MATIC" : currency1.symbol}
+      <TopSection>
+        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+          {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
+          {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
+        </TYPE.white>
+        {isOld ? (
+          <StyledInternalLink
+            to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+            style={{ width: '100%' }}
+          >
+            <ButtonPrimary padding="8px" borderRadius="8px">
+              {isStaking ? 'Manage' : 'Deposit'}
+            </ButtonPrimary>
+          </StyledInternalLink>
+        ) : (
+          <StyledInternalLink
+            to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+            style={{ width: '100%' }}
+          >
+            <ButtonPrimary padding="8px" borderRadius="8px">
+              {isStaking ? 'Manage' : 'Deposit'}
+            </ButtonPrimary>
+          </StyledInternalLink>
+        )}
+      </TopSection>
+
+      <StatContainer>
+        <RowBetween>
+          <TYPE.white> Total deposited</TYPE.white>
+          <TYPE.white>
+            {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
           </TYPE.white>
-          {isOld ? (
-            <StyledInternalLink to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
-              <ButtonPrimary padding="8px" borderRadius="8px">
-                {isStaking ? 'Manage' : 'Deposit'}
-              </ButtonPrimary>
-            </StyledInternalLink>
-          ) : (
-            <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
-              <ButtonPrimary padding="8px" borderRadius="8px">
-                {isStaking ? 'Manage' : 'Deposit'}
-              </ButtonPrimary>
-            </StyledInternalLink>
-          )
-          }
-        </TopSection>
-
-        <StatContainer>
-          <RowBetween>
-            <TYPE.white> Total deposited</TYPE.white>
-            <TYPE.white>
-              {valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </TYPE.white>
-          </RowBetween>
-          <RowBetween>
-            {/* <TYPE.white> Pool rate </TYPE.white>
+        </RowBetween>
+        <RowBetween>
+          {/* <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
@@ -157,43 +162,45 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
                 : '0 UNI / week'
               : '-'}
           </TYPE.white> */}
-            <TYPE.white> Pool rate </TYPE.white>
-            <TYPE.white>{`${stakingInfo.totalRewardRate
-              ?.multiply(`${60 * 60 * 24}`)
-              ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
-          </RowBetween>
-          <RowBetween>
-            <TYPE.white> APY </TYPE.white>
-            <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
-          </RowBetween>
-        </StatContainer>
+          <TYPE.white> Pool rate </TYPE.white>
+          <TYPE.white>{`${stakingInfo.totalRewardRate
+            ?.multiply(`${60 * 60 * 24}`)
+            ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
+        </RowBetween>
+        <RowBetween>
+          <TYPE.white> APY </TYPE.white>
+          <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
+        </RowBetween>
+      </StatContainer>
 
-        {isStaking && (
-          <>
-            <Break />
-            <BottomSection showBackground={true}>
-              <TYPE.black color={'white'} fontWeight={500}>
-                <span>Your rate</span>
-              </TYPE.black>
+      {isStaking && (
+        <>
+          <Break />
+          <BottomSection showBackground={true}>
+            <TYPE.black color={'white'} fontWeight={500}>
+              <span>Your rate</span>
+            </TYPE.black>
 
-              <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                  ⚡
+            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                ⚡
               </span>
-                {/* {stakingInfo
+              {/* {stakingInfo
                 ? stakingInfo.active
                   ? `${stakingInfo.rewardRate
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
                   : '0 UNI / week'
                 : '-'} */}
-                {`${stakingInfo.rewardRate
-                  ?.multiply(`${60 * 60 * 24}`)
-                  ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
-              </TYPE.black>
-            </BottomSection>
-          </>
-        )}
-      </Wrapper> : <span style={{ width: 0, display: "none" }}></span>
+              {`${stakingInfo.rewardRate
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
+            </TYPE.black>
+          </BottomSection>
+        </>
+      )}
+    </Wrapper>
+  ) : (
+    <span style={{ width: 0, display: 'none' }}></span>
   )
 }
