@@ -1,18 +1,6 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair } from '@uniswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import {
-  UNI,
-  NIOX,
-  USDC,
-  MaticWETH,
-  XENO,
-  ADDY,
-  WMATIC,
-  ALOHA,
-  GLQ,
-  AGI,
-  ETHER
-} from '../../constants'
+import { UNI, NIOX, USDC, MaticWETH, XENO, ADDY, WMATIC, ALOHA, GLQ, AGI, ETHER } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -161,13 +149,12 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: NIOX
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    },
-
-
+    }
   ],
   [ChainId.ROPSTEN]: [
     //TODO: ropsten
-  ]
+  ],
+  [ChainId.MAINNET]: []
 }
 
 export interface StakingInfo {
@@ -210,13 +197,13 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? OLD_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -353,13 +340,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -564,4 +551,23 @@ export function useDerivedUnstakeInfo(
     parsedAmount,
     error
   }
+}
+
+export function useCustomNetRewardRate(address: string, chainId: ChainId): TokenAmount | Fraction {
+  // const rewardRates = useMultipleContractSingleData(
+  //   [address],
+  //   STAKING_REWARDS_INTERFACE,
+  //   'rewardRate',
+  //   undefined,
+  //   NEVER_RELOAD
+  // )
+
+  // const rewardRateState = rewardRates ? rewardRates[0] : null
+
+  // return useMemo(() => {
+  //   if (!rewardRateState || rewardRateState.loading) return new Fraction('0', '1')
+
+  return new TokenAmount(NIOX, JSBI.BigInt(1157))
+  // return new TokenAmount(NIOX, JSBI.BigInt(rewardRateState.result?.[0]))
+  // }, [rewardRateState])
 }

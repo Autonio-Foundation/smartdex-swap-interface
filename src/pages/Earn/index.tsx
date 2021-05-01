@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { STAKING_REWARDS_INFO, useCustomNetRewardRate, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { RowBetween } from '../../components/Row'
@@ -17,7 +17,11 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { StyledInternalLink } from '../../theme'
 import { ButtonPrimary } from '../../components/Button'
 import { Break } from '../../components/earn/styled'
-import { NIOX, ETHER } from '../../constants'
+import { NIOX, ETHER, USDC, MAINNET_NIOX } from '../../constants'
+import { ChainId, CurrencyAmount, Fraction, JSBI, TokenAmount, WETH } from '@uniswap/sdk'
+// import useUSDCPrice from 'utils/useUSDCPrice'
+import { useApy } from 'data/Apy'
+// import { useCurrency } from 'hooks/Tokens'
 
 const nioxethdate = new Date(1622050200000)
 
@@ -151,6 +155,50 @@ export default function Earn() {
   // console.log("stakingInfos", stakingInfos)
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
 
+  // const mainnetRewardsInfo = useStakingInfo(null, ChainId.MAINNET)
+  const ethNioxPoolRewardRate = useCustomNetRewardRate('0xa54db7a2ce0b1d802552c655b36672bcfe2c538d', ChainId.MAINNET)
+  // const usdcPrice = useUSDCPrice()
+  const [totalLiquidityInUSDC, setTotalLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
+
+  useEffect(() => {
+    async function fetchInfo() {
+      let res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc813EA5e3b48BEbeedb796ab42A30C5599b01740&address=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+
+      const niox_amount = new TokenAmount(MAINNET_NIOX, res.result)
+
+      res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=autonio').then(res =>
+        res.json()
+      )
+
+      const niox_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
+
+      res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&address=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+
+      const eth_amount = new TokenAmount(WETH[ChainId.MAINNET], res.result)
+
+      res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=weth').then(res =>
+        res.json()
+      )
+
+      const eth_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
+
+      const totalLiquidity = new TokenAmount(
+        USDC,
+        JSBI.multiply(niox_amount.multiply(niox_price).quotient, eth_amount.multiply(eth_price).quotient)
+      )
+
+      setTotalLiquidityInUSDC(totalLiquidity)
+    }
+
+    fetchInfo()
+  }, [])
+
+  const ethNioxPoolAPY = useApy(ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`), totalLiquidityInUSDC)
+
   const staticLpPool = () => (
     // <div>
 
@@ -184,12 +232,15 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
-            {/* {`${stakingInfo.totalRewardRate
-            ?.multiply(`${60 * 60 * 24}`)
-            ?.toFixed(0, { groupSeparator: ',' })} */}
-            9,996 NIOX / day
+            {`${ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`)?.toFixed(0, { groupSeparator: ',' })}`} NIOX / day
+            {/* 9,996 NIOX / day */}
             {/* } */}
           </TYPE.white>
+        </RowBetween>
+
+        <RowBetween>
+          <TYPE.white> APY </TYPE.white>
+          <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white>
         </RowBetween>
       </StatContainer>
 

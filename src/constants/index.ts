@@ -28,7 +28,13 @@ export const WMATIC = new Token(
 )
 export const ALOHA = new Token(ChainId.MATIC, '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b', 18, 'ALOHA', 'ALOHA')
 export const GLQ = new Token(ChainId.MATIC, '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0', 18, 'GLQ', 'GraphLinq')
-export const MaticWETH = new Token(ChainId.MATIC, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether')
+export const MaticWETH = new Token(
+  ChainId.MATIC,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
 export const AGI = new Token(
   ChainId.MATIC,
   '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8',
@@ -44,6 +50,21 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
+export const MAINNET_USDC = new Token(
+  ChainId.MAINNET,
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  6,
+  'USDC',
+  'USD Coin'
+)
+export const MAINNET_NIOX = new Token(
+  ChainId.MAINNET,
+  '0xc813EA5e3b48BEbeedb796ab42A30C5599b01740',
+  4,
+  'NIOX',
+  'Autonio'
+)
+
 export const XENO = new Token(ChainId.ROPSTEN, '0x13681b1f6f93977f62389e0a2b1e84ba24d78fbc', 4, 'XENO', 'XENO')
 export const ADDY = new Token(ChainId.ROPSTEN, '0x6aa16f7844e3af995985bd035eec62d88e418ef1', 8, 'ADDY', 'ADDY Token')
 
