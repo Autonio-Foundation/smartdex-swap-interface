@@ -158,7 +158,7 @@ export default function Earn() {
   // const mainnetRewardsInfo = useStakingInfo(null, ChainId.MAINNET)
   const ethNioxPoolRewardRate = useCustomNetRewardRate('0xa54db7a2ce0b1d802552c655b36672bcfe2c538d', ChainId.MAINNET)
   // const usdcPrice = useUSDCPrice()
-  const [totalLiquidityInUSDC, setTotalLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
+  const [totalEthNioxLiquidityInUSDC, setTotalEthNioxLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
 
   useEffect(() => {
     async function fetchInfo() {
@@ -188,16 +188,19 @@ export default function Earn() {
 
       const totalLiquidity = new TokenAmount(
         USDC,
-        JSBI.multiply(niox_amount.multiply(niox_price).quotient, eth_amount.multiply(eth_price).quotient)
+        JSBI.multiply(
+          JSBI.add(niox_amount.multiply(niox_price).quotient, eth_amount.multiply(eth_price).quotient),
+          JSBI.BigInt(1000000)
+        )
       )
 
-      setTotalLiquidityInUSDC(totalLiquidity)
+      setTotalEthNioxLiquidityInUSDC(totalLiquidity)
     }
 
     fetchInfo()
   }, [])
 
-  const ethNioxPoolAPY = useApy(ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`), totalLiquidityInUSDC)
+  const ethNioxPoolAPY = useApy(ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`), totalEthNioxLiquidityInUSDC)
 
   const staticLpPool = () => (
     // <div>
@@ -223,9 +226,8 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            -
-            {/* {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+            {totalEthNioxLiquidityInUSDC ? '$' + totalEthNioxLiquidityInUSDC.toFixed(0, { groupSeparator: ',' }) : '-'}
+            {/* ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
           </TYPE.white>
         </RowBetween>
