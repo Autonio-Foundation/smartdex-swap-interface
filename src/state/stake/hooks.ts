@@ -23,73 +23,9 @@ export const OLD_STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MATIC]: [
     //TODO: MATIC mainnet
-    {
-      tokens: [WMATIC, USDC],
-      stakingRewardAddress: '0xf40324f73991d02c7672f6ee6b1eb94b3eb3e40c',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    },
-    {
-      tokens: [NIOX, USDC],
-      stakingRewardAddress: '0xa54db7a2ce0b1d802552c655b36672bcfe2c538d',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    },
-    {
-      tokens: [ALOHA, NIOX],
-      stakingRewardAddress: '0x7e1c71c123aedd1c6a0300fc88955c0fd6c296d7',
-      ended: false,
-      // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
-      name: '',
-      lp: '',
-      baseToken: NIOX
-      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
-    },
-    {
-      tokens: [GLQ, ETHER],
-      stakingRewardAddress: '0x9fd5dd6b89795ef5fc4ad582c73463693f576619',
-      ended: false,
-      // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
-      name: '',
-      lp: '',
-      baseToken: ETHER
-      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
-    }
-  ],
-  [ChainId.ROPSTEN]: [
-    //TODO: ropsten
-    {
-      tokens: [XENO, ADDY],
-      stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: XENO
-      //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
-    }
-  ]
-}
-export const STAKING_REWARDS_INFO: {
-  [chainId in ChainId]?: {
-    tokens: [Token, Token]
-    stakingRewardAddress: string
-    ended: boolean
-    name: string
-    lp: string
-    baseToken: Token
-  }[]
-} = {
-  [ChainId.MATIC]: [
-    //TODO: MATIC mainnet
+    ////////////////////////////////////////////////new one ////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
       tokens: [NIOX, USDC],
       stakingRewardAddress: '0x9c0ef78a30aa2d43f6f1aac677e227c43eb35356',
@@ -149,7 +85,126 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: NIOX
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
+    },
+    ////////////////////////////////////old one //////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    {
+      tokens: [WMATIC, USDC],
+      stakingRewardAddress: '0xf40324f73991d02c7672f6ee6b1eb94b3eb3e40c',
+      ended: false,
+
+      name: 'WMATIC-USDC OLD',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
+    },
+    {
+      tokens: [NIOX, USDC],
+      stakingRewardAddress: '0xa54db7a2ce0b1d802552c655b36672bcfe2c538d',
+      ended: false,
+
+      name: 'NIOX-USDC OLD',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
+    },
+    {
+      tokens: [ALOHA, NIOX],
+      stakingRewardAddress: '0x7e1c71c123aedd1c6a0300fc88955c0fd6c296d7',
+      ended: false,
+      // lp: 0x2ab6a1f1a2088a0deab45df19832e41349216e7f
+      name: 'ALOHA-NIOX OLD',
+      lp: '',
+      baseToken: NIOX
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+    {
+      tokens: [GLQ, ETHER],
+      stakingRewardAddress: '0x9fd5dd6b89795ef5fc4ad582c73463693f576619',
+      ended: false,
+      // lp : 0xe280901997ac453525009cea5d641ee51aad26ff
+      name: 'GLQ-ETHER OLD',
+      lp: '',
+      baseToken: ETHER
+      //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+  ],
+  [ChainId.ROPSTEN]: [
+    //TODO: ropsten
+    {
+      tokens: [XENO, ADDY],
+      stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: XENO
+      //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
     }
+  ]
+}
+export const STAKING_REWARDS_INFO: {
+  [chainId in ChainId]?: {
+    tokens: [Token, Token]
+    stakingRewardAddress: string
+    ended: boolean
+    name: string
+    lp: string
+    baseToken: Token
+  }[]
+} = {
+  [ChainId.MATIC]: [
+    //TODO: MATIC mainnet
+    {
+      tokens: [NIOX, USDC],
+      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [WMATIC, USDC],
+      stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [MaticWETH, USDC],
+      stakingRewardAddress: '0x73eb490b3acd5e36a365bb6f934bd85977ad7068',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [GLQ, MaticWETH],
+      stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: MaticWETH
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [ALOHA, NIOX],
+      stakingRewardAddress: '0x317875cbe5f64f14d7e9343703cac9c1501ddb05',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: NIOX
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
   ],
   [ChainId.ROPSTEN]: [
     //TODO: ropsten
@@ -197,13 +252,13 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? OLD_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -340,13 +395,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )

@@ -30,7 +30,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -117,10 +117,17 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
 
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-          {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
-          {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
-        </TYPE.white>
+        {stakingInfo.name && stakingInfo.name !== '' ? (
+          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+            {stakingInfo.name}
+          </TYPE.white>
+        ) : (
+          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+            {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
+            {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
+          </TYPE.white>
+        )}
+
         {isOld ? (
           <StyledInternalLink
             to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
