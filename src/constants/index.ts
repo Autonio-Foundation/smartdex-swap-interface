@@ -111,7 +111,7 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC],
-  [ChainId.MATIC]: [USDC, NIOX]
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], USDC, NIOX]
 }
 
 /**
