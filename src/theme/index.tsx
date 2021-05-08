@@ -58,7 +58,7 @@ export function colors(darkMode: boolean): Colors {
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    advancedBG: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)',
 
     //primary colors
     //autonio ui change 27-02-2021
@@ -86,15 +86,19 @@ export function colors(darkMode: boolean): Colors {
     red1: '#FD4040',
     red2: '#F82D3A',
     red3: '#D60000',
+    red4: '#E81C34',
     green1: '#27AE60',
+    green2: '#1AD37A',
     yellow1: '#FFE270',
     yellow2: '#FFFFFF',
     blue1: '#2172E5',
-    gray1: '#6f7177'
+    gray1: 'rgba(255,255,255,0.1)',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    gray5: 'rgba(255,255,255,.5)',
+    gray2: 'rgba(253, 253, 253, .5)'
   }
 }
 
