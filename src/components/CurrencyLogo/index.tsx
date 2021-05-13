@@ -204,6 +204,9 @@ export const getTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8'.toLowerCase()) {
     uri = 'https://assets.coingecko.com/coins/images/2138/small/singularitynet.png?1548609559'
   }
+  if (address?.toLowerCase() === '0xd7ecf95Cf7eF5256990BeAf4ac895cD9e64cb947'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/10805/small/J51iIea.png?1583891599'
+  }
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`

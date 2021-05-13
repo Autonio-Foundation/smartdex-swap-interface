@@ -1,6 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { UNI, NIOX, USDC, MaticWETH, XENO, ADDY, WMATIC, ALOHA, GLQ, AGI, ETHER } from '../../constants'
+import { UNI, NIOX, USDC, MaticWETH, XENO, ADDY, WMATIC, ALOHA, GLQ, AGI, ETHER, PBTC } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -212,6 +212,14 @@ export const STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: NIOX
+    },
+    {
+      tokens: [PBTC, USDC],
+      stakingRewardAddress: '0xdd58f05c32326006546855e58bedbb81f00f3c72',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: USDC
     }
   ],
   [ChainId.ROPSTEN]: [

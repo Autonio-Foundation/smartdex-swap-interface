@@ -42,6 +42,7 @@ export const AGI = new Token(
   'AGI',
   'SingularityNET Token'
 )
+export const PBTC = new Token(ChainId.MATIC, '0xd7ecf95Cf7eF5256990BeAf4ac895cD9e64cb947', 18, 'pBTC', 'pTokens BTC')
 // export const MRBAL = new Token(ChainId.MATIC, '0x66768ad00746aC4d68ded9f64886d55d5243f5Ec', 18, 'mRBAL', 'Matic Rebalance Token')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 // export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
