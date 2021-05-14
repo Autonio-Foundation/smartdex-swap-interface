@@ -131,9 +131,9 @@ export const OLD_STAKING_REWARDS_INFO: {
     },
     {
       tokens: [PBTC, USDC],
-      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
+      stakingRewardAddress: '0xdd58f05c32326006546855e58bedbb81f00f3c72',
       ended: false,
-      name: '',
+      name: 'pBTC-USDC OLD',
       lp: '',
       baseToken: USDC
     }
@@ -220,6 +220,14 @@ export const STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: NIOX
+    },
+    {
+      tokens: [PBTC, USDC],
+      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: USDC
     }
   ],
   [ChainId.ROPSTEN]: [
