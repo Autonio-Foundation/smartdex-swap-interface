@@ -172,7 +172,7 @@ export default function Earn() {
         res.json()
       )
 
-      const niox_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
+      const niox_price = new Fraction(JSBI.BigInt(~~(res[0].current_price * 1000000)), JSBI.BigInt(1000000))
 
       res = await fetch(
         'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&address=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
@@ -184,7 +184,7 @@ export default function Earn() {
         res.json()
       )
 
-      const eth_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
+      const eth_price = new Fraction(JSBI.BigInt(~~(res[0].current_price * 1000000)), JSBI.BigInt(1000000))
 
       const totalLiquidity = new TokenAmount(
         USDC,

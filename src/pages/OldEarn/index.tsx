@@ -146,13 +146,12 @@ const PageButtons = styled.div`
 `
 
 export default function OldEarn() {
-
   // pagination
   const [page, setPage] = useState(1)
-  const maxPage = 1;
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 10
 
   const { chainId } = useActiveWeb3React()
+
   // console.log("chainid", chainId);
   // staking info for connected account
   const stakingInfos = useOldStakingInfo()
@@ -165,9 +164,11 @@ export default function OldEarn() {
    * @todo only account for this if rewards are inactive
    */
   // const stakingInfosWithBalance = stakingInfos?.filter(s => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO))
-
+  const maxPage = Math.ceil(((chainId ? OLD_STAKING_REWARDS_INFO[chainId]?.length : 0) ?? 0) / 10)
   // toggle copy if rewards are inactive
-  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (OLD_STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+  const stakingRewardsExist = Boolean(
+    typeof chainId === 'number' && (OLD_STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0
+  )
   // console.log("akash")
   // console.log("stakingInfos", stakingInfos)
   // console.log("stakingInfosWithBalance", stakingInfosWithBalance)
@@ -251,8 +252,7 @@ export default function OldEarn() {
                 <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
               </RowBetween>{' '}
               <RowBetween>
-                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/farm'} >
-
+                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/farm'}>
                   <ButtonPrimary padding="8px" borderRadius="8px">
                     New Pools
                   </ButtonPrimary>
@@ -288,22 +288,24 @@ export default function OldEarn() {
               ''
             ) : (
               // 'No active rewards'
-              stakingInfos?.slice(
-                page === 1 ? 0 : (page - 1) * ITEMS_PER_PAGE,
-                (page * ITEMS_PER_PAGE) < stakingInfos.length ? (page * ITEMS_PER_PAGE) : stakingInfos.length
-              ).map(stakingInfo => (
-                // need to sort by added liquidity here
-                <div key={stakingInfo.stakingRewardAddress}>
-                  <CustomDataRow>
-                    {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
-                  </CustomDataRow>
-                  <PoolCard stakingInfo={stakingInfo} isOld={true} />
-                </div>
-              ))
+              stakingInfos
+                ?.slice(
+                  page === 1 ? 0 : (page - 1) * ITEMS_PER_PAGE,
+                  page * ITEMS_PER_PAGE < stakingInfos.length ? page * ITEMS_PER_PAGE : stakingInfos.length
+                )
+                .map(stakingInfo => (
+                  // need to sort by added liquidity here
+                  <div key={stakingInfo.stakingRewardAddress}>
+                    <CustomDataRow>
+                      {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
+                    </CustomDataRow>
+                    <PoolCard stakingInfo={stakingInfo} isOld={true} />
+                  </div>
+                ))
             )}
             <PageButtons>
               <div
-                onClick={(e) => {
+                onClick={e => {
                   setPage(page === 1 ? page : page - 1)
                 }}
               >
@@ -311,7 +313,7 @@ export default function OldEarn() {
               </div>
               <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
               <div
-                onClick={(e) => {
+                onClick={e => {
                   setPage(page === maxPage ? page : page + 1)
                 }}
               >

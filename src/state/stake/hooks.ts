@@ -128,6 +128,14 @@ export const OLD_STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: ETHER
       //STAKINGREWARDSFACTORY- 0xDDA456D46f72Ebbc5af0D833dA3c37ed5242DE75 mainnet matic
+    },
+    {
+      tokens: [PBTC, USDC],
+      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: USDC
     }
   ],
   [ChainId.ROPSTEN]: [
@@ -212,14 +220,6 @@ export const STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: NIOX
-    },
-    {
-      tokens: [PBTC, USDC],
-      stakingRewardAddress: '0xdd58f05c32326006546855e58bedbb81f00f3c72',
-      ended: false,
-      name: '',
-      lp: '',
-      baseToken: USDC
     }
   ],
   [ChainId.ROPSTEN]: [
