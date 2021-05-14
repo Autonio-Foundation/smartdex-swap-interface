@@ -136,6 +136,14 @@ export const OLD_STAKING_REWARDS_INFO: {
       name: 'pBTC-USDC OLD',
       lp: '',
       baseToken: USDC
+    },
+    {
+      tokens: [NIOX, AGI],
+      stakingRewardAddress: '0xa79374bf7c8b9297b20789375fc7ef2c72c32dbf',
+      ended: false,
+      name: 'AGI-NIOX OLD',
+      lp: '',
+      baseToken: NIOX
     }
   ],
   [ChainId.ROPSTEN]: [
@@ -213,14 +221,7 @@ export const STAKING_REWARDS_INFO: {
       baseToken: NIOX
       //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     },
-    {
-      tokens: [NIOX, AGI],
-      stakingRewardAddress: '0xa79374bf7c8b9297b20789375fc7ef2c72c32dbf',
-      ended: false,
-      name: '',
-      lp: '',
-      baseToken: NIOX
-    },
+
     {
       tokens: [PBTC, USDC],
       stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
