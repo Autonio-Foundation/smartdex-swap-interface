@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Modal from 'react-modal'
 import Matic from '@maticnetwork/maticjs'
-// import { MaticPOSClient } from '@maticnetwork/maticjs'
+// import { InstaExit, SignatureType, RESPONSE_CODES } from '@biconomy/inex'
 import { MATIC_PROVIDER, INFURA_PROVIDER } from '../../constants'
 import { Dropdown, DropdownPositions } from './MaticBridgeDropdown'
 import { DropdownTextItem } from './MaticBridgeTextItem'
@@ -13,9 +13,9 @@ import { tokenAmountInUnits } from '../../utils/tokens'
 import { DEPOSIT_TOKENS_META_DATA, TokenMetaData } from '../../constants/tokenLists/tokens'
 import { modalTheme } from './styles'
 
-interface Props {
-  test?: string
-}
+// interface Props {
+//   test?: string
+// }
 
 interface State {
   isOpen: boolean
@@ -25,6 +25,7 @@ interface State {
   ethBalance: { [k: string]: any }
   chainId: number
   isDeposit: boolean
+  instaExit: any
 }
 
 const DepositTabButton = styled(ButtonLight)`
@@ -185,59 +186,95 @@ function TokenSymbolFormat(symbol: string) {
   return symbol === 'wmatic' ? 'MATIC' : symbol.toUpperCase()
 }
 
-class MaticBridge extends React.Component<Props, State> {
-  public state: State = {
+const MaticBridge = () => {
+  const [state, setState] = useState<State>({
     isOpen: false,
     currentToken: DEPOSIT_TOKENS_META_DATA[0],
     amount: new BigNumber(0),
     chainId: 0,
     maticBalance: {},
     ethBalance: {},
-    isDeposit: true
-  }
+    isDeposit: true,
+    instaExit: null
+  })
 
-  constructor(props: Props) {
-    super(props)
-  }
+  const { isOpen, currentToken, amount, maticBalance, ethBalance, chainId, isDeposit } = state
+  const account = (window as any).ethereum.selectedAddress
 
-  public componentDidMount = async () => {
-    await this.detectChainId()
-  }
+  // const init = async () => {
+  //   if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+  //     // Ethereum user detected. You can now use the provider.
+  //     const provider = window['ethereum']
+  //     await provider.enable()
+  //     const ethersProvider = new ethers.providers.Web3Provider(provider, 'any')
 
-  public componentDidUpdate = async () => {
-    await this.detectChainId()
-  }
+  //     const instaExit = new InstaExit(provider, {
+  //       fromChainId: 5,
+  //       toChainId: 80001,
+  //       debug: true,
+  //       infiniteApproval: true,
+  //       onFundsTransfered: (data: any) => {
+  //         console.log('Funds transfer successful', data)
+  //       }
+  //     })
 
-  public detectChainId = async () => {
-    if (!window || !window.ethereum) return
+  //     await instaExit.init()
+  //     signer = ethersProvider.getSigner()
+  //     let userAddress = await signer.getAddress()
+  //     if (userAddress) {
+  //       setUserAddress(userAddress)
+  //     }
 
-    try {
-      const { chainId } = this.state
-      const _chainId = parseInt(await (window as any).ethereum.request({ method: 'eth_chainId' }))
-      console.log(_chainId)
-      if (chainId !== _chainId) {
-        this.setState({ chainId: _chainId })
-        await this.updateBalances()
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //     ethersProvider.on('network', (newNetwork, oldNetwork) => {
+  //       // When a Provider makes its initial connection, it emits a "network"
+  //       // event with a null oldNetwork along with the newNetwork. So, if the
+  //       // oldNetwork exists, it represents a changing network
+  //       if (oldNetwork) {
+  //         window.location.reload()
+  //       }
+  //     })
 
-  public updateBalances = async () => {
+  //     // try {
+  //     //   ethersProvider.on("block", (blockNumber) => {
+  //     //      updateFaucetBalance();
+  //     //   });
+  //     // } catch (error) {
+  //     //   console.log(error);
+  //     // }
+  //     setState({ instaExit })
+
+  //     // Hanlde user address change
+  //     // if (provider.on) {
+  //     //   provider.on('accountsChanged', function(accounts) {
+  //     //     console.log(`Address changed EVENT`)
+  //     //     console.log(`New account info`, accounts)
+
+  //     //     if (accounts && accounts.length > 0) {
+  //     //       let newUserAddress = accounts[0]
+  //     //       if (newUserAddress) {
+  //     //         setUserAddress(newUserAddress)
+  //     //       }
+  //     //     }
+  //     //   })
+  //     // }
+  //   } else {
+  //     console.log('Metamask not installed')
+  //   }
+  // }
+
+  const updateBalances = async () => {
     if (!window || !window.ethereum) return
 
     let maticWrapper: Matic
-    const { chainId } = this.state
     try {
-      if (chainId === 1) {
+      if (Number(chainId) === 1) {
         maticWrapper = new Matic({
           network: 'mainnet',
           version: 'v1',
           maticProvider: MATIC_PROVIDER,
           parentProvider: window.ethereum,
-          parentDefaultOptions: { from: (window as any).ethereum.selectedAddress },
-          maticDefaultOptions: { from: (window as any).ethereum.selectedAddress }
+          parentDefaultOptions: { from: account },
+          maticDefaultOptions: { from: account }
         })
       } else {
         maticWrapper = new Matic({
@@ -245,8 +282,8 @@ class MaticBridge extends React.Component<Props, State> {
           version: 'v1',
           maticProvider: window.ethereum,
           parentProvider: INFURA_PROVIDER,
-          parentDefaultOptions: { from: (window as any).ethereum.selectedAddress },
-          maticDefaultOptions: { from: (window as any).ethereum.selectedAddress }
+          parentDefaultOptions: { from: account },
+          maticDefaultOptions: { from: account }
         })
       }
       maticWrapper.initialize()
@@ -256,170 +293,283 @@ class MaticBridge extends React.Component<Props, State> {
       DEPOSIT_TOKENS_META_DATA &&
         DEPOSIT_TOKENS_META_DATA.map(async token => {
           let value = await maticWrapper.balanceOfERC20(
-            (window as any).ethereum.selectedAddress,
+            account,
             token.symbol === 'wmatic' ? maticWrapper.network.Matic.Contracts.Tokens.MaticToken : token.addresses[137],
             {
-              from: (window as any).ethereum.selectedAddress
+              from: account
             }
           )
           maticBalance[token.symbol] = value / Math.pow(10, token.decimals)
           value = await maticWrapper.balanceOfERC20(
-            (window as any).ethereum.selectedAddress,
+            account,
             token.symbol === 'wmatic' ? maticWrapper.network.Main.Contracts.Tokens.MaticToken : token.addresses[1],
             {
-              from: (window as any).ethereum.selectedAddress,
+              from: account,
               parent: true
             }
           )
           ethBalance[token.symbol] = value / Math.pow(10, token.decimals)
         })
-      this.setState({ maticBalance, ethBalance })
+      setState({ ...state, maticBalance, ethBalance })
     } catch (error) {
       console.log(error)
     }
   }
 
-  public handleOpenModal = (ev: any) => {
-    ev.preventDefault()
-    this.setState({ isOpen: true })
+  const detectChainId = async () => {
+    try {
+      const _chainId = parseInt(await (window as any).ethereum.request({ method: 'eth_chainId' }))
+      if (_chainId !== chainId) {
+        setState({ ...state, chainId: _chainId })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  public handleCloseModel = (ev: any) => {
-    ev.preventDefault()
-    this.setState({ isOpen: false })
-  }
-
-  public updateAmount = (newValue: BigNumber) => {
-    this.setState({
-      amount: newValue
+  useEffect(() => {
+    const _window = window as any
+    _window.ethereum.on('networkChanged', (networkId: number) => {
+      setState({ ...state, chainId: networkId })
     })
+    // try {
+    //   init()
+    // } catch (error) {
+    //   console.log(error)
+    //   console.log('Error while initiazing the App')
+    // }
+  }, [])
+
+  useEffect(() => {
+    detectChainId()
+    updateBalances()
+  }, [account])
+  useEffect(() => {
+    updateBalances()
+  }, [chainId])
+
+  const handleOpenModal = (ev: any) => {
+    ev.preventDefault()
+    setState({ ...state, isOpen: true })
   }
 
-  public onClickWithdraw = () => {
+  const handleCloseModel = (ev: any) => {
+    ev.preventDefault()
+    setState({ ...state, isOpen: false })
+  }
+
+  const updateAmount = (newValue: BigNumber) => {
+    setState({ ...state, amount: newValue })
+  }
+
+  const onClickWithdraw = () => {
     window.open('https://wallet.matic.network/', '_blank')
   }
 
-  public submit = async () => {}
+  // const deposit = async (depositRequest: any) => {
+  //   const { instaExit } = state
+  //   const depositResponse = await instaExit.deposit(depositRequest)
+  //   return depositResponse
+  // }
 
-  public render = () => {
-    const { isOpen, currentToken, amount, maticBalance, ethBalance, chainId, isDeposit } = this.state
-
-    return (
-      <>
-        <DepositTabButton onClick={this.handleOpenModal}>Deposit</DepositTabButton>
-        <Modal isOpen={isOpen} style={modalTheme} onRequestClose={this.handleCloseModel}>
-          <ModalContent>
-            <div style={{ display: 'flex', width: '100%' }}>
-              <DepositContent onClick={() => this.setState({ isDeposit: true })} active={isDeposit}>
-                Deposit
-              </DepositContent>
-              <DepositContent onClick={this.onClickWithdraw} active={!isDeposit}>
-                Withdraw
-              </DepositContent>
-            </div>
-            <Content>
-              <div>
-                <span style={{ fontWeight: 'bold', fontSize: 18 }}>Matic Bridge</span>
-                <span style={{ fontSize: 14, marginLeft: 4, color: '#aaa' }}>
-                  {isDeposit ? 'Deposit to Matic Mainnet' : 'Withdraw to Ethereum Mainnet'}
-                </span>
-              </div>
-              <div style={{ display: 'flex', marginBottom: 26, marginTop: 10 }}>
-                <DotDiv
-                  style={{
-                    backgroundColor:
-                      (isDeposit && chainId === 1) || (!isDeposit && chainId === 137) ? '#ACCA27' : '#E81C34'
-                  }}
-                />
-                <span style={{ fontSize: 14 }}>
-                  {chainId === 1
-                    ? isDeposit
-                      ? 'You are on Ethereum Mainnet'
-                      : 'Switch to Matic Mainnet for withdrawal'
-                    : !isDeposit
-                    ? 'You are on Matic Mainnet'
-                    : 'Switch to Ethereum Mainnet for deposit'}
-                </span>
-              </div>
-
-              <Dropdown
-                body={
-                  <>
-                    {DEPOSIT_TOKENS_META_DATA.map((token, idx) => {
-                      if (token.symbol === 'wmatic') {
-                        return null
-                      }
-                      return (
-                        <DropdownTextItem
-                          key={idx}
-                          style={{ width: '100%' }}
-                          onClick={() => this.setState({ currentToken: token })}
-                          text={TokenSymbolFormat(token.symbol)}
-                          value={
-                            isDeposit
-                              ? ethBalance[token.symbol]
-                                ? ethBalance[token.symbol].toFixed(token.displayDecimals)
-                                : '0.00'
-                              : maticBalance[token.symbol]
-                              ? maticBalance[token.symbol].toFixed(token.displayDecimals)
-                              : '0.00'
-                          }
-                        />
-                      )
-                    })}
-                  </>
-                }
-                header={<>&#9660; {TokenSymbolFormat(currentToken.symbol)}</>}
-                horizontalPosition={DropdownPositions.Left}
-                shouldCloseDropdownOnClickOutside={true}
-              />
-
-              <FieldContainer>
-                <BigInputNumberStyled
-                  decimals={currentToken.decimals}
-                  min={new BigNumber(0)}
-                  onChange={this.updateAmount}
-                  value={amount}
-                  placeholder={'0.00'}
-                />
-                <TokenContainer>
-                  <TokenText>
-                    Max.{' '}
-                    {isDeposit
-                      ? ethBalance[currentToken.symbol]
-                        ? ethBalance[currentToken.symbol].toFixed(currentToken.displayDecimals)
-                        : '0.00'
-                      : maticBalance[currentToken.symbol]
-                      ? maticBalance[currentToken.symbol].toFixed(currentToken.displayDecimals)
-                      : '0.00'}
-                  </TokenText>
-                </TokenContainer>
-              </FieldContainer>
-
-              <LabelContainer>
-                <MainLabel>Details</MainLabel>
-              </LabelContainer>
-              <Row>
-                <FeeLabel>Amount</FeeLabel>
-                <Value>
-                  {tokenAmountInUnits(amount, currentToken.decimals)} {TokenSymbolFormat(currentToken.symbol)}
-                </Value>
-              </Row>
-
-              <DepositButton
-                disabled={amount.isZero() || (isDeposit && chainId !== 1) || !isDeposit}
-                // variant={isDeposit ? ButtonVariant.Buy : ButtonVariant.Sell}
-                style={{ backgroundColor: '#ACCA27', textTransform: 'capitalize' }}
-                onClick={this.submit}
-              >
-                {isDeposit ? 'Deposit' : 'Withdraw'}
-              </DepositButton>
-            </Content>
-          </ModalContent>
-        </Modal>
-      </>
-    )
+  const submit = async () => {
+    // try {
+    //   // let networkCheck = await checkNetwork()
+    //   // if (!networkCheck) {
+    //   //   return
+    //   // }
+    //   let amount = state.amount
+    //   if (amount.isEqualTo(new BigNumber(0))) {
+    //     return
+    //   }
+    //   // set fromChain and toChain IDs
+    //   const fromChainId = 137
+    //   const toChainId = 1
+    //   // console.log('Initiaiting Transfer')
+    //   const tokenDecimals = await instaExit.getERC20TokenDecimals(selectedToken.address)
+    //   amount = amount.multipliedBy(new BigNumber(10).pow(tokenDecimals))
+    //   console.log('Total amount to  be transfered: ', amount.toString())
+    //   const transferStatus = await instaExit.preDepositStatus({
+    //     tokenAddress: selectedToken.address,
+    //     amount: amount.toString(),
+    //     fromChainId,
+    //     toChainId
+    //   })
+    //   if (transferStatus) {
+    //     if (transferStatus.code === RESPONSE_CODES.OK) {
+    //       console.log('All good. Proceed with deposit')
+    //       console.log(transferStatus)
+    //       try {
+    //         const depositTx = await deposit({
+    //           sender: await signer.getAddress(),
+    //           receiver: await signer.getAddress(),
+    //           tokenAddress: selectedToken.address,
+    //           depositContractAddress: transferStatus.depositContract,
+    //           amount: amount.toString(),
+    //           fromChainId: fromChainId,
+    //           toChainId: toChainId
+    //         })
+    //         await depositTx.wait(1)
+    //         console.log(`Deposit Confirmed. Waiting for transaction on ${selectedToChain.name}`, 'success')
+    //       } catch (error) {
+    //         console.log(error)
+    //         if (error && error.code == RESPONSE_CODES.ALLOWANCE_NOT_GIVEN) {
+    //           const approveTx = await instaExit.approveERC20(
+    //             selectedToken.address,
+    //             transferStatus.depositContract,
+    //             amount.toString()
+    //           )
+    //           console.log(`Waiting for approval confirmation`)
+    //           await approveTx.wait(2)
+    //           console.log('Approval transaction confirmed')
+    //           console.log('Initiating deposit transaction')
+    //           let depositTx = await deposit({
+    //             sender: await signer.getAddress(),
+    //             receiver: await signer.getAddress(),
+    //             tokenAddress: selectedToken.address,
+    //             depositContractAddress: transferStatus.depositContract,
+    //             amount: amount.toString(),
+    //             fromChainId: fromChainId,
+    //             toChainId: toChainId
+    //           })
+    //           console.log(`Waiting for deposit confirmation on ${selectedFromChain.name}`)
+    //           console.log(depositTx)
+    //           await depositTx.wait(1)
+    //           console.log(`Deposit Confirmed. Waiting for transaction on ${selectedToChain.name}`, 'success')
+    //         }
+    //       }
+    //     } else if (transferStatus.code === RESPONSE_CODES.UNSUPPORTED_NETWORK) {
+    //       console.log('Target chain id is not supported yet')
+    //     } else if (transferStatus.code === RESPONSE_CODES.NO_LIQUIDITY) {
+    //       console.log(`No liquidity available for ${selectedTokenAmount} tokens`)
+    //     } else if (transferStatus.code === RESPONSE_CODES.UNSUPPORTED_TOKEN) {
+    //       console.log('Requested token is not supported yet')
+    //     }
+    //   }
+    // } catch (error) {
+    //   if (error && error.message) {
+    //     console.log(error.message)
+    //   } else {
+    //     console.log(`Make sure your wallet is on ${selectedFromChain.name} network`)
+    //   }
+    // }
   }
+
+  return (
+    <>
+      <DepositTabButton onClick={handleOpenModal}>Deposit</DepositTabButton>
+      <Modal isOpen={isOpen} style={modalTheme} onRequestClose={handleCloseModel}>
+        <ModalContent>
+          <div style={{ display: 'flex', width: '100%' }}>
+            <DepositContent onClick={() => setState({ ...state, isDeposit: true })} active={isDeposit}>
+              Deposit
+            </DepositContent>
+            <DepositContent onClick={onClickWithdraw} active={!isDeposit}>
+              Withdraw
+            </DepositContent>
+          </div>
+          <Content>
+            <div>
+              <span style={{ fontWeight: 'bold', fontSize: 18 }}>Matic Bridge</span>
+              <span style={{ fontSize: 14, marginLeft: 4, color: '#aaa' }}>
+                {isDeposit ? 'Deposit to Matic Mainnet' : 'Withdraw to Ethereum Mainnet'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', marginBottom: 26, marginTop: 10 }}>
+              <DotDiv
+                style={{
+                  backgroundColor:
+                    (isDeposit && chainId === 1) || (!isDeposit && chainId === 137) ? '#ACCA27' : '#E81C34'
+                }}
+              />
+              <span style={{ fontSize: 14 }}>
+                {chainId === 1
+                  ? isDeposit
+                    ? 'You are on Ethereum Mainnet'
+                    : 'Switch to Matic Mainnet for withdrawal'
+                  : !isDeposit
+                  ? 'You are on Matic Mainnet'
+                  : 'Switch to Ethereum Mainnet for deposit'}
+              </span>
+            </div>
+
+            <Dropdown
+              body={
+                <>
+                  {DEPOSIT_TOKENS_META_DATA.map((token, idx) => {
+                    if (token.symbol === 'wmatic') {
+                      return null
+                    }
+                    return (
+                      <DropdownTextItem
+                        key={idx}
+                        style={{ width: '100%' }}
+                        onClick={() => setState({ ...state, currentToken: token })}
+                        text={TokenSymbolFormat(token.symbol)}
+                        value={
+                          isDeposit
+                            ? ethBalance[token.symbol]
+                              ? ethBalance[token.symbol].toFixed(token.displayDecimals)
+                              : '0.00'
+                            : maticBalance[token.symbol]
+                            ? maticBalance[token.symbol].toFixed(token.displayDecimals)
+                            : '0.00'
+                        }
+                      />
+                    )
+                  })}
+                </>
+              }
+              header={<>&#9660; {TokenSymbolFormat(currentToken.symbol)}</>}
+              horizontalPosition={DropdownPositions.Left}
+              shouldCloseDropdownOnClickOutside={true}
+            />
+
+            <FieldContainer>
+              <BigInputNumberStyled
+                decimals={currentToken.decimals}
+                min={new BigNumber(0)}
+                onChange={updateAmount}
+                value={amount}
+                placeholder={'0.00'}
+              />
+              <TokenContainer>
+                <TokenText>
+                  Max.{' '}
+                  {isDeposit
+                    ? ethBalance[currentToken.symbol]
+                      ? ethBalance[currentToken.symbol].toFixed(currentToken.displayDecimals)
+                      : '0.00'
+                    : maticBalance[currentToken.symbol]
+                    ? maticBalance[currentToken.symbol].toFixed(currentToken.displayDecimals)
+                    : '0.00'}
+                </TokenText>
+              </TokenContainer>
+            </FieldContainer>
+
+            <LabelContainer>
+              <MainLabel>Details</MainLabel>
+            </LabelContainer>
+            <Row>
+              <FeeLabel>Amount</FeeLabel>
+              <Value>
+                {tokenAmountInUnits(amount, currentToken.decimals)} {TokenSymbolFormat(currentToken.symbol)}
+              </Value>
+            </Row>
+
+            <DepositButton
+              disabled={amount.isZero() || (isDeposit && chainId !== 1) || !isDeposit}
+              // variant={isDeposit ? ButtonVariant.Buy : ButtonVariant.Sell}
+              style={{ backgroundColor: '#ACCA27', textTransform: 'capitalize' }}
+              onClick={submit}
+            >
+              {isDeposit ? 'Deposit' : 'Withdraw'}
+            </DepositButton>
+          </Content>
+        </ModalContent>
+      </Modal>
+    </>
+  )
 }
 
 export { MaticBridge }
