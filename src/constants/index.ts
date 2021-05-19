@@ -263,3 +263,7 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x901bb9583b24D97e995513C6778dc6888AB6870e',
   '0xA7e5d5A720f06526557c513402f2e6B5fA20b008'
 ]
+
+// providers
+export const MATIC_PROVIDER = 'https://rpc-mainnet.matic.network'
+export const INFURA_PROVIDER = 'https://mainnet.infura.io/v3/21cae5088ccc40b199bc7352155d7c92'

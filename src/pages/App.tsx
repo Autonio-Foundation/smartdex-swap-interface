@@ -79,20 +79,20 @@ function TopLevelModals() {
 
 function App(props: any) {
   useEffect(() => {
-    window.onmessage = function (e: any) {
+    window.onmessage = function(e: any) {
       if (e.data === 'redirect to swap') {
-        props.history.push('/swap');
+        props.history.push('/swap')
       }
 
       if (e.data === 'redirect to pool') {
-        props.history.push('/pool');
+        props.history.push('/pool')
       }
 
       if (e.data === 'redirect to farm') {
-        props.history.push('/farm');
+        props.history.push('/farm')
       }
-    };
-  }, [props.history]);
+    }
+  }, [props.history])
 
   return (
     <Suspense fallback={null}>
@@ -144,4 +144,4 @@ function App(props: any) {
   )
 }
 
-export default withRouter(App);
+export default withRouter(App)
