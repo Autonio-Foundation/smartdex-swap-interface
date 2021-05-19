@@ -202,21 +202,23 @@ class MaticBridge extends React.Component<Props, State> {
 
   public componentDidMount = async () => {
     await this.detectChainId()
-    await this.updateBalances()
   }
 
   public componentDidUpdate = async () => {
     await this.detectChainId()
-    await this.updateBalances()
   }
 
   public detectChainId = async () => {
     if (!window || !window.ethereum) return
 
     try {
-      const chainId = parseInt(await (window as any).ethereum.request({ method: 'eth_chainId' }))
-      console.log(chainId)
-      this.setState({ chainId })
+      const { chainId } = this.state
+      const _chainId = parseInt(await (window as any).ethereum.request({ method: 'eth_chainId' }))
+      console.log(_chainId)
+      if (chainId !== _chainId) {
+        this.setState({ chainId: _chainId })
+        await this.updateBalances()
+      }
     } catch (error) {
       console.log(error)
     }
