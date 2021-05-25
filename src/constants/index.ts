@@ -18,6 +18,7 @@ export const FXS = new Token(ChainId.MATIC, '0x3e121107F6F22DA4911079845a470757a
 export const NIOX = new Token(ChainId.MATIC, '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96', 4, 'NIOX', 'Autonio')
 export const USDC = new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin (PoS)')
 export const DEV = new Token(ChainId.MATIC, '0xdd667bf15e34b126eaa53198c207e5390374bc1a', 4, 'DEV', 'Developer')
+export const TEST = new Token(ChainId.MATIC, '0x9e254a4FB0cC003c8679e48cB1777ED9bf03C5c4', 18, 'TEST', 'TEST')
 export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'WETH', 'Wrapped Ether')
 export const WMATIC = new Token(
   ChainId.MATIC,

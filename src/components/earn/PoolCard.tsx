@@ -15,6 +15,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useApy } from 'data/Apy'
+// import { padding } from 'polished'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const StatContainer = styled.div`
@@ -30,7 +31,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -38,7 +39,25 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   /* background: ${({ theme, bgColor, showBackground }) =>
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
-  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -50%, #061324 100%);
+  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+
+  ${({ showBackground }) =>
+    showBackground &&
+    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);`}
+`
+
+const Wrapper1 = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+  border-radius: 12px;
+  
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -150%, #061324 100%);
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
   ${({ showBackground }) =>
@@ -111,55 +130,60 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
   const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC)
 
   return show ? (
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-      <CardBGImage desaturate />
-      <CardNoise />
+    <Wrapper1 showBackground={isStaking} bgColor={backgroundColor}>
+      <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '8px', padding: '10px', color: '#acca27' }}>
+        Dual Tokens Farming Pool <TYPE.white fontWeight={400} fontSize={18} style={{ display: 'inline-block', color: '#acca27' }}>  - Earn two tokens instead of one</TYPE.white>
+      </TYPE.white>
 
-      <TopSection>
-        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-        {stakingInfo.name && stakingInfo.name !== '' ? (
-          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {stakingInfo.name}
-          </TYPE.white>
-        ) : (
-          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
-            {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
-          </TYPE.white>
-        )}
+      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+        <CardBGImage desaturate />
+        <CardNoise />
 
-        {isOld ? (
-          <StyledInternalLink
-            to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
-            style={{ width: '100%' }}
-          >
-            <ButtonPrimary padding="8px" borderRadius="8px">
-              {isStaking ? 'Manage' : 'Deposit'}
-            </ButtonPrimary>
-          </StyledInternalLink>
-        ) : (
-          <StyledInternalLink
-            to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
-            style={{ width: '100%' }}
-          >
-            <ButtonPrimary padding="8px" borderRadius="8px">
-              {isStaking ? 'Manage' : 'Deposit'}
-            </ButtonPrimary>
-          </StyledInternalLink>
-        )}
-      </TopSection>
+        <TopSection>
+          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+          {stakingInfo.name && stakingInfo.name !== '' ? (
+            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+              {stakingInfo.name}
+            </TYPE.white>
+          ) : (
+            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+              {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
+              {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
+            </TYPE.white>
+          )}
 
-      <StatContainer>
-        <RowBetween>
-          <TYPE.white> Total deposited</TYPE.white>
-          <TYPE.white>
-            {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-          </TYPE.white>
-        </RowBetween>
-        <RowBetween>
-          {/* <TYPE.white> Pool rate </TYPE.white>
+          {isOld ? (
+            <StyledInternalLink
+              to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+              style={{ width: '100%' }}
+            >
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          ) : (
+            <StyledInternalLink
+              to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+              style={{ width: '100%' }}
+            >
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          )}
+        </TopSection>
+
+        <StatContainer>
+          <RowBetween>
+            <TYPE.white> Total deposited</TYPE.white>
+            <TYPE.white>
+              {valueOfTotalStakedAmountInUSDC
+                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+            </TYPE.white>
+          </RowBetween>
+          <RowBetween>
+            {/* <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
@@ -169,44 +193,51 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
                 : '0 UNI / week'
               : '-'}
           </TYPE.white> */}
-          <TYPE.white> Pool rate </TYPE.white>
-          <TYPE.white>{`${stakingInfo.totalRewardRate
-            ?.multiply(`${60 * 60 * 24}`)
-            ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.white> APY </TYPE.white>
-          <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
-        </RowBetween>
-      </StatContainer>
+            <TYPE.white> Pool rate </TYPE.white>
+            <TYPE.white>{`${stakingInfo.totalRewardRate
+              ?.multiply(`${60 * 60 * 24}`)
+              ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.token0.symbol} / day + `}
+              {`${stakingInfo.totalRewardRate1
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.token1.symbol} / day`}</TYPE.white>
+          </RowBetween>
+          <RowBetween>
+            <TYPE.white> APY </TYPE.white>
+            <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
+          </RowBetween>
+        </StatContainer>
 
-      {isStaking && (
-        <>
-          <Break />
-          <BottomSection showBackground={true}>
-            <TYPE.black color={'white'} fontWeight={500}>
-              <span>Your rate</span>
-            </TYPE.black>
+        {isStaking && (
+          <>
+            <Break />
+            <BottomSection showBackground={true}>
+              <TYPE.black color={'white'} fontWeight={500}>
+                <span>Your rate</span>
+              </TYPE.black>
 
-            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                ⚡
+              <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                  ⚡
               </span>
-              {/* {stakingInfo
+                {/* {stakingInfo
                 ? stakingInfo.active
                   ? `${stakingInfo.rewardRate
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
                   : '0 UNI / week'
                 : '-'} */}
-              {`${stakingInfo.rewardRate
-                ?.multiply(`${60 * 60 * 24}`)
-                ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
-            </TYPE.black>
-          </BottomSection>
-        </>
-      )}
-    </Wrapper>
+                {`${stakingInfo.rewardRate
+                  ?.multiply(`${60 * 60 * 24}`)
+                  ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo.token0.symbol} / day + `}
+                {`${stakingInfo.rewardRate1
+                  ?.multiply(`${60 * 60 * 24}`)
+                  ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo.token1.symbol} / day`}
+              </TYPE.black>
+            </BottomSection>
+          </>
+        )}
+      </Wrapper>
+    </Wrapper1>
   ) : (
     <span style={{ width: 0, display: 'none' }}></span>
   )

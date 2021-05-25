@@ -3,7 +3,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { OLD_STAKING_REWARDS_INFO, useOldStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
-import PoolCard from '../../components/earn/PoolCard'
+import PoolCardOld from '../../components/earn/PoolCardOld'
 import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { Countdown } from './Countdown'
@@ -299,7 +299,7 @@ export default function OldEarn() {
                     <CustomDataRow>
                       {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
                     </CustomDataRow>
-                    <PoolCard stakingInfo={stakingInfo} isOld={true} />
+                    <PoolCardOld stakingInfo={stakingInfo} isOld={true} />
                   </div>
                 ))
             )}

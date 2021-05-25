@@ -46,7 +46,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claim accumulated NIOX rewards`
+            summary: `Claim accumulated ` + stakingInfo.token0.symbol + ` & ` + stakingInfo.token1.symbol + ` rewards`
           })
           setHash(response.hash)
         })
@@ -76,9 +76,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmount?.toSignificant(6)}
+                {stakingInfo?.earnedAmount?.toSignificant(6) + ' & ' + stakingInfo?.earnedAmount1?.toSignificant(6)}
               </TYPE.body>
-              <TYPE.body>Unclaimed NIOX</TYPE.body>
+              <TYPE.body>Unclaimed {stakingInfo.token0.symbol + ' & ' + stakingInfo.token1.symbol}</TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
@@ -92,7 +92,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} NIOX</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6) + ' ' + stakingInfo.token0.symbol + ' & ' + stakingInfo?.earnedAmount1?.toSignificant(6) + ' ' + stakingInfo.token1.symbol} </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -100,7 +100,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Claimed NIOX!</TYPE.body>
+            <TYPE.body fontSize={20}>Claimed {stakingInfo.token0.symbol + ' & ' + stakingInfo.token1.symbol}!</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}
