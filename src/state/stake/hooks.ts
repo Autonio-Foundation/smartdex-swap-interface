@@ -243,25 +243,25 @@ export const STAKING_REWARDS_INFO: {
     //testing pool for dual token
     {
       tokens: [NIOX, USDC],
-      stakingRewardAddress: '0x378aafb8a0b0a5caefcea13f9ea0a3e51288aba7', // 1000 +600 5hr
+      stakingRewardAddress: '0x651048dcf0ea38fde758a358d451823ebade4134', // 1000 +600 5hr
       ended: false,
       token0: DEV, //reward token
       token1: TEST, //reward1 token
       name: '',
       lp: '',
       baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x0Bb2f2cf2e405744427672f9C9f256b3E41e5e82 mainnet matic
+      //STAKINGREWARDSFACTORY- 0xBEbdF375a6a01bB7eb6aa6B201c64D68BEEAa9be mainnet matic
     },
     {
       tokens: [DEV, TEST],
-      stakingRewardAddress: '0xb42262a67306de44aa039f6b41a4145f1d8415b8', // 500 +1000
+      stakingRewardAddress: '0x149bd490f362b4adbf1448c583828251cf896d6d', // 500 +1000
       ended: false,
       token0: DEV,
       token1: TEST,
       name: '',
       lp: '',
       baseToken: TEST
-      //STAKINGREWARDSFACTORY- 0x0Bb2f2cf2e405744427672f9C9f256b3E41e5e82 mainnet matic
+      //STAKINGREWARDSFACTORY- 0xBEbdF375a6a01bB7eb6aa6B201c64D68BEEAa9be mainnet matic
     },
 
   ],

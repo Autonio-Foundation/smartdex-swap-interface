@@ -218,7 +218,7 @@ export default function Manage({
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Pool Rate (Token 1)</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>Pool Rate </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo?.totalRewardRate
                 ?.multiply((60 * 60 * 24).toString())
@@ -229,7 +229,7 @@ export default function Manage({
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Pool Rate (Token 2)</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>Pool Rate </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo?.totalRewardRate1
                 ?.multiply((60 * 60 * 24).toString())
@@ -389,7 +389,7 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          When you withdraw, the contract will automatically claim {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1} on your behalf!
+          When you withdraw, the contract will automatically claim {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1.symbol} on your behalf!
         </TYPE.main>
 
         {!showAddLiquidityButton && (
