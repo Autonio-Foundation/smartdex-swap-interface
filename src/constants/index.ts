@@ -28,6 +28,7 @@ export const WMATIC = new Token(
   'Wrapped Matic'
 )
 export const ALOHA = new Token(ChainId.MATIC, '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b', 18, 'ALOHA', 'ALOHA')
+export const DIGI = new Token(ChainId.MATIC, '0x4d8181f051E617642e233Be09Cea71Cc3308ffD4', 18, 'DIGI', 'DigiToken')
 export const GLQ = new Token(ChainId.MATIC, '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0', 18, 'GLQ', 'GraphLinq')
 export const MaticWETH = new Token(
   ChainId.MATIC,

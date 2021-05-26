@@ -9,6 +9,10 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
+// import Toggle from "../../components/Toggle"
+import OldEarnSingle from '../OldEarnSingle'
+import Switch from "react-switch";
+// import { Moon, Sun } from 'react-feather'
 // import { JSBI } from '@uniswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -23,6 +27,34 @@ import { ChainId, CurrencyAmount, Fraction, JSBI, TokenAmount, WETH } from '@uni
 import { useApy } from 'data/Apy'
 // import { useCurrency } from 'hooks/Tokens'
 
+export const StyledMenuButton = styled.button`
+  position: relative;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+  background-color: ${({ theme }) => theme.bg3};
+  margin-left: 8px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.bg4};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+  > * {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
+
 const nioxethdate = new Date(1622050200000)
 
 const PageWrapper = styled(AutoColumn)`
@@ -33,6 +65,12 @@ const PageWrapper = styled(AutoColumn)`
 const TopSection = styled(AutoColumn)`
   max-width: 720px;
   width: 100%;
+`
+
+const Combined = styled.div`
+display: flex;
+justify-content: flex-end
+align-items: center
 `
 
 // const PoolSection = styled.div`
@@ -64,7 +102,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -142,6 +180,8 @@ export default function Earn() {
 
   const isStakingLP = false
   const isInLiveMode = true
+
+  const [singleMode, toggleSingleMode] = useState(false)
 
   /**
    * only show staking cards with balance
@@ -305,18 +345,21 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          {/* {isInLiveMode && <Countdown />} */}
+          <Combined>
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>Dual Token</TYPE.white>
+
+            <Switch onChange={() => toggleSingleMode(!singleMode)} height={22} width={40} offHandleColor='#acca27' uncheckedIcon={false} checkedIcon={false} onColor="#acca27" checked={singleMode} />
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>Single Token</TYPE.white>
+          </Combined>
         </DataRow>
-        {/* // working section staking */}
-        {/* //static eth-niox pool card */}
         <CustomDataRow>
           <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={42} />
         </CustomDataRow>
         {isInLiveMode && staticLpPool()}
 
         {/* //static eth-niox pool card end  */}
-
-        {isInLiveMode && (
+        {singleMode ? <OldEarnSingle></OldEarnSingle> : ''}
+        {!singleMode && isInLiveMode && (
           <>
             {stakingRewardsExist && stakingInfos?.length === 0 ? (
               <Loader style={{ margin: 'auto' }} />
@@ -331,7 +374,7 @@ export default function Earn() {
                     {console.log('stakingInfo.periodFinis', stakingInfo.periodFinish)}
                     {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
                   </CustomDataRow>
-                  <PoolCard stakingInfo={stakingInfo} isOld={false} />
+                  <PoolCard stakingInfo={stakingInfo} isOld={false} isSingle={false} />
                 </div>
               ))
             )}

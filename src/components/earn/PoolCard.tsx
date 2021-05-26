@@ -31,7 +31,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any; isSingle: Boolean }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -39,7 +39,7 @@ const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   /* background: ${({ theme, bgColor, showBackground }) =>
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
-  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -50%, #061324 100%);
+  background: ${({ isSingle }) => isSingle ? 'radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);' : 'radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -50%, #061324 100%)'}; 
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
   ${({ showBackground }) =>
@@ -89,7 +89,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingInfo; isOld: Boolean }) {
+export default function PoolCard({ stakingInfo, isOld, isSingle }: { stakingInfo: StakingInfo; isOld: Boolean; isSingle: Boolean }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
@@ -135,7 +135,7 @@ export default function PoolCard({ stakingInfo, isOld }: { stakingInfo: StakingI
         Dual Tokens Farming Pool <TYPE.white fontWeight={400} fontSize={18} style={{ display: 'inline-block', color: '#acca27' }}>  - Earn two tokens instead of one</TYPE.white>
       </TYPE.white>
 
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+      <Wrapper showBackground={isStaking} bgColor={backgroundColor} isSingle={isSingle}>
         <CardBGImage desaturate />
         <CardNoise />
 

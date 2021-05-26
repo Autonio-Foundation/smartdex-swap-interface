@@ -133,6 +133,7 @@ function App(props: any) {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/farm/:currencyIdA/:currencyIdB/:rewardsAddress" component={Manage} />
               <Route exact strict path="/archive/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
+              <Route exact strict path="/single/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>

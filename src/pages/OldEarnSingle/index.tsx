@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { OLD_STAKING_REWARDS_INFO, useOldStakingInfo } from '../../state/stake/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { SINGLE_STAKING_REWARDS_INFO, useSingleStakingInfo } from '../../state/stake/hooks'
+import { TYPE, /*ExternalLink */ } from '../../theme'
 import PoolCardOld from '../../components/earn/PoolCardOld'
 import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+// import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
@@ -15,7 +15,7 @@ import { useActiveWeb3React } from '../../hooks'
 
 // import DoubleCurrencyLogo from '../../components/DoubleLogo'
 // import { StyledInternalLink } from '../../theme'
-import { ButtonPrimary } from '../../components/Button'
+// import { ButtonPrimary } from '../../components/Button'
 // import { Break } from '../../components/earn/styled'
 // import { NIOX, ETHER } from '../../constants'
 
@@ -24,10 +24,10 @@ const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `
 
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-`
+// const TopSection = styled(AutoColumn)`
+//   max-width: 720px;
+//   width: 100%;
+// `
 
 // const PoolSection = styled.div`
 //   display: grid;
@@ -145,7 +145,7 @@ const PageButtons = styled.div`
   margin-bottom: 2em;
 `
 
-export default function OldEarn() {
+export default function OldEarnSingle() {
   // pagination
   const [page, setPage] = useState(1)
   const ITEMS_PER_PAGE = 10
@@ -154,7 +154,7 @@ export default function OldEarn() {
 
   // console.log("chainid", chainId);
   // staking info for connected account
-  const stakingInfos = useOldStakingInfo()
+  const stakingInfos = useSingleStakingInfo()
 
   // const isStakingLP = false
   const isInLiveMode = true
@@ -164,10 +164,10 @@ export default function OldEarn() {
    * @todo only account for this if rewards are inactive
    */
   // const stakingInfosWithBalance = stakingInfos?.filter(s => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO))
-  const maxPage = Math.ceil(((chainId ? OLD_STAKING_REWARDS_INFO[chainId]?.length : 0) ?? 0) / 10)
+  const maxPage = Math.ceil(((chainId ? SINGLE_STAKING_REWARDS_INFO[chainId]?.length : 0) ?? 0) / 10)
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(
-    typeof chainId === 'number' && (OLD_STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0
+    typeof chainId === 'number' && (SINGLE_STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0
   )
   // console.log("akash")
   // console.log("stakingInfos", stakingInfos)
@@ -239,46 +239,9 @@ export default function OldEarn() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <DataCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Smartdex liquidity mining</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
-              </RowBetween>{' '}
-              <RowBetween>
-                <ExternalLink id={`old-pools-link`} href={'http://swap.smartdex.app/#/farm'}>
-                  <ButtonPrimary padding="8px" borderRadius="8px">
-                    New Pools
-                  </ButtonPrimary>
-                </ExternalLink>
-              </RowBetween>
-              <ExternalLink style={{ color: 'white', textDecoration: 'underline' }} href="" target="_blank">
-                {/* <TYPE.white fontSize={14}>Coming Soon</TYPE.white> */}
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </DataCard>
-      </TopSection>
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Archived pools</TYPE.mediumHeader>
-          {/* {isInLiveMode && <Countdown />} */}
-        </DataRow>
-        {/* // working section staking */}
-        {/* //static eth-niox pool card */}
 
-        {/* {isInLiveMode && staticLpPool()} */}
-
-        {/* //static eth-niox pool card end  */}
 
         {isInLiveMode && (
           <>
@@ -299,7 +262,7 @@ export default function OldEarn() {
                     <CustomDataRow>
                       {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
                     </CustomDataRow>
-                    <PoolCardOld stakingInfo={stakingInfo} isOld={true} isSingle={false} />
+                    <PoolCardOld stakingInfo={stakingInfo} isOld={true} isSingle={true} />
                   </div>
                 ))
             )}
