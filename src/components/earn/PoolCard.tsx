@@ -35,8 +35,9 @@ const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
   ${({ showBackground }) =>
@@ -71,7 +72,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
-
+  console.log("staking info", stakingInfo)
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
 
@@ -115,10 +116,10 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <TopSection>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
           <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {currency0.symbol}-{currency1.symbol}
+            {stakingInfo.name === 'NIOX-ETH OLD' ? stakingInfo.name : currency0.symbol + '-' + currency1.symbol}
           </TYPE.white>
 
-          <StyledInternalLink to={`/niox/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
+          <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
             <ButtonPrimary padding="8px" borderRadius="8px">
               {isStaking ? 'Manage' : 'Deposit'}
             </ButtonPrimary>

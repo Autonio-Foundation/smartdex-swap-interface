@@ -59,7 +59,8 @@ export function useIsDarkMode(): boolean {
 
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const darkMode = useIsDarkMode()
+  // const darkMode = useIsDarkMode()
+  const darkMode = false;
 
   const toggleSetDarkMode = useCallback(() => {
     //akash theme update
@@ -200,7 +201,7 @@ export function useURLWarningToggle(): () => void {
  * @param tokenB the other token
  */
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 4, 'NIOXV2', 'SmartdexPair')
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 4, 'UNI-V2', 'Uniswap V2')
 }
 
 /**

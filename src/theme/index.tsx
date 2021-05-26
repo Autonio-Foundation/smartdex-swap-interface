@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -6,7 +5,7 @@ import styled, {
   css,
   DefaultTheme
 } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
+// import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
@@ -69,9 +68,13 @@ export function colors(darkMode: boolean): Colors {
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     //autonio ui change 27-02-2021
     primary5: darkMode ? '#ACCA27' : '#ACCA27',
+    //autonio ui change 31-03-2021
+    primary6: darkMode ? '#7C9632' : '#7C9632',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#FFFFFF',
+    primaryText1: darkMode ? '#FFFFFF' : '#FFFFFF',
+    //autonio ui change 25-03-2021
+    primaryText2: darkMode ? 'rgba(172,202,39,.65)' : 'rgba(172,202,39,.65)',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -123,7 +126,8 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
+  // const darkMode = useIsDarkMode()
+  const darkMode = false;
 
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
@@ -225,17 +229,13 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background: radial-gradient(94.86% 94.86% at 50% -6.3%, rgb(47, 54, 65) 0%, rgb(21, 26, 34) 100%);
 }
 
 body {
   min-height: 100vh;
   background-position: 0 -30vh;
   background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background: radial-gradient(94.86% 94.86% at 50% -6.3%, rgb(47, 54, 65) 0%, rgb(21, 26, 34) 100%);
 }
 `
