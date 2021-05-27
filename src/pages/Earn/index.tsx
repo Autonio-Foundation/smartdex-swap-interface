@@ -55,7 +55,7 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const nioxethdate = new Date(1622050200000)
+const nioxethdate = new Date(1625702400000)
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -163,9 +163,9 @@ const ComingSoonWrapper = styled.div`
 //   }
 // `
 
-const CustomDataRow = styled(DataRow)`
+const CustomDataRow = styled(DataRow)<{ main?: boolean }>`
   flex-direction: row-reverse;
-  margin-bottom: 24px;
+  margin-bottom: ${({ main }) => (main ? 0 : '24px')};
 
   @media (max-width: 720px) {
     flex-direction: initial;
@@ -226,11 +226,11 @@ export default function Earn() {
 
       const eth_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
 
-      // res = await fetch(
-      //   'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&address=0x31f985e479576b93B1307d423f369766726bE349&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
-      // ).then(res => res.json())
+      res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&address=0x31f985e479576b93B1307d423f369766726bE349&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
 
-      // const lp_amount = new TokenAmount(LP_NIOX_ETH, res.result)
+      const lp_amount = new TokenAmount(LP_NIOX_ETH, res.result)
 
       res = await fetch(
         'https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xd1Bc66660bA7edD64F0cC442ca5F32e5d199dfc6&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
@@ -243,22 +243,17 @@ export default function Earn() {
         eth_amount.multiply(eth_price).quotient
       )
 
-      console.log(lp_total_amount)
-      // console.log('I am price!!!!!!!!', lp_total_amount.divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
-
-      // const lp_price = JSBI.divide(
-      //   totalLiquidityUSD,
-      //   JSBI.divide(lp_total_amount.raw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
-      // )
-
-      // console.log(lp_price)
-
-      const temp = new TokenAmount(
-        USDC,
-        JSBI.multiply(totalLiquidityUSD, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(6)))
+      const lp_price = JSBI.divide(
+        JSBI.multiply(totalLiquidityUSD, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))),
+        lp_total_amount.raw
       )
 
-      setTotalEthNioxLiquidityInUSDC(temp)
+      const totalEthNioxLiquidity = new TokenAmount(
+        USDC,
+        JSBI.multiply(lp_amount.multiply(lp_price).quotient, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(6)))
+      )
+
+      setTotalEthNioxLiquidityInUSDC(totalEthNioxLiquidity)
     }
 
     fetchInfo()
@@ -292,10 +287,9 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            {/* {totalEthNioxLiquidityInUSDC ? '$' + totalEthNioxLiquidityInUSDC.toFixed(0, { groupSeparator: ',' }) : '-'} */}
+            {totalEthNioxLiquidityInUSDC ? '$' + totalEthNioxLiquidityInUSDC.toFixed(0, { groupSeparator: ',' }) : '-'}
             {/* ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
-            $0
           </TYPE.white>
         </RowBetween>
         <RowBetween>
@@ -309,8 +303,7 @@ export default function Earn() {
 
         <RowBetween>
           <TYPE.white> APY </TYPE.white>
-          {/* <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white> */}
-          <TYPE.white>0.00%</TYPE.white>
+          <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white>
         </RowBetween>
       </StatContainer>
 
@@ -393,7 +386,7 @@ export default function Earn() {
             </TYPE.white>
           </Combined>
         </DataRow>
-        <CustomDataRow>
+        <CustomDataRow main={true}>
           <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={42} />
         </CustomDataRow>
         {isInLiveMode && staticLpPool()}
