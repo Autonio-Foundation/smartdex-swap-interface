@@ -126,9 +126,18 @@ export default function PoolCard({ stakingInfo, isOld, isSingle }: { stakingInfo
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-
-  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC)
-
+  console.log('stakingInfo', stakingInfo.token1.name)
+  let id = 'autonio';
+  if (stakingInfo.token1.name === 'DigiToken') {
+    id = 'digible';
+  } else if (stakingInfo.token1.name === 'ALOHA') {
+    id = 'aloha';
+  } else {
+    id = 'autonio';
+  }
+  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC, 'autonio')
+  const apy1 = useApy(stakingInfo.totalRewardRate1?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC, id)
+  const finalapy = apy1 + apy;
   return show ? (
     <Wrapper1 showBackground={isStaking} bgColor={backgroundColor}>
       <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '8px', padding: '10px', color: '#acca27' }}>
@@ -203,7 +212,8 @@ export default function PoolCard({ stakingInfo, isOld, isSingle }: { stakingInfo
           </RowBetween>
           <RowBetween>
             <TYPE.white> APY </TYPE.white>
-            <TYPE.white>{`${apy?.toFixed(2)} %`}</TYPE.white>
+            <TYPE.white>{`${finalapy?.toFixed(2)} %`}</TYPE.white>
+
           </RowBetween>
         </StatContainer>
 

@@ -55,7 +55,7 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const nioxethdate = new Date(1625702400000)
+const nioxethdate = new Date(1625724000000)
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -259,7 +259,11 @@ export default function Earn() {
     fetchInfo()
   }, [])
 
-  const ethNioxPoolAPY = useApy(ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`), totalEthNioxLiquidityInUSDC)
+  const ethNioxPoolAPY = useApy(
+    ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`),
+    totalEthNioxLiquidityInUSDC,
+    'autonio'
+  )
 
   console.log(ethNioxPoolAPY)
 

@@ -110,7 +110,7 @@ export default function PoolCardOld({ stakingInfo, isOld, isSingle }: { stakingI
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC)
+  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC, 'autonio')
 
   return show ? (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>

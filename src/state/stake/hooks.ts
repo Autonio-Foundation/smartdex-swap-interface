@@ -37,36 +37,36 @@ export const OLD_STAKING_REWARDS_INFO: {
   [ChainId.MATIC]: [
     ///////////////////////new one expiring after 1 day
 
-    {
-      tokens: [NIOX, USDC],
-      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
-      ended: false,
+    // {
+    //   tokens: [NIOX, USDC],
+    //   stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
+    //   ended: false,
 
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [WMATIC, USDC],
-      stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
-      ended: false,
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    // },
+    // {
+    //   tokens: [WMATIC, USDC],
+    //   stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
+    //   ended: false,
 
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [MaticWETH, USDC],
-      stakingRewardAddress: '0x73eb490b3acd5e36a365bb6f934bd85977ad7068',
-      ended: false,
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    // },
+    // {
+    //   tokens: [MaticWETH, USDC],
+    //   stakingRewardAddress: '0x73eb490b3acd5e36a365bb6f934bd85977ad7068',
+    //   ended: false,
 
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    //   //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    // },
     {
       tokens: [GLQ, MaticWETH],
       stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
@@ -87,14 +87,14 @@ export const OLD_STAKING_REWARDS_INFO: {
       //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     },
 
-    {
-      tokens: [PBTC, USDC],
-      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
-      ended: false,
-      name: '',
-      lp: '',
-      baseToken: USDC
-    },
+    // {
+    //   tokens: [PBTC, USDC],
+    //   stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
+    //   ended: false,
+    //   name: '',
+    //   lp: '',
+    //   baseToken: USDC
+    // },
     ///////////////////////new one expiring after 1 day
 
     //TODO: MATIC mainnet
@@ -285,14 +285,6 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: USDC
-    },
-    {
-      tokens: [DIGI, NIOX],
-      stakingRewardAddress: '0xde660404d5b1313fc2daf4fc8a22d46347d4d838',
-      ended: false,
-      name: '',
-      lp: '',
-      baseToken: DIGI
     }
     // {
     //   tokens: [GLQ, MaticWETH],
