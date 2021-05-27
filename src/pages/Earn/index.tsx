@@ -11,7 +11,7 @@ import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
 // import Toggle from "../../components/Toggle"
 import OldEarnSingle from '../OldEarnSingle'
-import Switch from "react-switch";
+import Switch from 'react-switch'
 // import { Moon, Sun } from 'react-feather'
 // import { JSBI } from '@uniswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
@@ -21,7 +21,7 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { StyledInternalLink } from '../../theme'
 import { ButtonPrimary } from '../../components/Button'
 import { Break } from '../../components/earn/styled'
-import { NIOX, ETHER, USDC, MAINNET_NIOX } from '../../constants'
+import { NIOX, ETHER, MAINNET_NIOX, LP_NIOX_ETH, USDC } from '../../constants'
 import { ChainId, CurrencyAmount, Fraction, JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 // import useUSDCPrice from 'utils/useUSDCPrice'
 import { useApy } from 'data/Apy'
@@ -68,9 +68,9 @@ const TopSection = styled(AutoColumn)`
 `
 
 const Combined = styled.div`
-display: flex;
-justify-content: flex-end
-align-items: center
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `
 
 // const PoolSection = styled.div`
@@ -102,7 +102,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -224,23 +224,49 @@ export default function Earn() {
         res.json()
       )
 
-      const eth_price = new Fraction(JSBI.BigInt(~~(res[0].current_price * 1000000)), JSBI.BigInt(1000000))
+      const eth_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
 
-      const totalLiquidity = new TokenAmount(
-        USDC,
-        JSBI.multiply(
-          JSBI.add(niox_amount.multiply(niox_price).quotient, eth_amount.multiply(eth_price).quotient),
-          JSBI.BigInt(1000000)
-        )
+      // res = await fetch(
+      //   'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&address=0x31f985e479576b93B1307d423f369766726bE349&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      // ).then(res => res.json())
+
+      // const lp_amount = new TokenAmount(LP_NIOX_ETH, res.result)
+
+      res = await fetch(
+        'https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xd1Bc66660bA7edD64F0cC442ca5F32e5d199dfc6&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+
+      const lp_total_amount = new TokenAmount(LP_NIOX_ETH, res.result)
+
+      const totalLiquidityUSD = JSBI.add(
+        niox_amount.multiply(niox_price).quotient,
+        eth_amount.multiply(eth_price).quotient
       )
 
-      setTotalEthNioxLiquidityInUSDC(totalLiquidity)
+      console.log(lp_total_amount)
+      // console.log('I am price!!!!!!!!', lp_total_amount.divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
+
+      // const lp_price = JSBI.divide(
+      //   totalLiquidityUSD,
+      //   JSBI.divide(lp_total_amount.raw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
+      // )
+
+      // console.log(lp_price)
+
+      const temp = new TokenAmount(
+        USDC,
+        JSBI.multiply(totalLiquidityUSD, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(6)))
+      )
+
+      setTotalEthNioxLiquidityInUSDC(temp)
     }
 
     fetchInfo()
   }, [])
 
   const ethNioxPoolAPY = useApy(ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`), totalEthNioxLiquidityInUSDC)
+
+  console.log(ethNioxPoolAPY)
 
   const staticLpPool = () => (
     // <div>
@@ -266,9 +292,10 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            {totalEthNioxLiquidityInUSDC ? '$' + totalEthNioxLiquidityInUSDC.toFixed(0, { groupSeparator: ',' }) : '-'}
+            {/* {totalEthNioxLiquidityInUSDC ? '$' + totalEthNioxLiquidityInUSDC.toFixed(0, { groupSeparator: ',' }) : '-'} */}
             {/* ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`} */}
+            $0
           </TYPE.white>
         </RowBetween>
         <RowBetween>
@@ -282,7 +309,8 @@ export default function Earn() {
 
         <RowBetween>
           <TYPE.white> APY </TYPE.white>
-          <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white>
+          {/* <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white> */}
+          <TYPE.white>0.00%</TYPE.white>
         </RowBetween>
       </StatContainer>
 
@@ -346,10 +374,23 @@ export default function Earn() {
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           <Combined>
-            <TYPE.white fontSize={14} style={{ margin: '5px' }}>Dual Token</TYPE.white>
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>
+              Dual Token
+            </TYPE.white>
 
-            <Switch onChange={() => toggleSingleMode(!singleMode)} height={22} width={40} offHandleColor='#acca27' uncheckedIcon={false} checkedIcon={false} onColor="#acca27" checked={singleMode} />
-            <TYPE.white fontSize={14} style={{ margin: '5px' }}>Single Token</TYPE.white>
+            <Switch
+              onChange={() => toggleSingleMode(!singleMode)}
+              height={22}
+              width={40}
+              offHandleColor="#acca27"
+              uncheckedIcon={false}
+              checkedIcon={false}
+              onColor="#acca27"
+              checked={singleMode}
+            />
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>
+              Single Token
+            </TYPE.white>
           </Combined>
         </DataRow>
         <CustomDataRow>

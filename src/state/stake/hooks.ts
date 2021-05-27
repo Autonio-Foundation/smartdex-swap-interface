@@ -1,6 +1,18 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { UNI, NIOX, USDC, MaticWETH,/* XENO, ADDY,*/ WMATIC, ALOHA, GLQ, AGI, ETHER, PBTC,/* DEV, TEST,*/ DIGI } from '../../constants'
+import {
+  UNI,
+  NIOX,
+  USDC,
+  MaticWETH,
+  /* XENO, ADDY,*/ WMATIC,
+  ALOHA,
+  GLQ,
+  AGI,
+  ETHER,
+  PBTC,
+  /* DEV, TEST,*/ DIGI
+} from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards1'
 import { STAKING_REWARDS_INTERFACE_OLD } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -84,8 +96,6 @@ export const OLD_STAKING_REWARDS_INFO: {
       baseToken: USDC
     },
     ///////////////////////new one expiring after 1 day
-
-
 
     //TODO: MATIC mainnet
     ////////////////////////////////////////////////new one ////////////////////////////////////////////////////////////
@@ -217,7 +227,6 @@ export const OLD_STAKING_REWARDS_INFO: {
     //   tokens: [XENO, ADDY],
     //   stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
     //   ended: false,
-
     //   name: '',
     //   lp: '',
     //   baseToken: XENO
@@ -278,15 +287,23 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       baseToken: USDC
     },
     {
-      tokens: [GLQ, MaticWETH],
-      stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
+      tokens: [DIGI, NIOX],
+      stakingRewardAddress: '0xde660404d5b1313fc2daf4fc8a22d46347d4d838',
       ended: false,
-
       name: '',
       lp: '',
-      baseToken: MaticWETH
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
+      baseToken: DIGI
+    }
+    // {
+    //   tokens: [GLQ, MaticWETH],
+    //   stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
+    //   ended: false,
+
+    //   name: '',
+    //   lp: '',
+    //   baseToken: MaticWETH
+    //   //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    // },
     // {
     //   tokens: [ALOHA, NIOX],
     //   stakingRewardAddress: '0x317875cbe5f64f14d7e9343703cac9c1501ddb05',
@@ -297,12 +314,9 @@ export const SINGLE_STAKING_REWARDS_INFO: {
     //   //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     // },
 
-
     ///////////////////////new one expiring after 1 day
-
   ],
-  [ChainId.ROPSTEN]: [
-  ]
+  [ChainId.ROPSTEN]: []
 }
 
 export const STAKING_REWARDS_INFO: {
@@ -342,8 +356,7 @@ export const STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: NIOX
       //STAKINGREWARDSFACTORY- 0xA303516F14a00EA1633Db77CEE0b7f38076475d8 mainnet matic
-    },
-
+    }
   ],
   [ChainId.ROPSTEN]: [
     //TODO: ropsten
@@ -434,13 +447,13 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
     () =>
       chainId
         ? OLD_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -452,8 +465,18 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
   const accountArg = useMemo(() => [account ?? undefined], [account])
 
   // get all the info from the staking rewards contracts
-  const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'balanceOf', accountArg)
-  const earnedAmounts = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'earned', accountArg)
+  const balances = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE_OLD,
+    'balanceOf',
+    accountArg
+  )
+  const earnedAmounts = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE_OLD,
+    'earned',
+    accountArg
+  )
   const totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'totalSupply')
 
   // tokens per second, constants
@@ -538,7 +561,6 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
           )
         }
 
-
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
         const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
@@ -555,7 +577,7 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
-          getHypotheticalRewardRate,
+          getHypotheticalRewardRate
         })
       }
       return memo
@@ -570,13 +592,13 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
     () =>
       chainId
         ? SINGLE_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -588,8 +610,18 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
   const accountArg = useMemo(() => [account ?? undefined], [account])
 
   // get all the info from the staking rewards contracts
-  const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'balanceOf', accountArg)
-  const earnedAmounts = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'earned', accountArg)
+  const balances = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE_OLD,
+    'balanceOf',
+    accountArg
+  )
+  const earnedAmounts = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE_OLD,
+    'earned',
+    accountArg
+  )
   const totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE_OLD, 'totalSupply')
 
   // tokens per second, constants
@@ -674,7 +706,6 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
           )
         }
 
-
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
         const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
@@ -691,7 +722,7 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
-          getHypotheticalRewardRate,
+          getHypotheticalRewardRate
         })
       }
       return memo
@@ -707,13 +738,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -727,7 +758,12 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   // get all the info from the staking rewards contracts
   const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
   const earnedAmounts = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'earned', accountArg)
-  const earnedAmounts1 = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'earned1', accountArg)
+  const earnedAmounts1 = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE,
+    'earned1',
+    accountArg
+  )
   const totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'totalSupply')
 
   // tokens per second, constants
@@ -738,7 +774,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     undefined,
     NEVER_RELOAD
   )
-  console.log("rewardrate ", rewardRates);
+  console.log('rewardrate ', rewardRates)
   const rewardRates1 = useMultipleContractSingleData(
     rewardsAddresses,
     STAKING_REWARDS_INTERFACE,
@@ -746,7 +782,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     undefined,
     NEVER_RELOAD
   )
-  console.log("rewardrate11 ", rewardRates1);
+  console.log('rewardrate11 ', rewardRates1)
 
   const periodFinishes = useMultipleContractSingleData(
     rewardsAddresses,
@@ -867,7 +903,19 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       }
       return memo
     }, [])
-  }, [balances, chainId, earnedAmounts, earnedAmounts1, info, periodFinishes, rewardRates, rewardRates1, rewardsAddresses, totalSupplies, uni])
+  }, [
+    balances,
+    chainId,
+    earnedAmounts,
+    earnedAmounts1,
+    info,
+    periodFinishes,
+    rewardRates,
+    rewardRates1,
+    rewardsAddresses,
+    totalSupplies,
+    uni
+  ])
 }
 
 export function useTotalUniEarned(): TokenAmount | undefined {

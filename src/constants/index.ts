@@ -68,6 +68,14 @@ export const MAINNET_NIOX = new Token(
   'Autonio'
 )
 
+export const LP_NIOX_ETH = new Token(
+  ChainId.MAINNET,
+  '0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6',
+  18,
+  'Uniswap V2',
+  'UNI-V2'
+)
+
 export const XENO = new Token(ChainId.ROPSTEN, '0x13681b1f6f93977f62389e0a2b1e84ba24d78fbc', 4, 'XENO', 'XENO')
 export const ADDY = new Token(ChainId.ROPSTEN, '0x6aa16f7844e3af995985bd035eec62d88e418ef1', 8, 'ADDY', 'ADDY Token')
 
