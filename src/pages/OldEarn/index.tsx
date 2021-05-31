@@ -295,10 +295,12 @@ export default function OldEarn() {
                 )
                 .map(stakingInfo => (
                   // need to sort by added liquidity here
+
                   <div key={stakingInfo.stakingRewardAddress}>
-                    <CustomDataRow>
-                      {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
-                    </CustomDataRow>
+                    {stakingInfo?.ended ? '' :
+                      <CustomDataRow>
+                        {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
+                      </CustomDataRow>}
                     <PoolCardOld stakingInfo={stakingInfo} isOld={true} isSingle={false} />
                   </div>
                 ))

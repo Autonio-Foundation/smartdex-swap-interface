@@ -356,11 +356,11 @@ export default function Manage({
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            { !stakingInfo?.ended &&
-              <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : stakingInfo && stakingInfo?.name !== '' ? 'Deposit ' + stakingInfo?.name + " Tokens" : 'Deposit SmartdexPair LP Tokens'}
-              </ButtonPrimary>
-            }
+            {/* { !stakingInfo?.ended && */}
+            <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+              {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : stakingInfo && stakingInfo?.name !== '' ? 'Deposit ' + stakingInfo?.name + " Tokens" : 'Deposit SmartdexPair LP Tokens'}
+            </ButtonPrimary>
+            {/* } */}
 
             {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
               <>
