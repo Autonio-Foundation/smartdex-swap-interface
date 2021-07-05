@@ -11,6 +11,9 @@ const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
+declare var window: any;
+// const Biconomy = window.Biconomy;
+
 export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 
 if (typeof NETWORK_URL === 'undefined') {
@@ -23,6 +26,8 @@ export const network = new NetworkConnector({
 
 let networkLibrary: Web3Provider | undefined
 export function getNetworkLibrary(): Web3Provider {
+  // const biconomy = new Biconomy(network.provider, { apiKey: 'MyuvzG-gl.5879ba7b-d128-42f1-bda0-4b7c668e08a4', debug: true });
+  // web3 = new Web3(biconomy);
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 

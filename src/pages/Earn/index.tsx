@@ -102,7 +102,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -163,7 +163,7 @@ const ComingSoonWrapper = styled.div`
 //   }
 // `
 
-const CustomDataRow = styled(DataRow) <{ main?: boolean }>`
+const CustomDataRow = styled(DataRow)<{ main?: boolean }>`
   flex-direction: row-reverse;
   margin-bottom: ${({ main }) => (main ? 0 : '24px')};
 
@@ -181,7 +181,7 @@ export default function Earn() {
   const isStakingLP = false
   const isInLiveMode = true
 
-  const [singleMode, toggleSingleMode] = useState(true)
+  const [singleMode, toggleSingleMode] = useState(false)
 
   /**
    * only show staking cards with balance
@@ -372,7 +372,7 @@ export default function Earn() {
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           <Combined>
             <TYPE.white fontSize={14} style={{ margin: '5px' }}>
-              Archived Dual Token
+              Dual Token
             </TYPE.white>
 
             <Switch
@@ -393,13 +393,12 @@ export default function Earn() {
         <CustomDataRow main={true}>
           <Countdown exactEnd={nioxethdate} exactRewardsDurationDays={42} />
         </CustomDataRow>
-        {singleMode && isInLiveMode && staticLpPool()}
+        {isInLiveMode && staticLpPool()}
 
         {/* //static eth-niox pool card end  */}
         {singleMode ? <OldEarnSingle></OldEarnSingle> : ''}
         {!singleMode && isInLiveMode && (
           <>
-            <TYPE.white fontWeight={600}>Archived Dual Token Pools</TYPE.white>
             {stakingRewardsExist && stakingInfos?.length === 0 ? (
               <Loader style={{ margin: 'auto' }} />
             ) : !stakingRewardsExist ? (

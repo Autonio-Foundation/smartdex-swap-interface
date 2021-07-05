@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+// import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -27,10 +27,10 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
-import { useTransactionAdder } from '../../state/transactions/hooks'
+// import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateSlippageAmount /*, getRouterContract*/ } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -40,7 +40,13 @@ import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-
+// import { splitSignature } from 'ethers/lib/utils'
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+declare var window: any;
+const Biconomy = window.Biconomy;
+declare var Web3: any;
+let web3;
+// let lp;
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB }
@@ -48,6 +54,19 @@ export default function AddLiquidity({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
+  // let lp: any;
+
+  // useEffect(() => {
+  //   // let web3: any;
+  //   // NOTE: dappId is no longer needed in latest version of Biconomy SDK
+  //   const biconomy = new Biconomy(window.ethereum, { apiKey: "MyuvzG-gl.5879ba7b-d128-42f1-bda0-4b7c668e08a4" });
+
+  //   const web3 = new Web3(biconomy);
+  //   console.log("web3", web3)
+  //   const lp = new web3.eth.Contract(IUniswapV2Router02ABI, ROUTER_ADDRESS);
+  //   console.log("lp", lp)
+  // }
+  //   , []);
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -55,12 +74,12 @@ export default function AddLiquidity({
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId])))
+    ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
+      (currencyB && currencyEquals(currencyB, WETH[chainId])))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
-
+  // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const expertMode = useIsExpertMode()
 
   // mint state
@@ -86,7 +105,9 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
+  const [attempting, setAttempting] = useState<boolean>(false)
+  const [hash, setHash] = useState<string | undefined>()
+  console.log(attempting, hash)
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
@@ -123,92 +144,223 @@ export default function AddLiquidity({
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
 
-  const addTransaction = useTransactionAdder()
+  // const addTransaction = useTransactionAdder()
 
   async function onAdd() {
-    if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    try {
+      if (!chainId || !library || !account) return
+      // const router = getRouterContract(chainId, library, account)
 
-    const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
-    if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
-      return
-    }
+      // initializing biconomy sdk loaded in index.html
+      const biconomy = new Biconomy(window.ethereum, { apiKey: "MyuvzG-gl.5879ba7b-d128-42f1-bda0-4b7c668e08a4" });
 
-    const amountsMin = {
-      [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
-    }
+      // ceating web3 instance using biconomy
+      web3 = new Web3(biconomy);
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        account,
-        deadline.toHexString()
+      // new router with gasless eip  712 enabled
+      const lp = new web3.eth.Contract(IUniswapV2Router02ABI, ROUTER_ADDRESS);
+
+      const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
+      if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
+        return
+      }
+
+      const amountsMin = {
+        [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
+        [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
+      }
+
+      let functionSignature: any, // to generate function signature required for meta transaction
+        // gasLimit: any,
+        // estimate: any,
+        // method: (...args: any) => Promise<TransactionResponse>,
+        args: Array<string | string[] | number>,
+        value: BigNumber | null
+
+      if (currencyA === ETHER || currencyB === ETHER) {
+        const tokenBIsETH = currencyB === ETHER
+        // estimate = router.estimateGas.addLiquidityETH
+        // method = router.addLiquidityETH
+        args = [
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          account,
+          deadline.toHexString()
+        ]
+        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString());
+        console.log(value, lp)
+        functionSignature = await lp.methods.addLiquidityETH(args[0], args[1], args[2], args[3], args[4], args[5]).encodeABI();
+        // gasLimit = await router.estimateGas.addLiquidityETH(args[0], args[1], args[2], args[3], args[4], args[5],);
+
+      } else {
+        // estimate = router.estimateGas.addLiquidity
+        // method = router.addLiquidity
+        args = [
+          wrappedCurrency(currencyA, chainId)?.address ?? '',
+          wrappedCurrency(currencyB, chainId)?.address ?? '',
+          parsedAmountA.raw.toString(),
+          parsedAmountB.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          account,
+          deadline.toHexString()
+        ]
+        value = null
+        functionSignature = await lp.methods.addLiquidity(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]).encodeABI();
+      }
+
+
+      const nonce = await lp.methods.getNonce(account).call(); // getting nonce for meta-transaction
+      setAttempting(true)
+
+      setAttemptingTxn(true)
+
+      // setting data for meta tx signature
+      const EIP712Domain = [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "verifyingContract", type: "address" },
+        { name: "salt", type: "bytes32" },
+      ];
+
+      let domainData = {
+        name: "TestSC",
+        version: "1",
+        verifyingContract: ROUTER_ADDRESS,
+        salt: '0x' + (137).toString(16).padStart(64, '0')
+      };
+
+      let MetaTransaction = [
+        { name: "nonce", type: "uint256" },
+        { name: "from", type: "address" },
+        { name: "functionSignature", type: "bytes" }
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
-    } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
-      args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString()
-      ]
-      value = null
-    }
 
-    setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
-          setAttemptingTxn(false)
+      let message = {
+        nonce: nonce,
+        from: account,
+        functionSignature: functionSignature
+      };
 
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
+      const dataToSign = JSON.stringify({
+        types: {
+          EIP712Domain: EIP712Domain,
+          MetaTransaction: MetaTransaction
+        },
+        domain: domainData,
+        primaryType: "MetaTransaction",
+        message: message
+      });
+
+      //signing data 
+      await window.web3.currentProvider.sendAsync({
+        jsonrpc: "2.0",
+        id: 999999999999,
+        method: "eth_signTypedData_v4",
+        params: [window.ethereum.selectedAddress, dataToSign]
+      }, async (err: any, result: any) => {
+        if (err) {
+          return console.error("sign error", err);
+        }
+        const signature = result.result.substring(2);
+        const r = "0x" + signature.substring(0, 64);
+        const s = "0x" + signature.substring(64, 128);
+        const v = parseInt(signature.substring(128, 130), 16);
+
+        // calling meta tx and passing user signature and function signature
+        const promiEvent = lp.methods
+          .executeMetaTransaction(window.ethereum.selectedAddress, functionSignature, r, s, v)
+          .send({
+            from: window.ethereum.selectedAddress
           })
+        promiEvent.on("transactionHash", (hash: any) => {
+          setAttemptingTxn(false)
+          console.log(hash)
+          // addTransaction((response: any), {
+          //   summary:
+          //     'Add ' +
+          //     parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+          //     ' ' +
+          //     currencies[Field.CURRENCY_A]?.symbol +
+          //     ' and ' +
+          //     parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+          //     ' ' +
+          //     currencies[Field.CURRENCY_B]?.symbol
+          // })
 
-          setTxHash(response.hash)
+          setTxHash(hash)
+          setHash(hash)
 
           ReactGA.event({
             category: 'Liquidity',
             action: 'Add',
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
+        }).once("confirmation", (confirmationNumber: any, receipt: any) => {
+          if (receipt.status) {
+            console.log("if", receipt, confirmationNumber)
+            // showSuccessMessage("Transaction processed successfully")
+            // startApp()
+          } else {
+            console.log("else", confirmationNumber, receipt)
+            // showErrorMessage("Transaction Failed");
+          }
+          console.log("receipt", receipt)
+        }).catch((e: any) => {
+          setAttemptingTxn(false)
+          console.log("e", e)
         })
-      )
-      .catch(error => {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        if (error?.code !== 4001) {
-          console.error(error)
-        }
+        // })
+
       })
+
+
+
+      // console.log('signatureData2', signatureData)
+      // setAttemptingTxn(true)
+      // await estimate(...args, value ? { value } : {})
+      //   .then(estimatedGasLimit =>
+      //     method(...args, {
+      //       ...(value ? { value } : {}),
+      //       gasLimit: calculateGasMargin(estimatedGasLimit)
+      //     }).then(response => {
+      //       setAttemptingTxn(false)
+
+      //       addTransaction(response, {
+      //         summary:
+      //           'Add ' +
+      //           parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+      //           ' ' +
+      //           currencies[Field.CURRENCY_A]?.symbol +
+      //           ' and ' +
+      //           parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+      //           ' ' +
+      //           currencies[Field.CURRENCY_B]?.symbol
+      //       })
+
+      //       setTxHash(response.hash)
+
+      //       ReactGA.event({
+      //         category: 'Liquidity',
+      //         action: 'Add',
+      //         label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
+      //       })
+      //     })
+      //   )
+      //   .catch(error => {
+      //     setAttemptingTxn(false)
+      //     // we only care if the error is something _other_ than the user rejected the tx
+      //     if (error?.code !== 4001) {
+      //       console.error(error)
+      //     }
+      //   })
+    } catch (e) {
+      setAttemptingTxn(false)
+      console.log(e, "my error")
+    }
+
   }
 
   const modalHeader = () => {
@@ -220,8 +372,8 @@ export default function AddLiquidity({
               {currencies[Field.CURRENCY_A]?.symbol === 'ETH'
                 ? 'MATIC'
                 : currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol === 'ETH'
-                ? 'MATIC'
-                : currencies[Field.CURRENCY_B]?.symbol}
+                  ? 'MATIC'
+                  : currencies[Field.CURRENCY_B]?.symbol}
             </Text>
             <DoubleCurrencyLogo
               currency0={currencies[Field.CURRENCY_A]}
@@ -248,8 +400,8 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A]?.symbol === 'ETH'
               ? 'MATIC'
               : currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol === 'ETH'
-              ? 'MATIC'
-              : currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
+                ? 'MATIC'
+                : currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
@@ -273,11 +425,9 @@ export default function AddLiquidity({
     )
   }
 
-  const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    currencies[Field.CURRENCY_A]?.symbol === 'ETH' ? 'MATIC' : currencies[Field.CURRENCY_A]?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${
-    currencies[Field.CURRENCY_B]?.symbol === 'ETH' ? 'MATIC' : currencies[Field.CURRENCY_B]?.symbol
-  }`
+  const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencies[Field.CURRENCY_A]?.symbol === 'ETH' ? 'MATIC' : currencies[Field.CURRENCY_A]?.symbol
+    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol === 'ETH' ? 'MATIC' : currencies[Field.CURRENCY_B]?.symbol
+    }`
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {

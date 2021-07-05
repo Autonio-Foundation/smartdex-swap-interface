@@ -11,8 +11,6 @@ import {
   AGI,
   ETHER,
   PBTC,
-  DAI,
-  USDT,
   /* DEV, TEST,*/ DIGI
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards1'
@@ -38,26 +36,7 @@ export const OLD_STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MATIC]: [
     ///////////////////////new one expiring after 1 day
-    {
-      tokens: [DAI, USDC],
-      stakingRewardAddress: '0xB1280593437E65d9a5a1249D53749F6A0f772F94',
-      ended: true,
 
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [USDC, USDT],
-      stakingRewardAddress: '0xed3Db68a933BCc1Af76056FFcF82Dc16Babf4191',
-      ended: true,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
     {
       tokens: [NIOX, USDC],
       stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
@@ -268,28 +247,7 @@ export const SINGLE_STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MATIC]: [
     ///////////////////////new one expiring after 1 day
-    //new
-    {
-      tokens: [DAI, USDC],
-      stakingRewardAddress: '0xB1280593437E65d9a5a1249D53749F6A0f772F94',
-      ended: false,
 
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [USDC, USDT],
-      stakingRewardAddress: '0xed3Db68a933BCc1Af76056FFcF82Dc16Babf4191',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    // old 
     {
       tokens: [NIOX, USDC],
       stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
