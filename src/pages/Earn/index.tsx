@@ -199,7 +199,7 @@ export default function Earn() {
   const ethNioxPoolRewardRate = useCustomNetRewardRate('0xa54db7a2ce0b1d802552c655b36672bcfe2c538d', ChainId.MAINNET)
   // const usdcPrice = useUSDCPrice()
   const [totalEthNioxLiquidityInUSDC, setTotalEthNioxLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
-  const staticEthNioxPoolRewardRate = new TokenAmount(NIOX, JSBI.BigInt(120000000))
+  const staticEthNioxPoolRewardRate = new TokenAmount(NIOX, JSBI.BigInt(125000000))
 
   useEffect(() => {
     async function fetchInfo() {

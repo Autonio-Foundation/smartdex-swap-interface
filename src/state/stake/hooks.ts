@@ -1052,7 +1052,7 @@ export function useCustomNetRewardRate(address: string, chainId: ChainId): Token
   // return useMemo(() => {
   //   if (!rewardRateState || rewardRateState.loading) return new Fraction('0', '1')
 
-  const amount = new Fraction(JSBI.BigInt(100000), JSBI.BigInt(72))
+  const amount = new Fraction(JSBI.BigInt(1250000), JSBI.BigInt(36 * 24))
   return new TokenAmount(NIOX, amount.quotient)
   // return new TokenAmount(NIOX, JSBI.BigInt(rewardRateState.result?.[0]))
   // }, [rewardRateState])
