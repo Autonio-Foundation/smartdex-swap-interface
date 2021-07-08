@@ -102,7 +102,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -163,7 +163,7 @@ const ComingSoonWrapper = styled.div`
 //   }
 // `
 
-const CustomDataRow = styled(DataRow) <{ main?: boolean }>`
+const CustomDataRow = styled(DataRow)<{ main?: boolean }>`
   flex-direction: row-reverse;
   margin-bottom: ${({ main }) => (main ? 0 : '24px')};
 
@@ -199,6 +199,7 @@ export default function Earn() {
   const ethNioxPoolRewardRate = useCustomNetRewardRate('0xa54db7a2ce0b1d802552c655b36672bcfe2c538d', ChainId.MAINNET)
   // const usdcPrice = useUSDCPrice()
   const [totalEthNioxLiquidityInUSDC, setTotalEthNioxLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
+  const staticEthNioxPoolRewardRate = new TokenAmount(NIOX, JSBI.BigInt(120000000))
 
   useEffect(() => {
     async function fetchInfo() {
@@ -299,7 +300,7 @@ export default function Earn() {
         <RowBetween>
           <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
-            {`${ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`)?.toFixed(0, { groupSeparator: ',' })}`} NIOX / day
+            {staticEthNioxPoolRewardRate.toFixed(0, { groupSeparator: ',' })} NIOX / day
             {/* 9,996 NIOX / day */}
             {/* } */}
           </TYPE.white>
