@@ -13,7 +13,8 @@ import {
   PBTC,
   DAI,
   USDT,
-  /* DEV, TEST,*/ DIGI
+  /* DEV, TEST,*/ DIGI,
+  RENBTC
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards1'
 import { STAKING_REWARDS_INTERFACE_OLD } from '../../constants/abis/staking-rewards'
@@ -289,7 +290,7 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       baseToken: USDC
       //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     },
-    // old 
+    // old
     {
       tokens: [NIOX, USDC],
       stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
@@ -327,6 +328,14 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: USDC
+    },
+    {
+      tokens: [RENBTC, NIOX],
+      stakingRewardAddress: '0xc8748Cdba57dd66d7EAE5c8221A1C79f931688d9',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: NIOX
     }
     // {
     //   tokens: [GLQ, MaticWETH],
@@ -481,13 +490,13 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
     () =>
       chainId
         ? OLD_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -626,13 +635,13 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
     () =>
       chainId
         ? SINGLE_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -772,13 +781,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )

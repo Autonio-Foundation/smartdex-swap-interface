@@ -210,6 +210,9 @@ export const getTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0x4d8181f051E617642e233Be09Cea71Cc3308ffD4'.toLowerCase()) {
     uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/logo-digi.svg'
   }
+  if (address?.toLowerCase() === '0xdbf31df14b66535af65aac99c32e9ea844e14501'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/11370/small/renBTC.png?1589985711'
+  }
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`

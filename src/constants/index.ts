@@ -17,8 +17,20 @@ export const FRAX = new Token(ChainId.MATIC, '0x104592a158490a9228070E0A8e5343B4
 export const FXS = new Token(ChainId.MATIC, '0x3e121107F6F22DA4911079845a470757aF4e1A1b', 18, 'FXS', 'Frax Shares')
 export const NIOX = new Token(ChainId.MATIC, '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96', 4, 'NIOX', 'Autonio')
 export const USDC = new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin (PoS)')
-export const USDT = new Token(ChainId.MATIC, '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', 6, 'USDT', 'Tether USD (PoS)')
-export const DAI = new Token(ChainId.MATIC, '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', 18, 'DAI', '(PoS) Dai Stablecoin')
+export const USDT = new Token(
+  ChainId.MATIC,
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+  6,
+  'USDT',
+  'Tether USD (PoS)'
+)
+export const DAI = new Token(
+  ChainId.MATIC,
+  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+  18,
+  'DAI',
+  '(PoS) Dai Stablecoin'
+)
 export const DEV = new Token(ChainId.MATIC, '0xdd667bf15e34b126eaa53198c207e5390374bc1a', 4, 'DEV', 'Developer')
 export const TEST = new Token(ChainId.MATIC, '0x9e254a4FB0cC003c8679e48cB1777ED9bf03C5c4', 18, 'TEST', 'TEST')
 export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'WETH', 'Wrapped Ether')
@@ -69,6 +81,8 @@ export const MAINNET_NIOX = new Token(
   'NIOX',
   'Autonio'
 )
+
+export const RENBTC = new Token(ChainId.MATIC, '0xdbf31df14b66535af65aac99c32e9ea844e14501', 8, 'renBTC', 'renBTC')
 
 export const LP_NIOX_ETH = new Token(
   ChainId.MAINNET,
