@@ -241,6 +241,14 @@ export const OLD_STAKING_REWARDS_INFO: {
       name: 'AGI-NIOX OLD',
       lp: '',
       baseToken: NIOX
+    },
+    {
+      tokens: [RENBTC, NIOX],
+      stakingRewardAddress: '0xc8748Cdba57dd66d7EAE5c8221A1C79f931688d9',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: NIOX
     }
   ],
   [ChainId.ROPSTEN]: [
