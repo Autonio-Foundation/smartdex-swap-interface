@@ -59,6 +59,22 @@ export const AGI = new Token(
   'SingularityNET Token'
 )
 export const PBTC = new Token(ChainId.MATIC, '0xd7ecf95Cf7eF5256990BeAf4ac895cD9e64cb947', 18, 'pBTC', 'pTokens BTC')
+export const RENBTC = new Token(ChainId.MATIC, '0xdbf31df14b66535af65aac99c32e9ea844e14501', 8, 'renBTC', 'renBTC')
+export const AGIX = new Token(
+  ChainId.MATIC,
+  '0x190Eb8a183D22a4bdf278c6791b152228857c033',
+  8,
+  'AGIX',
+  'SingularityNET Token'
+)
+export const SDAO = new Token(
+  ChainId.MATIC,
+  '0x59e991B37b35Ac2187113dFdB5D60D2e887eEec1',
+  18,
+  'SDAO',
+  'Singularity Dao'
+)
+
 // export const MRBAL = new Token(ChainId.MATIC, '0x66768ad00746aC4d68ded9f64886d55d5243f5Ec', 18, 'mRBAL', 'Matic Rebalance Token')
 // export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 // export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
@@ -81,8 +97,6 @@ export const MAINNET_NIOX = new Token(
   'NIOX',
   'Autonio'
 )
-
-export const RENBTC = new Token(ChainId.MATIC, '0xdbf31df14b66535af65aac99c32e9ea844e14501', 8, 'renBTC', 'renBTC')
 
 export const LP_NIOX_ETH = new Token(
   ChainId.MAINNET,

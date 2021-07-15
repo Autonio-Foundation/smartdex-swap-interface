@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { OLD_STAKING_REWARDS_INFO, useOldStakingInfo } from '../../state/stake/hooks'
+import { OLD_STAKING_REWARDS_INFO, useDualStakingInfo, useOldStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCardOld from '../../components/earn/PoolCardOld'
 import { RowBetween } from '../../components/Row'
@@ -18,6 +18,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { ButtonPrimary } from '../../components/Button'
 // import { Break } from '../../components/earn/styled'
 // import { NIOX, ETHER } from '../../constants'
+import Switch from 'react-switch'
+import PoolCard from '../../components/earn/PoolCard'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -145,6 +147,21 @@ const PageButtons = styled.div`
   margin-bottom: 2em;
 `
 
+const Combined = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+// const PoolSection = styled.div`
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   column-gap: 10px;
+//   row-gap: 15px;
+//   width: 100%;
+//   justify-self: center;
+// `
+
 export default function OldEarn() {
   // pagination
   const [page, setPage] = useState(1)
@@ -155,9 +172,12 @@ export default function OldEarn() {
   // console.log("chainid", chainId);
   // staking info for connected account
   const stakingInfos = useOldStakingInfo()
+  const dualStakingInfos = useDualStakingInfo()
 
   // const isStakingLP = false
   const isInLiveMode = true
+
+  const [singleMode, toggleSingleMode] = useState(true)
 
   /**
    * only show staking cards with balance
@@ -271,6 +291,25 @@ export default function OldEarn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Archived pools</TYPE.mediumHeader>
+          <Combined>
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>
+              Archived Dual Token
+            </TYPE.white>
+
+            <Switch
+              onChange={() => toggleSingleMode(!singleMode)}
+              height={22}
+              width={40}
+              offHandleColor="#acca27"
+              uncheckedIcon={false}
+              checkedIcon={false}
+              onColor="#acca27"
+              checked={singleMode}
+            />
+            <TYPE.white fontSize={14} style={{ margin: '5px' }}>
+              Single Token
+            </TYPE.white>
+          </Combined>
           {/* {isInLiveMode && <Countdown />} */}
         </DataRow>
         {/* // working section staking */}
@@ -280,7 +319,7 @@ export default function OldEarn() {
 
         {/* //static eth-niox pool card end  */}
 
-        {isInLiveMode && (
+        {singleMode && isInLiveMode && (
           <>
             {stakingRewardsExist && stakingInfos?.length === 0 ? (
               <Loader style={{ margin: 'auto' }} />
@@ -297,10 +336,15 @@ export default function OldEarn() {
                   // need to sort by added liquidity here
 
                   <div key={stakingInfo.stakingRewardAddress}>
-                    {stakingInfo?.ended ? '' :
+                    {stakingInfo?.ended ? (
+                      ''
+                    ) : (
                       <CustomDataRow>
-                        {isInLiveMode && <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />}
-                      </CustomDataRow>}
+                        {isInLiveMode && (
+                          <Countdown exactEnd={stakingInfo.periodFinish} exactRewardsDurationDays={14} />
+                        )}
+                      </CustomDataRow>
+                    )}
                     <PoolCardOld stakingInfo={stakingInfo} isOld={true} isSingle={false} />
                   </div>
                 ))
@@ -322,6 +366,31 @@ export default function OldEarn() {
                 <Arrow>→</Arrow>
               </div>
             </PageButtons>
+          </>
+        )}
+
+        {!singleMode && isInLiveMode && (
+          <>
+            {/* <TYPE.white fontWeight={600}>Archived Dual Token Pools</TYPE.white> */}
+            {stakingRewardsExist && dualStakingInfos?.length === 0 ? (
+              <Loader style={{ margin: 'auto' }} />
+            ) : !stakingRewardsExist ? (
+              ''
+            ) : (
+              // 'No active rewards'
+              dualStakingInfos?.map(dualStakingInfo => (
+                // need to sort by added liquidity here
+                <div key={dualStakingInfo.stakingRewardAddress}>
+                  <CustomDataRow>
+                    {console.log('stakingInfo.periodFinis', dualStakingInfo.periodFinish)}
+                    {isInLiveMode && (
+                      <Countdown exactEnd={dualStakingInfo.periodFinish} exactRewardsDurationDays={14} />
+                    )}
+                  </CustomDataRow>
+                  <PoolCard stakingInfo={dualStakingInfo} isOld={false} isSingle={false} />
+                </div>
+              ))
+            )}
           </>
         )}
 

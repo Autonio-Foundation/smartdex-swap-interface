@@ -14,7 +14,7 @@ import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModalOld'
-import { useOldStakingInfo } from '../../state/stake/hooks'
+import { useSingleStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModalOld'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModalOld'
 import { useTokenBalance } from '../../state/wallet/hooks'
@@ -105,7 +105,8 @@ export default function Manage({
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
   console.log(stakingTokenPair)
-  const stakingInfos = useOldStakingInfo(stakingTokenPair)
+  const stakingInfos = useSingleStakingInfo(stakingTokenPair)
+
   let stakingInfo = stakingInfos?.reduce<any>((memo, staking) => {
     if (staking.stakingRewardAddress === rewardsAddress) {
       return staking

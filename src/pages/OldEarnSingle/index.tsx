@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { SINGLE_STAKING_REWARDS_INFO, useSingleStakingInfo } from '../../state/stake/hooks'
-import { TYPE, /*ExternalLink */ } from '../../theme'
+import { TYPE /*ExternalLink */ } from '../../theme'
 import PoolCardOld from '../../components/earn/PoolCardOld'
 import { RowBetween } from '../../components/Row'
 // import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
@@ -239,10 +239,7 @@ export default function OldEarnSingle() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-
-
         {isInLiveMode && (
           <>
             {stakingRewardsExist && stakingInfos?.length === 0 ? (

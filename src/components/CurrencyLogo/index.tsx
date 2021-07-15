@@ -213,6 +213,12 @@ export const getTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0xdbf31df14b66535af65aac99c32e9ea844e14501'.toLowerCase()) {
     uri = 'https://assets.coingecko.com/coins/images/11370/small/renBTC.png?1589985711'
   }
+  if (address?.toLowerCase() === '0x190Eb8a183D22a4bdf278c6791b152228857c033'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/2138/small/singularitynet.png?1548609559'
+  }
+  if (address?.toLowerCase() === '0x59e991B37b35Ac2187113dFdB5D60D2e887eEec1'.toLowerCase()) {
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/sdao.png'
+  }
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
