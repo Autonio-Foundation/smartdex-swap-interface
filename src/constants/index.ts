@@ -41,6 +41,14 @@ export const WETHs = new Token(
 )
 export const ADNIOX = new Token(ChainId.ROPSTEN, '0x4b96be51253856e20420a75d5ceb31ccf7623f90', 4, 'ADNIOX', 'Akash')
 
+export const LP_NIOX_ETH = new Token(
+  ChainId.MAINNET,
+  '0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6',
+  18,
+  'Uniswap V2',
+  'UNI-V2'
+)
+
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 13
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320

@@ -1,13 +1,12 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, WETH } from '@uniswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, WETH, Fraction } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import {
   UNI,
-  NIOX,
+  NIOX
   // USDC,
   // DEV,
   // XENO,
-  WETHs,
-  ADNIOX
+  // ADNIOX
 
   // ADDY,
   // WMATIC
@@ -89,7 +88,6 @@ export const STAKING_REWARDS_INFO: {
     //   tokens: [WETHs, XENO],
     //   stakingRewardAddress: '0x9091a6e09257Affb6f3dC61Cb3EC1aFDE823bb2A',
     //   ended: false,
-
     //   name: '',
     //   lp: '0xc6A85a5c17Ed118Dd772ACD049bB13670967683a', //xeno weth
     //   baseToken: XENO
@@ -100,22 +98,20 @@ export const STAKING_REWARDS_INFO: {
     //   tokens: [WETHs, XENO],
     //   stakingRewardAddress: '0x5dB9c53f7ebd863980BCb8770990A43e91a5a101',
     //   ended: false,
-
     //   name: '',
     //   lp: '0xc6A85a5c17Ed118Dd772ACD049bB13670967683a', //xeno weth
     //   baseToken: XENO
     //   // STAKINGREWARDSFACTORY- 0x544fC329a7c9874eCabAe594280BB8BAC1528bAc
     // },
-    {
-      tokens: [ADNIOX, WETHs],
-      stakingRewardAddress: '0x40d0EbEf5806E74f3590847fB55Aa58533BBcB44',
-      ended: false,
-
-      name: '',
-      lp: '0x860d971Bd51a9ECf9E786eA189890060E1CAE5A2', //xeno weth
-      baseToken: WETHs
-      // STAKINGREWARDSFACTORY- 0x544fC329a7c9874eCabAe594280BB8BAC1528bAc
-    }
+    // {
+    //   tokens: [ADNIOX, WETHs],
+    //   stakingRewardAddress: '0x40d0EbEf5806E74f3590847fB55Aa58533BBcB44',
+    //   ended: false,
+    //   name: '',
+    //   lp: '0x860d971Bd51a9ECf9E786eA189890060E1CAE5A2', //xeno weth
+    //   baseToken: WETHs
+    //   // STAKINGREWARDSFACTORY- 0x544fC329a7c9874eCabAe594280BB8BAC1528bAc
+    // }
   ],
   [ChainId.MAINNET]: [
     //TODO: mainnet
@@ -400,4 +396,22 @@ export function useDerivedUnstakeInfo(
     parsedAmount,
     error
   }
+}
+
+export function useRewardRate(address: string): TokenAmount | Fraction {
+  const rewardRates = useMultipleContractSingleData(
+    [address],
+    STAKING_REWARDS_INTERFACE,
+    'rewardRate',
+    undefined,
+    NEVER_RELOAD
+  )
+
+  const rewardRateState = rewardRates ? rewardRates[0] : null
+
+  return useMemo(() => {
+    if (!rewardRateState || rewardRateState.loading) return new Fraction('0', '1')
+
+    return new TokenAmount(NIOX, JSBI.BigInt(rewardRateState.result?.[0]))
+  }, [rewardRateState])
 }

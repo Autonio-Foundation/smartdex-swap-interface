@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ETHER, JSBI, TokenAmount } from '@uniswap/sdk'
+import { ChainId, CurrencyAmount, ETHER, Fraction, JSBI, TokenAmount, WETH as UWETH } from '@uniswap/sdk'
 import { ButtonPrimary } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
+import { StakingInfo, useRewardRate } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
 import { Break, CardNoise, CardBGImage } from './styled'
@@ -14,6 +14,8 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { LP_NIOX_ETH, NIOX, USDC } from '../../constants'
+import { useApy } from 'data/Apy'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const StatContainer = styled.div`
@@ -29,7 +31,7 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
@@ -68,11 +70,10 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   justify-content: space-between;
   z-index: 1;
 `
-
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+export default function PoolCard({ stakingInfo, hasApy }: { stakingInfo: StakingInfo; hasApy?: boolean }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
-  console.log("staking info", stakingInfo)
+  console.log('staking info', stakingInfo)
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
 
@@ -101,42 +102,99 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
       )
     )
   }
-  var show = isStaking || !stakingInfo.ended;
+  var show = isStaking || !stakingInfo.ended
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  return (
-    show ?
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-        <CardBGImage desaturate />
-        <CardNoise />
+  const ethNioxPoolRewardRate = useRewardRate(stakingInfo.stakingRewardAddress)
+  const [totalEthNioxLiquidityInUSDC, setTotalEthNioxLiquidityInUSDC] = useState<CurrencyAmount | undefined>(undefined)
 
-        <TopSection>
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {stakingInfo.name === 'NIOX-ETH OLD' ? stakingInfo.name : currency0.symbol + '-' + currency1.symbol}
+  useEffect(() => {
+    async function fetchInfo() {
+      let res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc813EA5e3b48BEbeedb796ab42A30C5599b01740&address=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+      const niox_amount = new TokenAmount(NIOX, res.result)
+      res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=autonio').then(res =>
+        res.json()
+      )
+      const niox_price = new Fraction(JSBI.BigInt(~~(res[0].current_price * 1000000)), JSBI.BigInt(1000000))
+      res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&address=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+      const eth_amount = new TokenAmount(UWETH[ChainId.MAINNET], res.result)
+      res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=weth').then(res =>
+        res.json()
+      )
+      const eth_price = new Fraction(JSBI.BigInt(res[0].current_price * 1000000), JSBI.BigInt(1000000))
+      res = await fetch(
+        'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6&address=0x31f985e479576b93B1307d423f369766726bE349&tag=latest&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+      const lp_amount = new TokenAmount(LP_NIOX_ETH, res.result)
+      res = await fetch(
+        'https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xd1Bc66660bA7edD64F0cC442ca5F32e5d199dfc6&apikey=R7M8G88CEH6E3AFKWZMMHZFXQ78NIRWRVP'
+      ).then(res => res.json())
+
+      const lp_total_amount = new TokenAmount(LP_NIOX_ETH, res.result)
+
+      const totalLiquidityUSD = JSBI.add(
+        niox_amount.multiply(niox_price).quotient,
+        eth_amount.multiply(eth_price).quotient
+      )
+      const lp_price = JSBI.divide(
+        JSBI.multiply(totalLiquidityUSD, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))),
+        lp_total_amount.raw
+      )
+      const totalEthNioxLiquidity = new TokenAmount(
+        USDC,
+        JSBI.multiply(lp_amount.multiply(lp_price).quotient, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(6)))
+      )
+      setTotalEthNioxLiquidityInUSDC(totalEthNioxLiquidity)
+    }
+
+    if (hasApy) fetchInfo()
+  }, [hasApy])
+
+  const ethNioxPoolAPY = useApy(
+    ethNioxPoolRewardRate?.multiply(`${60 * 60 * 24}`),
+    totalEthNioxLiquidityInUSDC,
+    'autonio'
+  )
+
+  return show ? (
+    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+      <CardBGImage desaturate />
+      <CardNoise />
+
+      <TopSection>
+        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+          {stakingInfo.name === 'NIOX-ETH OLD' ? stakingInfo.name : currency0.symbol + '-' + currency1.symbol}
+        </TYPE.white>
+
+        <StyledInternalLink
+          to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+          style={{ width: '100%' }}
+        >
+          <ButtonPrimary padding="8px" borderRadius="8px">
+            {isStaking ? 'Manage' : 'Deposit'}
+          </ButtonPrimary>
+        </StyledInternalLink>
+      </TopSection>
+
+      <StatContainer>
+        <RowBetween>
+          <TYPE.white> Total deposited</TYPE.white>
+          <TYPE.white>
+            {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
           </TYPE.white>
-
-          <StyledInternalLink to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
-            <ButtonPrimary padding="8px" borderRadius="8px">
-              {isStaking ? 'Manage' : 'Deposit'}
-            </ButtonPrimary>
-          </StyledInternalLink>
-        </TopSection>
-
-        <StatContainer>
-          <RowBetween>
-            <TYPE.white> Total deposited</TYPE.white>
-            <TYPE.white>
-              {valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </TYPE.white>
-          </RowBetween>
-          <RowBetween>
-            {/* <TYPE.white> Pool rate </TYPE.white>
+        </RowBetween>
+        <RowBetween>
+          {/* <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
@@ -146,39 +204,47 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                 : '0 UNI / week'
               : '-'}
           </TYPE.white> */}
-            <TYPE.white> Pool rate </TYPE.white>
-            <TYPE.white>{`${stakingInfo.totalRewardRate
-              ?.multiply(`${60 * 60 * 24}`)
-              ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
+          <TYPE.white> Pool rate </TYPE.white>
+          <TYPE.white>{`${stakingInfo.totalRewardRate
+            ?.multiply(`${60 * 60 * 24}`)
+            ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
+        </RowBetween>
+        {hasApy && (
+          <RowBetween>
+            <TYPE.white> APY </TYPE.white>
+            <TYPE.white>{`${ethNioxPoolAPY?.toFixed(2)} %`}</TYPE.white>
           </RowBetween>
-        </StatContainer>
+        )}
+      </StatContainer>
 
-        {isStaking && (
-          <>
-            <Break />
-            <BottomSection showBackground={true}>
-              <TYPE.black color={'white'} fontWeight={500}>
-                <span>Your rate</span>
-              </TYPE.black>
+      {isStaking && (
+        <>
+          <Break />
+          <BottomSection showBackground={true}>
+            <TYPE.black color={'white'} fontWeight={500}>
+              <span>Your rate</span>
+            </TYPE.black>
 
-              <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                  ⚡
+            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                ⚡
               </span>
-                {/* {stakingInfo
+              {/* {stakingInfo
                 ? stakingInfo.active
                   ? `${stakingInfo.rewardRate
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
                   : '0 UNI / week'
                 : '-'} */}
-                {`${stakingInfo.rewardRate
-                  ?.multiply(`${60 * 60 * 24}`)
-                  ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
-              </TYPE.black>
-            </BottomSection>
-          </>
-        )}
-      </Wrapper> : <span style={{ width: 0, display: "none" }}></span>
+              {`${stakingInfo.rewardRate
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
+            </TYPE.black>
+          </BottomSection>
+        </>
+      )}
+    </Wrapper>
+  ) : (
+    <span style={{ width: 0, display: 'none' }}></span>
   )
 }

@@ -67,15 +67,9 @@ export default function Earn() {
                 <TYPE.white fontWeight={600}>Smartdex liquidity mining</TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive NIOX.
-                </TYPE.white>
+                <TYPE.white fontSize={14}>Deposit your Liquidity Provider tokens to receive NIOX.</TYPE.white>
               </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href=""
-                target="_blank"
-              >
+              <ExternalLink style={{ color: 'white', textDecoration: 'underline' }} href="" target="_blank">
                 {/* <TYPE.white fontSize={14}>Coming Soon</TYPE.white> */}
               </ExternalLink>
             </AutoColumn>
@@ -97,10 +91,16 @@ export default function Earn() {
           ) : !stakingRewardsExist ? (
             'No active rewards'
           ) : (
-            stakingInfos?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-            })
+            <>
+              <PoolCard key={stakingInfos[0].stakingRewardAddress} stakingInfo={stakingInfos[0]} hasApy={true} />
+              <DataRow style={{ alignItems: 'baseline' }}>
+                <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Archived pools</TYPE.mediumHeader>
+              </DataRow>
+              {stakingInfos?.map((stakingInfo, index) => {
+                // need to sort by added liquidity here
+                return index !== 0 && <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+              })}
+            </>
           )}
         </PoolSection>
         {/* till here akash */}
