@@ -41,9 +41,9 @@ export function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#FFFFFF',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text2: darkMode ? '#C3C5CB' : '#aeb1bdfa',
     text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
+    text4: darkMode ? '#aeb1bdfa' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
@@ -53,7 +53,7 @@ export function colors(darkMode: boolean): Colors {
     bg2: darkMode ? '#2F3641' : '#1A1F28',
     //autonio ui change 27-02-2021
     bg3: darkMode ? '#40444F' : '#1A1F28',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
+    bg4: darkMode ? '#aeb1bdfa' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
 
     //specialty colors
