@@ -219,6 +219,35 @@ export const OLD_STAKING_REWARDS_INFO: {
       name: 'AGI-NIOX OLD',
       lp: '',
       baseToken: NIOX
+    },
+    //01-09-2021
+    {
+      tokens: [WMATIC, USDC],
+      stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [MaticWETH, USDC],
+      stakingRewardAddress: '0x73eb490b3acd5e36a365bb6f934bd85977ad7068',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [PBTC, USDC],
+      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
+      ended: false,
+      name: '',
+      lp: '',
+      baseToken: USDC
     }
   ],
   [ChainId.ROPSTEN]: [
@@ -257,35 +286,8 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       lp: '',
       baseToken: USDC
       //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [WMATIC, USDC],
-      stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [MaticWETH, USDC],
-      stakingRewardAddress: '0x73eb490b3acd5e36a365bb6f934bd85977ad7068',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
-    },
-    {
-      tokens: [PBTC, USDC],
-      stakingRewardAddress: '0xa6d04447695c38d4c687cb25330b22c840223e29',
-      ended: false,
-      name: '',
-      lp: '',
-      baseToken: USDC
     }
+
     // {
     //   tokens: [GLQ, MaticWETH],
     //   stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
@@ -439,13 +441,13 @@ export function useOldStakingInfo(pairToFilterBy?: Pair | null): StakingInfoOld[
     () =>
       chainId
         ? OLD_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -584,13 +586,13 @@ export function useSingleStakingInfo(pairToFilterBy?: Pair | null): StakingInfoO
     () =>
       chainId
         ? SINGLE_STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfoOld =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfoOld.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -730,13 +732,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
