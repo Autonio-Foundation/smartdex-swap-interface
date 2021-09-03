@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -6,7 +5,7 @@ import styled, {
   css,
   DefaultTheme
 } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
+// import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
@@ -21,7 +20,7 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -59,7 +58,7 @@ export function colors(darkMode: boolean): Colors {
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    advancedBG: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)',
 
     //primary colors
     //autonio ui change 27-02-2021
@@ -69,9 +68,13 @@ export function colors(darkMode: boolean): Colors {
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     //autonio ui change 27-02-2021
     primary5: darkMode ? '#ACCA27' : '#ACCA27',
+    //autonio ui change 31-03-2021
+    primary6: darkMode ? '#7C9632' : '#7C9632',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#FFFFFF',
+    primaryText1: darkMode ? '#FFFFFF' : '#FFFFFF',
+    //autonio ui change 25-03-2021
+    primaryText2: darkMode ? 'rgba(172,202,39,.65)' : 'rgba(172,202,39,.65)',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -83,14 +86,19 @@ export function colors(darkMode: boolean): Colors {
     red1: '#FD4040',
     red2: '#F82D3A',
     red3: '#D60000',
+    red4: '#E81C34',
     green1: '#27AE60',
+    green2: '#1AD37A',
     yellow1: '#FFE270',
     yellow2: '#FFFFFF',
-    blue1: '#2172E5'
+    blue1: '#2172E5',
+    gray1: 'rgba(255,255,255,0.1)',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    gray5: 'rgba(255,255,255,.5)',
+    gray2: 'rgba(253, 253, 253, .5)'
   }
 }
 
@@ -123,14 +131,15 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
+  // const darkMode = useIsDarkMode()
+  const darkMode = false
 
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text) <{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -225,17 +234,13 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background: radial-gradient(94.86% 94.86% at 50% -6.3%, rgb(47, 54, 65) 0%, rgb(21, 26, 34) 100%);
 }
 
 body {
   min-height: 100vh;
   background-position: 0 -30vh;
   background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background: radial-gradient(94.86% 94.86% at 50% -6.3%, rgb(47, 54, 65) 0%, rgb(21, 26, 34) 100%);
 }
 `

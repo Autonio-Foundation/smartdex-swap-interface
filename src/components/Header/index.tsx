@@ -1,13 +1,13 @@
 import { ChainId, TokenAmount } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo1 from '../../assets/svg/logo1.svg'
+import Logo from '../../assets/svg/logo_new.svg'
 // import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -41,7 +41,7 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -215,11 +215,10 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 500;
+  font-weight: 600;
 
   &.${activeClassName} {
     border-radius: 12px;
-    font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
 
@@ -243,17 +242,17 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 500;
+  font-weight: 600;
 
   &.${activeClassName} {
     border-radius: 12px;
-    font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
 
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -300,6 +299,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 }
 
 export default function Header() {
+  const location = useLocation();
+
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
@@ -322,104 +323,108 @@ export default function Header() {
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
-    <HeaderFrame>
-      <ClaimModal />
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-        <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'100px'} src={darkMode ? Logo1 : Logo1} alt="logo" />
-          </UniIcon>
-        </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
+    location.pathname === "/farmNIOXUniLP" ? null :
+      <HeaderFrame>
+        <ClaimModal />
+        <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
+          <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
+        </Modal>
+        <HeaderRow>
+          <Title href=".">
+            <UniIcon>
+              <img width={45} src={darkMode ? Logo : Logo} alt="logo" />
+            </UniIcon>
+          </Title>
+          <HeaderLinks>
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
+            </StyledNavLink>
+            <StyledExternalLink id={`trade-nav-link`} href={'https://dex.smartdex.app'}>
+              Trade
+          </StyledExternalLink>
+            <StyledNavLink
+              id={`pool-nav-link`}
+              to={'/pool'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                pathname.startsWith('/find')
+              }
+            >
+              {t('pool')}
+            </StyledNavLink>
+            <StyledNavLink id={`stake-nav-link`} to={'/farm'}>
+              Farm
           </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/niox'}>
-            NIOX
-          </StyledNavLink>
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             Vote
           </StyledNavLink> */}
-          <StyledExternalLink id={`stake-nav-link`} href={'https://info.smartdex.app'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
-        </HeaderLinks>
-      </HeaderRow>
-      <HeaderControls>
-        <HeaderElement>
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+            <StyledExternalLink id={`charts-nav-link`} href={'https://info.smartdex.app'}>
+              Charts <span style={{ fontSize: '11px' }}>↗</span>
+            </StyledExternalLink>
+          </HeaderLinks>
+        </HeaderRow>
+        <HeaderControls>
+          <HeaderElement>
+            <HideSmall>
+              {chainId && NETWORK_LABELS[chainId] && (
+                <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+              )}
+            </HideSmall>
+            {availableClaim && !showClaimPopup && (
+              <UNIWrapper onClick={toggleClaimModal}>
+                <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+                  <TYPE.white padding="0 2px">
+                    {claimTxn && !claimTxn?.receipt ? <Dots>Claiming NIOX</Dots> : 'Claim UNI'}
+                  </TYPE.white>
+                </UNIAmount>
+                <CardNoise />
+              </UNIWrapper>
             )}
-          </HideSmall>
-          {availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? <Dots>Claiming NIOX</Dots> : 'Claim UNI'}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )}
-          {!availableClaim && aggregateBalance && (
-            <UNIWrapper onClick={() => setShowUniBalanceModal(false)}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                {account && (
-                  <HideSmall>
-                    <TYPE.white
-                      style={{
-                        paddingRight: '.4rem'
-                      }}
-                    >
-                      <CountUp
-                        key={countUpValue}
-                        isCounting
-                        start={parseFloat(countUpValuePrevious)}
-                        end={parseFloat(countUpValue)}
-                        thousandsSeparator={','}
-                        duration={1}
-                      />
-                    </TYPE.white>
-                  </HideSmall>
-                )}
+            {!availableClaim && aggregateBalance && (
+              <UNIWrapper onClick={() => setShowUniBalanceModal(false)}>
+                <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+                  {account && (
+                    <HideSmall>
+                      <TYPE.white
+                        style={{
+                          paddingRight: '.4rem'
+                        }}
+                      >
+                        <CountUp
+                          key={countUpValue}
+                          isCounting
+                          start={parseFloat(countUpValuePrevious)}
+                          end={parseFloat(countUpValue)}
+                          thousandsSeparator={','}
+                          duration={1}
+                        />
+                      </TYPE.white>
+                    </HideSmall>
+                  )}
                 NIOX
               </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} MATIC
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-        </HeaderElement>
-        <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
-          <Menu />
-        </HeaderElementWrap>
-      </HeaderControls>
-    </HeaderFrame>
+                <CardNoise />
+              </UNIWrapper>
+            )}
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+              {account && userEthBalance ? (
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                  {userEthBalance?.toSignificant(4)} MATIC
+                </BalanceText>
+              ) : null}
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
+          <HeaderElementWrap>
+            <StyledMenuButton onClick={() => toggleDarkMode()}>
+              {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+            </StyledMenuButton>
+            <Menu />
+          </HeaderElementWrap>
+        </HeaderControls>
+      </HeaderFrame>
   )
 }

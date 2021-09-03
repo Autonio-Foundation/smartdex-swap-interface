@@ -32,7 +32,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
       <AutoColumn style={{ padding: '0 16px' }}>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.gray5}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -40,16 +40,18 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
           <RowFixed>
             <TYPE.black color={theme.text1} fontSize={14}>
               {isExactIn
-                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.outputAmount.currency.symbol}` ??
-                '-'
-                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol}` ??
-                '-'}
+                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${
+                    trade.outputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.outputAmount.currency.symbol
+                  }` ?? '-'
+                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${
+                    trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol
+                  }` ?? '-'}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.gray5}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
@@ -59,13 +61,17 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.gray5}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol}` : '-'}
+            {realizedLPFee
+              ? `${realizedLPFee.toSignificant(4)} ${
+                  trade.inputAmount.currency.symbol === 'ETH' ? 'MATIC' : trade.inputAmount.currency.symbol
+                }`
+              : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
@@ -77,6 +83,12 @@ export interface AdvancedSwapDetailsProps {
   trade?: Trade
 }
 
+export const SectionBreak = styled.div`
+  height: 1px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.gray1};
+`
+
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
@@ -85,21 +97,22 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
-    <AutoColumn gap="0px">
+    <AutoColumn gap="md">
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
-              <RowBetween style={{ padding: '0 16px' }}>
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              <SectionBreak />
+              <AutoColumn style={{ padding: '0 16px' }}>
+                <RowFixed>
+                  <TYPE.black fontSize={14} fontWeight={400} color={theme.gray5}>
                     Route
                   </TYPE.black>
                   <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-                </span>
+                </RowFixed>
                 <SwapRoute trade={trade} />
-              </RowBetween>
+              </AutoColumn>
             </>
           )}
           {!showRoute && (

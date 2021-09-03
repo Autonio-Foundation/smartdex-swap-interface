@@ -86,12 +86,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
+                {` & `}
+                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount1} />}
               </TYPE.body>
-              <TYPE.body>Unclaimed NIOX</TYPE.body>
+              <TYPE.body>Unclaimed {stakingInfo.token0.symbol + ' & ' + stakingInfo.token1.symbol}</TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            When you withdraw, your NIOX is claimed and your liquidity is removed from the mining pool.
+            When you withdraw, your {stakingInfo.token0.symbol + ' & ' + stakingInfo.token1.symbol} is claimed and your liquidity is removed from the mining pool.
           </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
             {error ?? 'Withdraw & Claim'}
@@ -102,7 +104,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} NIOXV2</TYPE.body>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} NIOX</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(4) + ' ' + stakingInfo.token0.symbol + ' & ' + stakingInfo?.earnedAmount1?.toSignificant(4) + ' ' + stakingInfo.token1.symbol} </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -111,7 +113,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             <TYPE.body fontSize={20}>Withdrew NIOXV2!</TYPE.body>
-            <TYPE.body fontSize={20}>Claimed NIOX!</TYPE.body>
+            <TYPE.body fontSize={20}>Claimed {stakingInfo.token0.symbol + ' & ' + stakingInfo.token1.symbol}!</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

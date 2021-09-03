@@ -4,7 +4,7 @@ import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@uniswa
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { useTransactionAdder, useTransactionAdderByHash } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
@@ -13,6 +13,17 @@ import { useV1ExchangeContract } from './useContract'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
+
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { ROUTER_ADDRESS } from '../constants'
+
+const ethUtil = require('ethereumjs-util');
+const abi = require('ethereumjs-abi')
+
+declare var window: any;
+const Biconomy = window.Biconomy;
+declare var Web3: any;
+let web3: any;
 
 export enum SwapCallbackState {
   INVALID,
@@ -120,6 +131,41 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
+  const addTransactionByHash = useTransactionAdderByHash()
+  // meta tx 
+  const constructMetaTransactionMessage = (nonce: any, chainId: any, functionSignature: any, contractAddress: any) => {
+    console.log("ethUtil", ethUtil)
+    return abi.soliditySHA3(
+      ["uint256", "address", "uint256", "bytes"],
+      [nonce, contractAddress, chainId, ethUtil.toBuffer(functionSignature)]
+    );
+  }
+
+  const getSignatureParameters = (signature: any) => {
+    if (!web3.utils.isHexStrict(signature)) {
+      throw new Error(
+        'Given value "'.concat(signature, '" is not a valid hex string.')
+      );
+    }
+    var r = signature.slice(0, 66);
+    var s = "0x".concat(signature.slice(66, 130));
+    // var v = "0x".concat(signature.slice(130, 132));
+    let v = web3.utils.hexToNumber("0x".concat(signature.slice(130, 132)));
+    v = parseInt(v)
+    console.log(r, s, v);
+    if (![27, 28].includes(v)) {
+      console.log("v", v);
+      v += 27
+    } else {
+      console.log("else v", v)
+    }
+    return {
+      r: r,
+      s: s,
+      v: v
+    };
+  };
+
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
@@ -197,48 +243,128 @@ export function useSwapCallback(
           },
           gasEstimate
         } = successfulEstimation
+        if (value && !isZero(value)) {
+          return contract[methodName](...args, {
+            gasLimit: calculateGasMargin(gasEstimate),
+            ...(value && !isZero(value) ? { value, from: account } : { from: account })
+          })
+            .then((response: any) => {
+              const inputSymbol = trade.inputAmount.currency.symbol
+              const outputSymbol = trade.outputAmount.currency.symbol
+              const inputAmount = trade.inputAmount.toSignificant(3)
+              const outputAmount = trade.outputAmount.toSignificant(3)
 
-        return contract[methodName](...args, {
-          gasLimit: calculateGasMargin(gasEstimate),
-          ...(value && !isZero(value) ? { value, from: account } : { from: account })
-        })
-          .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
-
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
+              const base = `Swap ${inputAmount} ${inputSymbol === 'ETH' ? 'MATIC' : inputSymbol} for ${outputAmount} ${outputSymbol === 'ETH' ? 'MATIC' : outputSymbol
+                }`
+              const withRecipient =
+                recipient === account
+                  ? base
+                  : `${base} to ${recipientAddressOrName && isAddress(recipientAddressOrName)
+                    ? shortenAddress(recipientAddressOrName)
+                    : recipientAddressOrName
                   }`
 
-            const withVersion =
-              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
+              const withVersion =
+                tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
 
-            addTransaction(response, {
-              summary: withVersion
+              addTransaction(response, {
+                summary: withVersion
+              })
+
+              return response.hash
             })
+            .catch((error: any) => {
+              // if the user rejected the tx, pass this along
+              if (error?.code === 4001) {
+                throw new Error('Transaction rejected.')
+              } else {
+                // otherwise, the error was unexpected and we need to convey that
+                console.error(`Swap failed`, error, methodName, args, value)
+                throw new Error(`Swap failed: ${error.message}`)
+              }
+            })
+        } else {
+          const biconomy = new Biconomy(window.ethereum, { apiKey: "JRKmMz4my.d3442601-7ced-4025-a85a-9e71b9f25eaa" }); // meta basic personal sgn
 
-            return response.hash
+          // ceating web3 instance using biconomy
+          web3 = new Web3(biconomy);
+
+          // new router with gasless enabled
+          const lp = new web3.eth.Contract(IUniswapV2Router02ABI, ROUTER_ADDRESS);
+
+          biconomy.onEvent(biconomy.READY, () => {
+            // Initialize your dapp here like getting user accounts etc
+            const lp = new web3.eth.Contract(
+              IUniswapV2Router02ABI, ROUTER_ADDRESS
+            );
+            console.log("lp from biconomy", lp)
           })
-          .catch((error: any) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error('Transaction rejected.')
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`)
-            }
-          })
+          const nonce = await lp.methods.getNonce(account).call(); // getting nonce for meta-transaction
+
+          const functionSignature = await lp.methods[methodName](...args).encodeABI();
+
+          let messageToSign = constructMetaTransactionMessage(nonce, chainId, functionSignature, ROUTER_ADDRESS);
+
+          console.log('msgto sign', messageToSign)
+          const signature = await web3.eth.personal.sign("0x" +
+            messageToSign.toString("hex"), account);
+          console.log("signature", signature)
+          const { r, s, v } = getSignatureParameters(signature);
+          console.log(r)
+          console.log(s)
+          console.log(v)
+          // const tx = lp.methods.executeMetaTransaction(
+          //   account, functionSignature, r, s, v)
+          //   .send({ from: window.ethereum.selectedAddress });
+          return lp.methods.executeMetaTransaction(account, functionSignature, r, s, v).send({ from: account })
+            .then((response: any) => {
+              console.log(response.transactionHash)
+              const inputSymbol = trade.inputAmount.currency.symbol
+              const outputSymbol = trade.outputAmount.currency.symbol
+              const inputAmount = trade.inputAmount.toSignificant(3)
+              const outputAmount = trade.outputAmount.toSignificant(3)
+
+              const base = `Swap ${inputAmount} ${inputSymbol === 'ETH' ? 'MATIC' : inputSymbol} for ${outputAmount} ${outputSymbol === 'ETH' ? 'MATIC' : outputSymbol
+                }`
+              const withRecipient =
+                recipient === account
+                  ? base
+                  : `${base} to ${recipientAddressOrName && isAddress(recipientAddressOrName)
+                    ? shortenAddress(recipientAddressOrName)
+                    : recipientAddressOrName
+                  }`
+
+              const withVersion =
+                tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
+
+              addTransactionByHash(response.transactionHash, {
+                summary: withVersion
+              })
+
+              return response.transactionHash
+            }).catch((error: any) => {
+              // if the user rejected the tx, pass this along
+              if (error?.code === 4001) {
+                throw new Error('Transaction rejected.')
+              } else {
+                // otherwise, the error was unexpected and we need to convey that
+                console.error(`Swap failed`, error, methodName, args, value)
+                throw new Error(`Swap failed: ${error.message}`)
+              }
+            })
+          // tx.on("transactionHash", (hash: any) => {
+
+          //  return ()=>{
+          //    return hash;
+          //  }
+          // })
+
+
+
+        }
+
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction, addTransactionByHash])
 }

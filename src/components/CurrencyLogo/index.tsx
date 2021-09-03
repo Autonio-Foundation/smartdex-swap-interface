@@ -2,15 +2,15 @@ import { Currency, ETHER, Token } from '@uniswap/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import WMaticLogo from '../../assets/images/wmatic.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 
 export const getTokenLogoURL = (address: string) => {
-  let uri;
+  let uri
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    address = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/wmatic.png'
   }
   if (address?.toLowerCase() === '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063') {
     address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -111,7 +111,8 @@ export const getTokenLogoURL = (address: string) => {
   }
 
   if (address?.toLowerCase() === '0x104592a158490a9228070E0A8e5343B499e125D0'.toLowerCase()) {
-    uri = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955aCEf822Db058eb8505911ED77F175b99e/logo.png'
+    uri =
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955aCEf822Db058eb8505911ED77F175b99e/logo.png'
   }
 
   if (address?.toLowerCase() === '0xab0b2ddB9C7e440fAc8E140A89c0dbCBf2d7Bbff'.toLowerCase()) {
@@ -163,11 +164,7 @@ export const getTokenLogoURL = (address: string) => {
   }
 
   if (address?.toLowerCase() === '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96'.toLowerCase()) {
-    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/2151.png'
-  }
-
-  if (address?.toLowerCase() === '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96'.toLowerCase()) {
-    address = '0xc813EA5e3b48BEbeedb796ab42A30C5599b01740'
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/autonio-token-symbol.png'
   }
 
   if (address?.toLowerCase() === '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39'.toLowerCase()) {
@@ -198,11 +195,36 @@ export const getTokenLogoURL = (address: string) => {
     address = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
   }
 
-  if (!uri) {
-    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+  if (address?.toLowerCase() === '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/14048/small/aloha.png?1615527835'
+  }
+  if (address?.toLowerCase() === '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/14474/small/graphlinq_logo.jpg?1616397109'
+  }
+  if (address?.toLowerCase() === '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/2138/small/singularitynet.png?1548609559'
+  }
+  if (address?.toLowerCase() === '0xd7ecf95Cf7eF5256990BeAf4ac895cD9e64cb947'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/10805/small/J51iIea.png?1583891599'
+  }
+  if (address?.toLowerCase() === '0x4d8181f051E617642e233Be09Cea71Cc3308ffD4'.toLowerCase()) {
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/logo-digi.svg'
+  }
+  if (address?.toLowerCase() === '0xdbf31df14b66535af65aac99c32e9ea844e14501'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/11370/small/renBTC.png?1589985711'
+  }
+  if (address?.toLowerCase() === '0x190Eb8a183D22a4bdf278c6791b152228857c033'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/2138/small/singularitynet.png?1548609559'
+  }
+  if (address?.toLowerCase() === '0x59e991B37b35Ac2187113dFdB5D60D2e887eEec1'.toLowerCase()) {
+    uri = 'https://raw.githubusercontent.com/totoptech/niox-token-list/main/logos/sdao.png'
   }
 
-  return uri;
+  if (!uri) {
+    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  }
+
+  return uri
 }
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
@@ -210,9 +232,10 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   height: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   border-radius: 24px;
+  background-color: ${({ theme }) => theme.white};
 `
 
-const StyledLogo = styled(Logo) <{ size: string }>`
+const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
@@ -244,7 +267,7 @@ export default function CurrencyLogo({
   }, [currency, uriLocations])
 
   if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+    return <StyledEthereumLogo src={WMaticLogo} size={size} style={style} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

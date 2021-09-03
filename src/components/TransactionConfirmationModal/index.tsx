@@ -109,14 +109,25 @@ function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  Add {currencyToAdd.symbol === 'UNI-V2' ? 'Smartdex-V2' : currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                  Add{' '}
+                  {currencyToAdd.symbol === 'UNI-V2'
+                    ? 'Smartdex-V2'
+                    : currencyToAdd.symbol === 'ETH'
+                    ? 'MATIC'
+                    : currencyToAdd.symbol}{' '}
+                  to Metamask <StyledLogo src={MetaMaskLogo} />
                 </RowFixed>
               ) : (
-                  <RowFixed>
-                    Added {currencyToAdd.symbol}{' '}
-                    <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
-                  </RowFixed>
-                )}
+                <RowFixed>
+                  Added{' '}
+                  {currencyToAdd.symbol === 'UNI-V2'
+                    ? 'Smartdex-V2'
+                    : currencyToAdd.symbol === 'ETH'
+                    ? 'MATIC'
+                    : currencyToAdd.symbol}{' '}
+                  <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
+                </RowFixed>
+              )}
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
@@ -218,8 +229,8 @@ export default function TransactionConfirmationModal({
           currencyToAdd={currencyToAdd}
         />
       ) : (
-            content()
-          )}
+        content()
+      )}
     </Modal>
   )
 }

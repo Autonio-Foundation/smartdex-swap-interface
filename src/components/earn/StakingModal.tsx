@@ -51,11 +51,17 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
   let hypotheticalRewardRate: TokenAmount = new TokenAmount(stakingInfo.rewardRate.token, '0')
+  let hypotheticalRewardRate1: TokenAmount = new TokenAmount(stakingInfo?.rewardRate1.token, '0')
   if (parsedAmountWrapped?.greaterThan('0')) {
     hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount.add(parsedAmountWrapped),
       stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
       stakingInfo.totalRewardRate
+    )
+    hypotheticalRewardRate1 = stakingInfo?.getHypotheticalRewardRate1(
+      stakingInfo.stakedAmount.add(parsedAmountWrapped),
+      stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
+      stakingInfo?.totalRewardRate1
     )
   }
 
@@ -72,7 +78,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
   // const pairContract = usePairContract(dummyPair.liquidityToken.address)
-  const pairContract = usePairContract(stakingInfo.lp && stakingInfo.lp !== '' ? stakingInfo.lp : dummyPair.liquidityToken.address)
+  const pairContract = usePairContract(
+    stakingInfo.lp && stakingInfo.lp !== '' ? stakingInfo.lp : dummyPair.liquidityToken.address
+  )
 
   // approval data for stake
   const deadline = useTransactionDeadline()
@@ -84,7 +92,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   async function onStake() {
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
-      console.log("ApprovalState.APPROVED", approval, ApprovalState.APPROVED);
+      console.log('ApprovalState.APPROVED', approval, ApprovalState.APPROVED)
       if (approval === ApprovalState.APPROVED) {
         // console.log("if", parsedAmount.raw.toString(16))
         await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
@@ -225,7 +233,20 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
             <TYPE.black>
               {hypotheticalRewardRate.multiply((60 * 60 * 24).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              NIOX / DAY
+              {stakingInfo.token0.symbol} / DAY
+            </TYPE.black>
+          </HypotheticalRewardRate>
+
+          <HypotheticalRewardRate dim={!hypotheticalRewardRate1.greaterThan('0')}>
+            <div>
+              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
+            </div>
+
+            <TYPE.black>
+              {
+                hypotheticalRewardRate1 &&
+                hypotheticalRewardRate1.multiply((60 * 60 * 24).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
+              {stakingInfo.token1.symbol} / DAY
             </TYPE.black>
           </HypotheticalRewardRate>
 

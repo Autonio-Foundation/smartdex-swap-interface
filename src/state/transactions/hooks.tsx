@@ -37,6 +37,36 @@ export function useTransactionAdder(): (
   )
 }
 
+export function useTransactionAdderByHash(): (
+  response: string,
+  customData?: { summary?: string; approval?: { tokenAddress: string; spender: string }; claim?: { recipient: string } }
+) => void {
+  const { chainId, account } = useActiveWeb3React()
+  const dispatch = useDispatch<AppDispatch>()
+
+  return useCallback(
+    (
+      response: string,
+      {
+        summary,
+        approval,
+        claim
+      }: { summary?: string; claim?: { recipient: string }; approval?: { tokenAddress: string; spender: string } } = {}
+    ) => {
+      if (!account) return
+      if (!chainId) return
+
+      const hash = response
+      if (!hash) {
+        throw Error('No transaction hash found.')
+      }
+      dispatch(addTransaction({ hash, from: account, chainId, approval, summary, claim }))
+    },
+    [dispatch, chainId, account]
+  )
+}
+
+
 // returns all the transactions for the current chain
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useActiveWeb3React()

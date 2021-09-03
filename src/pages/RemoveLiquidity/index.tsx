@@ -1,6 +1,6 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
+// import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -27,7 +27,7 @@ import { usePairContract } from '../../hooks/useContract'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useTransactionAdderByHash } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
@@ -43,6 +43,16 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
+
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+
+const ethUtil = require('ethereumjs-util');
+const abi = require('ethereumjs-abi')
+
+declare var window: any;
+const Biconomy = window.Biconomy;
+declare var Web3: any;
+let web3: any;
 
 export default function RemoveLiquidity({
   history,
@@ -191,7 +201,44 @@ export default function RemoveLiquidity({
   ])
 
   // tx sending
-  const addTransaction = useTransactionAdder()
+  // const addTransaction = useTransactionAdder()
+
+  const addTransactionByHash = useTransactionAdderByHash()
+
+  // meta tx 
+  const constructMetaTransactionMessage = (nonce: any, chainId: any, functionSignature: any, contractAddress: any) => {
+    console.log("ethUtil", ethUtil)
+    return abi.soliditySHA3(
+      ["uint256", "address", "uint256", "bytes"],
+      [nonce, contractAddress, chainId, ethUtil.toBuffer(functionSignature)]
+    );
+  }
+
+  const getSignatureParameters = (signature: any) => {
+    if (!web3.utils.isHexStrict(signature)) {
+      throw new Error(
+        'Given value "'.concat(signature, '" is not a valid hex string.')
+      );
+    }
+    var r = signature.slice(0, 66);
+    var s = "0x".concat(signature.slice(66, 130));
+    // var v = "0x".concat(signature.slice(130, 132));
+    let v = web3.utils.hexToNumber("0x".concat(signature.slice(130, 132)));
+    v = parseInt(v)
+    console.log(r, s, v);
+    if (![27, 28].includes(v)) {
+      console.log("v", v);
+      v += 27
+    } else {
+      console.log("else v", v)
+    }
+    return {
+      r: r,
+      s: s,
+      v: v
+    };
+  };
+
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -199,6 +246,22 @@ export default function RemoveLiquidity({
       throw new Error('missing currency amounts')
     }
     const router = getRouterContract(chainId, library, account)
+
+    const biconomy = new Biconomy(window.ethereum, { apiKey: "JRKmMz4my.d3442601-7ced-4025-a85a-9e71b9f25eaa" }); // meta basic personal sgn
+
+    // ceating web3 instance using biconomy
+    web3 = new Web3(biconomy);
+
+    // new router with gasless enabled
+    const lp = new web3.eth.Contract(IUniswapV2Router02ABI, ROUTER_ADDRESS);
+
+    biconomy.onEvent(biconomy.READY, () => {
+      // Initialize your dapp here like getting user accounts etc
+      const lp = new web3.eth.Contract(
+        IUniswapV2Router02ABI, ROUTER_ADDRESS
+      );
+      console.log("lp from biconomy", lp)
+    })
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
@@ -214,7 +277,8 @@ export default function RemoveLiquidity({
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
-    let methodNames: string[], args: Array<string | string[] | number | boolean>
+    let methodNames: string[], args: Array<string | string[] | number | boolean>,
+      functionSignature: any
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
@@ -301,41 +365,89 @@ export default function RemoveLiquidity({
     if (indexOfSuccessfulEstimation === -1) {
       console.error('This transaction would fail. Please contact support.')
     } else {
-      const methodName = methodNames[indexOfSuccessfulEstimation]
-      const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
-
       setAttemptingTxn(true)
-      await router[methodName](...args, {
-        gasLimit: safeGasEstimate
-      })
-        .then((response: TransactionResponse) => {
-          setAttemptingTxn(false)
+      const methodName = methodNames[indexOfSuccessfulEstimation]
+      // const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
-          addTransaction(response, {
-            summary:
-              'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencyA?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencyB?.symbol
-          })
+      functionSignature = await lp.methods[methodName](...args).encodeABI();
 
-          setTxHash(response.hash)
+      const nonce = await lp.methods.getNonce(account).call(); // getting nonce for meta-transaction
+      let messageToSign = constructMetaTransactionMessage(nonce, chainId, functionSignature, ROUTER_ADDRESS);
 
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/')
-          })
+      const signature = await web3.eth.personal.sign("0x" +
+        messageToSign.toString("hex"), account);
+      console.log("signature", signature)
+      const { r, s, v } = getSignatureParameters(signature);
+      console.log(r)
+      console.log(s)
+      console.log(v)
+      const tx = lp.methods.executeMetaTransaction(
+        account, functionSignature, r, s, v)
+        .send({ from: window.ethereum.selectedAddress });
+
+      tx.on("transactionHash", (hash: any) => {
+        // Handle transaction hash
+        setTxHash(hash)
+        setAttemptingTxn(false)
+        addTransactionByHash(hash, {
+          summary:
+            'Remove ' +
+            parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+            ' ' +
+            currencyA?.symbol +
+            ' and ' +
+            parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+            ' ' +
+            currencyB?.symbol
         })
-        .catch((error: Error) => {
-          setAttemptingTxn(false)
-          // we only care if the error is something _other_ than the user rejected the tx
+
+        ReactGA.event({
+          category: 'Liquidity',
+          action: 'Remove',
+          label: [currencyA?.symbol, currencyB?.symbol].join('/')
+        })
+
+      }).on("error", (error: any) => {
+        // Handle error
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
           console.error(error)
-        })
+        }
+      });
+
+
+      // await router[methodName](...args, {
+      //   gasLimit: safeGasEstimate
+      // })
+      //   .then((response: TransactionResponse) => {
+      //     setAttemptingTxn(false)
+
+      //     addTransaction(response, {
+      //       summary:
+      //         'Remove ' +
+      //         parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+      //         ' ' +
+      //         currencyA?.symbol +
+      //         ' and ' +
+      //         parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+      //         ' ' +
+      //         currencyB?.symbol
+      //     })
+
+      //     setTxHash(response.hash)
+
+      //     ReactGA.event({
+      //       category: 'Liquidity',
+      //       action: 'Remove',
+      //       label: [currencyA?.symbol, currencyB?.symbol].join('/')
+      //     })
+      //   })
+      //   .catch((error: Error) => {
+      //     setAttemptingTxn(false)
+      //     // we only care if the error is something _other_ than the user rejected the tx
+      //     console.error(error)
+      //   })
     }
   }
 
@@ -655,36 +767,36 @@ export default function RemoveLiquidity({
               {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
               ) : (
-                  <RowBetween>
-                    <ButtonConfirmed
-                      onClick={onAttemptToApprove}
-                      confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                      disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-                      mr="0.5rem"
-                      fontWeight={500}
-                      fontSize={16}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <Dots>Approving</Dots>
-                      ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                        'Approved'
-                      ) : (
-                            'Approve'
-                          )}
-                    </ButtonConfirmed>
-                    <ButtonError
-                      onClick={() => {
-                        setShowConfirm(true)
-                      }}
-                      disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
-                      error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                    >
-                      <Text fontSize={16} fontWeight={500}>
-                        {error || 'Remove'}
-                      </Text>
-                    </ButtonError>
-                  </RowBetween>
-                )}
+                <RowBetween>
+                  <ButtonConfirmed
+                    onClick={onAttemptToApprove}
+                    confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                    disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                    mr="0.5rem"
+                    fontWeight={500}
+                    fontSize={16}
+                  >
+                    {approval === ApprovalState.PENDING ? (
+                      <Dots>Approving</Dots>
+                    ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                      'Approved'
+                    ) : (
+                      'Approve'
+                    )}
+                  </ButtonConfirmed>
+                  <ButtonError
+                    onClick={() => {
+                      setShowConfirm(true)
+                    }}
+                    disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
+                    error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  >
+                    <Text fontSize={16} fontWeight={500}>
+                      {error || 'Remove'}
+                    </Text>
+                  </ButtonError>
+                </RowBetween>
+              )}
             </div>
           </AutoColumn>
         </Wrapper>
