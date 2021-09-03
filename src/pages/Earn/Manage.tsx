@@ -14,7 +14,7 @@ import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
-import { useStakingInfo } from '../../state/stake/hooks'
+import { useDualStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
@@ -35,7 +35,7 @@ const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `
 
-const PositionInfo = styled(AutoColumn) <{ dim: any }>`
+const PositionInfo = styled(AutoColumn)<{ dim: any }>`
   position: relative;
   max-width: 640px;
   width: 100%;
@@ -48,7 +48,7 @@ const BottomSection = styled(AutoColumn)`
   position: relative;
 `
 
-const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }>`
+const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -57,7 +57,7 @@ const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }
   background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);
 `
 
-const StyledBottomCard = styled(DataCard) <{ dim: any }>`
+const StyledBottomCard = styled(DataCard)<{ dim: any }>`
   /* background: ${({ theme }) => theme.bg3}; */
   background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #1A1F28 0%, #2F3641 100%);
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
@@ -76,7 +76,7 @@ const PoolData = styled(DataCard)`
 
 const VoteCard = styled(DataCard)`
   /* background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%); */
-  background: radial-gradient(121.78% 497.4% at 0% -243.23%, #7C9632 0%, #070C12 100%);
+  background: radial-gradient(121.78% 497.4% at 0% -243.23%, #7c9632 0%, #070c12 100%);
   overflow: hidden;
 `
 
@@ -94,7 +94,7 @@ export default function Manage({
   match: {
     params: { currencyIdA, currencyIdB, rewardsAddress }
   }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string, rewardsAddress: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; rewardsAddress: string }>) {
   const { account, chainId } = useActiveWeb3React()
 
   // get currencies and pair
@@ -104,19 +104,17 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
-  const stakingInfos = useStakingInfo(stakingTokenPair)
+  const stakingInfos = useDualStakingInfo(stakingTokenPair)
   let stakingInfo = stakingInfos?.reduce<any>((memo, staking) => {
     if (staking.stakingRewardAddress === rewardsAddress) {
-      return staking;
+      return staking
+    } else {
+      return memo
     }
-    else {
-      return memo;
-    }
-
-  }, []);
+  }, [])
 
   if (stakingInfo.length === 0) {
-    stakingInfo = undefined;
+    stakingInfo = undefined
   }
 
   // detect existing unstaked LP position to show add button if none found
@@ -175,14 +173,12 @@ export default function Manage({
     stakedToken = Number(stakedToken09).toFixed(5);
   }*/
 
-
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  const valueOfMyStakedAmountInUSDC =
-    valueOfMyStakedAmountInWETH && USDPrice?.quote(valueOfMyStakedAmountInWETH)
+  const valueOfMyStakedAmountInUSDC = valueOfMyStakedAmountInWETH && USDPrice?.quote(valueOfMyStakedAmountInWETH)
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -198,7 +194,12 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {stakingInfo?.name && stakingInfo?.name !== '' ? stakingInfo?.name : ((currencyA?.symbol ? currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol : '') + '-' + (currencyB?.symbol ? currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol : ''))} Liquidity Mining
+          {stakingInfo?.name && stakingInfo?.name !== ''
+            ? stakingInfo?.name
+            : (currencyA?.symbol ? (currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol) : '') +
+              '-' +
+              (currencyB?.symbol ? (currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol) : '')}{' '}
+          Liquidity Mining
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -220,9 +221,8 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Pool Rate </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo?.totalRewardRate
-                ?.multiply((60 * 60 * 24).toString())
-                ?.toFixed(0, { groupSeparator: ',' }) ?? '- '}
+              {stakingInfo?.totalRewardRate?.multiply((60 * 60 * 24).toString())?.toFixed(0, { groupSeparator: ',' }) ??
+                '- '}
               {' ' + stakingInfo?.token0.symbol + ' / day'}
             </TYPE.body>
           </AutoColumn>
@@ -247,12 +247,23 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get {(stakingInfo?.name && stakingInfo?.name !== "" ? stakingInfo.name : "SmartdexPair")} Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>
+                  Step 1. Get {stakingInfo?.name && stakingInfo?.name !== '' ? stakingInfo.name : 'SmartdexPair'}{' '}
+                  Liquidity tokens
+                </TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {(stakingInfo?.name && stakingInfo?.name !== "" ? stakingInfo.name : "SmartdexPair") + " tokens are required. Once you've added liquidity to the " + currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol + "-" + currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol + " pool you can stake your liquidity tokens on " + (stakingInfo?.lp && stakingInfo?.lp !== "" ? "the Aavegotchi page" : "this page.")}
-
+                  {(stakingInfo?.name && stakingInfo?.name !== '' ? stakingInfo.name : 'SmartdexPair') +
+                    " tokens are required. Once you've added liquidity to the " +
+                    currencyA?.symbol ===
+                  'ETH'
+                    ? 'MATIC'
+                    : currencyA?.symbol + '-' + currencyB?.symbol === 'ETH'
+                    ? 'MATIC'
+                    : currencyB?.symbol +
+                      ' pool you can stake your liquidity tokens on ' +
+                      (stakingInfo?.lp && stakingInfo?.lp !== '' ? 'the Aavegotchi page' : 'this page.')}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -262,7 +273,9 @@ export default function Manage({
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
-                {`Add ${currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol}-${currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol} liquidity`}
+                {`Add ${currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol}-${
+                  currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol
+                } liquidity`}
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
@@ -309,7 +322,20 @@ export default function Manage({
                       : `${valueOfMyStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} MATIC`}
                   </TYPE.white>
                   <TYPE.white>
-                    {stakingInfo?.name && stakingInfo?.name && stakingInfo.name !== '' ? stakingInfo.name : 'SmartdexPair ' + ((currencyA?.symbol !== undefined ? currencyA?.symbol === 'ETH' ? 'MATIC' : currencyA?.symbol : '') + '-' + (currencyB?.symbol !== undefined ? currencyB?.symbol === 'ETH' ? 'MATIC' : currencyB?.symbol : ''))}
+                    {stakingInfo?.name && stakingInfo?.name && stakingInfo.name !== ''
+                      ? stakingInfo.name
+                      : 'SmartdexPair ' +
+                        ((currencyA?.symbol !== undefined
+                          ? currencyA?.symbol === 'ETH'
+                            ? 'MATIC'
+                            : currencyA?.symbol
+                          : '') +
+                          '-' +
+                          (currencyB?.symbol !== undefined
+                            ? currencyB?.symbol === 'ETH'
+                              ? 'MATIC'
+                              : currencyB?.symbol
+                            : ''))}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -321,7 +347,9 @@ export default function Manage({
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <TYPE.black>Your unclaimed {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1.symbol}</TYPE.black>
+                  <TYPE.black>
+                    Your unclaimed {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1.symbol}
+                  </TYPE.black>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
                   <ButtonEmpty
@@ -346,17 +374,17 @@ export default function Manage({
                     duration={1}
                   />
                 </TYPE.largeHeader>
-                {!stakingInfo?.ended &&
+                {!stakingInfo?.ended && (
                   <TYPE.black fontSize={16} fontWeight={500}>
                     <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                       ⚡
-                  </span>
+                    </span>
                     {stakingInfo?.rewardRate
                       ?.multiply((60 * 60 * 24).toString())
                       ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
                     {' ' + stakingInfo?.token0.symbol + ' / day'}
                   </TYPE.black>
-                }
+                )}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
                 <TYPE.largeHeader fontSize={36} fontWeight={600}>
@@ -370,17 +398,17 @@ export default function Manage({
                     duration={1}
                   />
                 </TYPE.largeHeader>
-                {!stakingInfo?.ended &&
+                {!stakingInfo?.ended && (
                   <TYPE.black fontSize={16} fontWeight={500}>
                     <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                       ⚡
-                  </span>
+                    </span>
                     {stakingInfo?.rewardRate1
                       ?.multiply((60 * 60 * 24).toString())
                       ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
                     {' ' + stakingInfo?.token1.symbol + ' / day'}
                   </TYPE.black>
-                }
+                )}
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
@@ -389,16 +417,21 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          When you withdraw, the contract will automatically claim {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1.symbol} on your behalf!
+          When you withdraw, the contract will automatically claim{' '}
+          {stakingInfo?.token0.symbol + ' & ' + stakingInfo?.token1.symbol} on your behalf!
         </TYPE.main>
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            { !stakingInfo?.ended &&
+            {!stakingInfo?.ended && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : stakingInfo && stakingInfo?.name !== '' ? 'Deposit ' + stakingInfo?.name + " Tokens" : 'Deposit SmartdexPair LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0))
+                  ? 'Deposit'
+                  : stakingInfo && stakingInfo?.name !== ''
+                  ? 'Deposit ' + stakingInfo?.name + ' Tokens'
+                  : 'Deposit SmartdexPair LP Tokens'}
               </ButtonPrimary>
-            }
+            )}
 
             {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
               <>
@@ -415,7 +448,10 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
-          <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} {stakingInfo?.name !== '' ? stakingInfo?.name : 'SmartdexPair LP'} tokens available</TYPE.main>
+          <TYPE.main>
+            {userLiquidityUnstaked.toSignificant(6)} {stakingInfo?.name !== '' ? stakingInfo?.name : 'SmartdexPair LP'}{' '}
+            tokens available
+          </TYPE.main>
         )}
       </PositionInfo>
     </PageWrapper>

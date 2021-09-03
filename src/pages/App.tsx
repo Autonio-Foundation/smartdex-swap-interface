@@ -21,7 +21,8 @@ import Earn from './Earn'
 import OldEarn from './OldEarn'
 import EarnFarm from './EarnFarm'
 import Manage from './Earn/Manage'
-import OldManage from './OldEarn/Manage'
+import SingleManage from './Earn/SingleManage'
+import OldManage from './Earn/OldManage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
@@ -79,20 +80,20 @@ function TopLevelModals() {
 
 function App(props: any) {
   useEffect(() => {
-    window.onmessage = function (e: any) {
+    window.onmessage = function(e: any) {
       if (e.data === 'redirect to swap') {
-        props.history.push('/swap');
+        props.history.push('/swap')
       }
 
       if (e.data === 'redirect to pool') {
-        props.history.push('/pool');
+        props.history.push('/pool')
       }
 
       if (e.data === 'redirect to farm') {
-        props.history.push('/farm');
+        props.history.push('/farm')
       }
-    };
-  }, [props.history]);
+    }
+  }, [props.history])
 
   return (
     <Suspense fallback={null}>
@@ -133,7 +134,7 @@ function App(props: any) {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/farm/:currencyIdA/:currencyIdB/:rewardsAddress" component={Manage} />
               <Route exact strict path="/archive/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
-              <Route exact strict path="/single/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
+              <Route exact strict path="/single/:currencyIdA/:currencyIdB/:rewardsAddress" component={SingleManage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
@@ -145,4 +146,4 @@ function App(props: any) {
   )
 }
 
-export default withRouter(App);
+export default withRouter(App)
