@@ -251,45 +251,8 @@ export const OLD_STAKING_REWARDS_INFO: {
       name: 'AGI-NIOX OLD',
       lp: '',
       baseToken: NIOX
-    }
-  ],
-  [ChainId.ROPSTEN]: [
-    //TODO: ropsten
-    // {
-    //   tokens: [XENO, ADDY],
-    //   stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
-    //   ended: false,
-    //   name: '',
-    //   lp: '',
-    //   baseToken: XENO
-    //   //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
-    // }
-  ]
-}
-
-export const SINGLE_STAKING_REWARDS_INFO: {
-  [chainId in ChainId]?: {
-    tokens: [Token, Token]
-    stakingRewardAddress: string
-    ended: boolean
-    name: string
-    lp: string
-    baseToken: Token
-  }[]
-} = {
-  [ChainId.MATIC]: [
-    ///////////////////////new one expiring after 1 day
-    // old
-    {
-      tokens: [NIOX, USDC],
-      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     },
+    //04-09-2021
     {
       tokens: [WMATIC, USDC],
       stakingRewardAddress: '0xe0af829866c719aaa88165323fcd8487b981fd3f',
@@ -362,6 +325,44 @@ export const SINGLE_STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: NIOX
+    }
+  ],
+  [ChainId.ROPSTEN]: [
+    //TODO: ropsten
+    // {
+    //   tokens: [XENO, ADDY],
+    //   stakingRewardAddress: '0xd0d51827C8D63fc6cF3d493977AC46f963D92C29',
+    //   ended: false,
+    //   name: '',
+    //   lp: '',
+    //   baseToken: XENO
+    //   //STAKINGREWARDSFACTORY- 0x5D490e48417Dd2F6165CEB3b2c04352675278998
+    // }
+  ]
+}
+
+export const SINGLE_STAKING_REWARDS_INFO: {
+  [chainId in ChainId]?: {
+    tokens: [Token, Token]
+    stakingRewardAddress: string
+    ended: boolean
+    name: string
+    lp: string
+    baseToken: Token
+  }[]
+} = {
+  [ChainId.MATIC]: [
+    ///////////////////////new one expiring after 1 day
+    // old
+    {
+      tokens: [NIOX, USDC],
+      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
     }
 
     // {
