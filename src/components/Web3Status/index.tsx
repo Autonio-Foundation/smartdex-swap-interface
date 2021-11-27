@@ -24,6 +24,7 @@ import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import { rgba } from 'polished'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -73,14 +74,18 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
+      background-color: ${({ theme }) => rgba(theme.primary5, 0.2)};
+      color: ${({ theme }) => theme.primary5};
+      border: ${({ theme }) => `1px solid ${rgba(theme.primary5, 0.05)}`};
+      box-shadow: none;
 
       :hover,
-      :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+      :focus,
+      :active {
+        background-color: ${({ theme }) => rgba(theme.primary5, 0.1)};
+        border: ${({ theme }) => `1px solid ${rgba(theme.primary5, 0.5)}`};
+        color: ${({ theme }) => theme.primary5};
+        box-shadow: none;
       }
     `}
 `
@@ -216,6 +221,10 @@ function Web3StatusInner() {
 
   }
 
+  const installMetamask = () => {
+    
+  }
+
   if (account) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
@@ -252,8 +261,8 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={(ethereum && ethereum.isMetaMask) ? addMaticToMetamask : toggleWalletModal} faded={!account}>
-        <Text>{(ethereum && ethereum.isMetaMask) ? t('Switch to Matic') : t('Connect to a wallet')}</Text>
+      <Web3StatusConnect id="connect-wallet" onClick={(ethereum && ethereum.isMetaMask) ? toggleWalletModal : installMetamask} faded={!account}>
+        <Text>{(ethereum && ethereum.isMetaMask) ? t('Connect to a wallet') : t('Install Metamask')}</Text>
       </Web3StatusConnect>
     )
   }

@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import React, { Suspense, useEffect } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
@@ -18,7 +18,11 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
+import OldEarn from './OldEarn'
+import EarnFarm from './EarnFarm'
 import Manage from './Earn/Manage'
+import SingleManage from './Earn/SingleManage'
+import OldManage from './Earn/OldManage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
@@ -36,6 +40,7 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
@@ -73,7 +78,23 @@ function TopLevelModals() {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
-export default function App() {
+function App(props: any) {
+  useEffect(() => {
+    window.onmessage = function(e: any) {
+      if (e.data === 'redirect to swap') {
+        props.history.push('/swap')
+      }
+
+      if (e.data === 'redirect to pool') {
+        props.history.push('/pool')
+      }
+
+      if (e.data === 'redirect to farm') {
+        props.history.push('/farm')
+      }
+    }
+  }, [props.history])
+
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
@@ -95,7 +116,9 @@ export default function App() {
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/niox" component={Earn} />
+              <Route exact strict path="/farm" component={Earn} />
+              <Route exact strict path="/archive" component={OldEarn} />
+              <Route exact strict path="/farmNIOXUniLP" component={EarnFarm} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
@@ -109,7 +132,9 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-              <Route exact strict path="/niox/:currencyIdA/:currencyIdB/:rewardsAddress" component={Manage} />
+              <Route exact strict path="/farm/:currencyIdA/:currencyIdB/:rewardsAddress" component={Manage} />
+              <Route exact strict path="/archive/:currencyIdA/:currencyIdB/:rewardsAddress" component={OldManage} />
+              <Route exact strict path="/single/:currencyIdA/:currencyIdB/:rewardsAddress" component={SingleManage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
@@ -120,3 +145,5 @@ export default function App() {
     </Suspense>
   )
 }
+
+export default withRouter(App)

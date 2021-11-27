@@ -14,6 +14,8 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { useApy } from 'data/Apy'
+// import { padding } from 'polished'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const StatContainer = styled.div`
@@ -29,14 +31,33 @@ const StatContainer = styled.div`
 `};
 `
 
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any; isSingle: Boolean }>`
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: ${({ isSingle }) => isSingle ? 'radial-gradient(124.43% 206.68% at 10.39% -100.8%, #66D5BB 0%, #061324 100%);' : 'radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -50%, #061324 100%)'}; 
+  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+
+  ${({ showBackground }) =>
+    showBackground &&
+    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);`}
+`
+
+const Wrapper1 = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
+  border-radius: 12px;
+  
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
+  /* background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `}; */
+  background: radial-gradient(124.43% 206.68% at 10.39% -100.8%, #acca27 -150%, #061324 100%);
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
   ${({ showBackground }) =>
@@ -68,7 +89,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+export default function PoolCard({ stakingInfo, isOld, isSingle }: { stakingInfo: StakingInfo; isOld: Boolean; isSingle: Boolean }) {
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
@@ -100,29 +121,65 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
       )
     )
   }
-  var show = isStaking || !stakingInfo.ended;
+  var show = isStaking || !stakingInfo.ended
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
+  console.log('stakingInfo', stakingInfo.token1.name)
+  let id = 'autonio';
+  if (stakingInfo.token1.name === 'DigiToken') {
+    id = 'digible';
+  } else if (stakingInfo.token1.name === 'ALOHA') {
+    id = 'aloha';
+  } else {
+    id = 'autonio';
+  }
+  const apy = useApy(stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC, 'autonio')
+  const apy1 = useApy(stakingInfo.totalRewardRate1?.multiply(`${60 * 60 * 24}`), valueOfTotalStakedAmountInUSDC, id)
+  const finalapy = apy1 + apy;
+  return show ? (
+    <Wrapper1 showBackground={isStaking} bgColor={backgroundColor}>
+      <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '8px', padding: '10px', color: '#acca27' }}>
+        Dual Tokens Farming Pool <TYPE.white fontWeight={400} fontSize={18} style={{ display: 'inline-block', color: '#acca27' }}>  - Earn two tokens instead of one</TYPE.white>
+      </TYPE.white>
 
-  return (
-    show ?
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+      <Wrapper showBackground={isStaking} bgColor={backgroundColor} isSingle={isSingle}>
         <CardBGImage desaturate />
         <CardNoise />
 
         <TopSection>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-          <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-            {currency0.symbol}-{currency1.symbol}
-          </TYPE.white>
+          {stakingInfo.name && stakingInfo.name !== '' ? (
+            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+              {stakingInfo.name}
+            </TYPE.white>
+          ) : (
+            <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+              {currency0.symbol === 'ETH' ? 'MATIC' : currency0.symbol}-
+              {currency1.symbol === 'ETH' ? 'MATIC' : currency1.symbol}
+            </TYPE.white>
+          )}
 
-          <StyledInternalLink to={`/niox/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`} style={{ width: '100%' }}>
-            <ButtonPrimary padding="8px" borderRadius="8px">
-              {isStaking ? 'Manage' : 'Deposit'}
-            </ButtonPrimary>
-          </StyledInternalLink>
+          {isOld ? (
+            <StyledInternalLink
+              to={`/archive/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+              style={{ width: '100%' }}
+            >
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          ) : (
+            <StyledInternalLink
+              to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingInfo.stakingRewardAddress}`}
+              style={{ width: '100%' }}
+            >
+              <ButtonPrimary padding="8px" borderRadius="8px">
+                {isStaking ? 'Manage' : 'Deposit'}
+              </ButtonPrimary>
+            </StyledInternalLink>
+          )}
         </TopSection>
 
         <StatContainer>
@@ -148,7 +205,15 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             <TYPE.white> Pool rate </TYPE.white>
             <TYPE.white>{`${stakingInfo.totalRewardRate
               ?.multiply(`${60 * 60 * 24}`)
-              ?.toFixed(0, { groupSeparator: ',' })} NIOX / day`}</TYPE.white>
+              ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.token0.symbol} / day + `}
+              {`${stakingInfo.totalRewardRate1
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.token1.symbol} / day`}</TYPE.white>
+          </RowBetween>
+          <RowBetween>
+            <TYPE.white> APY </TYPE.white>
+            <TYPE.white>{`${finalapy?.toFixed(2)} %`}</TYPE.white>
+
           </RowBetween>
         </StatContainer>
 
@@ -173,11 +238,17 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                 : '-'} */}
                 {`${stakingInfo.rewardRate
                   ?.multiply(`${60 * 60 * 24}`)
-                  ?.toSignificant(4, { groupSeparator: ',' })} NIOX / day`}
+                  ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo.token0.symbol} / day + `}
+                {`${stakingInfo.rewardRate1
+                  ?.multiply(`${60 * 60 * 24}`)
+                  ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo.token1.symbol} / day`}
               </TYPE.black>
             </BottomSection>
           </>
         )}
-      </Wrapper> : <span style={{ width: 0, display: "none" }}></span>
+      </Wrapper>
+    </Wrapper1>
+  ) : (
+    <span style={{ width: 0, display: 'none' }}></span>
   )
 }

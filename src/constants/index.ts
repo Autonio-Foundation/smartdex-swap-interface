@@ -17,15 +17,95 @@ export const FRAX = new Token(ChainId.MATIC, '0x104592a158490a9228070E0A8e5343B4
 export const FXS = new Token(ChainId.MATIC, '0x3e121107F6F22DA4911079845a470757aF4e1A1b', 18, 'FXS', 'Frax Shares')
 export const NIOX = new Token(ChainId.MATIC, '0xad684e79CE4b6D464f2Ff7c3FD51646892e24b96', 4, 'NIOX', 'Autonio')
 export const USDC = new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin (PoS)')
+export const USDT = new Token(
+  ChainId.MATIC,
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+  6,
+  'USDT',
+  'Tether USD (PoS)'
+)
+export const DAI = new Token(
+  ChainId.MATIC,
+  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+  18,
+  'DAI',
+  '(PoS) Dai Stablecoin'
+)
 export const DEV = new Token(ChainId.MATIC, '0xdd667bf15e34b126eaa53198c207e5390374bc1a', 4, 'DEV', 'Developer')
-export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
-export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
+export const TEST = new Token(ChainId.MATIC, '0x9e254a4FB0cC003c8679e48cB1777ED9bf03C5c4', 18, 'TEST', 'TEST')
+export const ETHER = new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'WETH', 'Wrapped Ether')
+export const WMATIC = new Token(
+  ChainId.MATIC,
+  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  18,
+  'WMATIC',
+  'Wrapped Matic'
+)
+export const ALOHA = new Token(ChainId.MATIC, '0x60ac2e84078ce30cbc68e3d7b18bcf613271ce6b', 18, 'ALOHA', 'ALOHA')
+export const DIGI = new Token(ChainId.MATIC, '0x4d8181f051E617642e233Be09Cea71Cc3308ffD4', 18, 'DIGI', 'DigiToken')
+export const GLQ = new Token(ChainId.MATIC, '0x0CfC9a713A5C17Bc8a5fF0379467f6558bAcD0e0', 18, 'GLQ', 'GraphLinq')
+export const MaticWETH = new Token(
+  ChainId.MATIC,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+export const AGI = new Token(
+  ChainId.MATIC,
+  '0x800eB319e3F0E962d3ca8D625C871B8F1bdf2bC8',
+  8,
+  'AGI',
+  'SingularityNET Token'
+)
+export const PBTC = new Token(ChainId.MATIC, '0xd7ecf95Cf7eF5256990BeAf4ac895cD9e64cb947', 18, 'pBTC', 'pTokens BTC')
+export const RENBTC = new Token(ChainId.MATIC, '0xdbf31df14b66535af65aac99c32e9ea844e14501', 8, 'renBTC', 'renBTC')
+export const AGIX = new Token(
+  ChainId.MATIC,
+  '0x190Eb8a183D22a4bdf278c6791b152228857c033',
+  8,
+  'AGIX',
+  'SingularityNET Token'
+)
+export const SDAO = new Token(
+  ChainId.MATIC,
+  '0x59e991B37b35Ac2187113dFdB5D60D2e887eEec1',
+  18,
+  'SDAO',
+  'Singularity Dao'
+)
+
+// export const MRBAL = new Token(ChainId.MATIC, '0x66768ad00746aC4d68ded9f64886d55d5243f5Ec', 18, 'mRBAL', 'Matic Rebalance Token')
+// export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 // export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
-export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+// export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
+export const MAINNET_USDC = new Token(
+  ChainId.MAINNET,
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  6,
+  'USDC',
+  'USD Coin'
+)
+export const MAINNET_NIOX = new Token(
+  ChainId.MAINNET,
+  '0xc813EA5e3b48BEbeedb796ab42A30C5599b01740',
+  4,
+  'NIOX',
+  'Autonio'
+)
+
+export const LP_NIOX_ETH = new Token(
+  ChainId.MAINNET,
+  '0xd1bc66660ba7edd64f0cc442ca5f32e5d199dfc6',
+  18,
+  'Uniswap V2',
+  'UNI-V2'
+)
+
 export const XENO = new Token(ChainId.ROPSTEN, '0x13681b1f6f93977f62389e0a2b1e84ba24d78fbc', 4, 'XENO', 'XENO')
 export const ADDY = new Token(ChainId.ROPSTEN, '0x6aa16f7844e3af995985bd035eec62d88e418ef1', 8, 'ADDY', 'ADDY Token')
 
@@ -71,7 +151,8 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, COMP, MKR, WBTC],
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], USDC, NIOX, ETHER]
 }
 
 /**
@@ -87,13 +168,14 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, WBTC],
+  [ChainId.MATIC]: [WMATIC]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDT, WBTC]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -102,7 +184,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     //   new Token(ChainId.MATIC, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
     //   new Token(ChainId.MATIC, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
     // ],
-    [USDC, NIOX],
+    [USDC, NIOX]
     // [ETH, USDC]
   ]
 }

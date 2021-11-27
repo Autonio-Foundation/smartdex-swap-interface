@@ -6,7 +6,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
-import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
+import { CloseIcon, TYPE, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -38,6 +38,23 @@ const Footer = styled.div`
   border-top-right-radius: 0;
   background-color: ${({ theme }) => theme.bg1};
   border-top: 1px solid ${({ theme }) => theme.bg2};
+`
+
+const ManageWrapper = styled.div`
+  color: ${({ theme }) => theme.primary1};
+  cursor: pointer;
+
+  :hover {
+    color: ${({ theme }) => theme.primary6};
+
+    svg {
+      stroke: ${({ theme }) => `${theme.primary6} !important`};
+    }
+  }
+
+  svg {
+    stroke: ${({ theme }) => `${theme.primary1} !important`};
+  }
 `
 
 interface CurrencySearchProps {
@@ -219,14 +236,14 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
+          <ManageWrapper onClick={showManageView} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage</TYPE.main>
+              <Text>Manage</Text>
             </RowFixed>
-          </ButtonText>
+          </ManageWrapper>
         </Row>
       </Footer>
     </ContentWrapper>
