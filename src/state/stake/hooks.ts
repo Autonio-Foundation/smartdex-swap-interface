@@ -135,6 +135,16 @@ export const OLD_STAKING_REWARDS_INFO: {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
       tokens: [NIOX, USDC],
+      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: USDC
+      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+    },
+    {
+      tokens: [NIOX, USDC],
       stakingRewardAddress: '0x9c0ef78a30aa2d43f6f1aac677e227c43eb35356',
       ended: false,
 
@@ -181,16 +191,6 @@ export const OLD_STAKING_REWARDS_INFO: {
       name: '',
       lp: '',
       baseToken: MaticWETH
-      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    },
-    {
-      tokens: [ALOHA, NIOX],
-      stakingRewardAddress: '0xaec962e533a350495c38507dd0ef1becc138af66',
-      ended: false,
-
-      name: '',
-      lp: '',
-      baseToken: NIOX
       //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
     },
     ////////////////////////////////////old one //////////////////////////////////////////////////////////////////
@@ -355,14 +355,14 @@ export const SINGLE_STAKING_REWARDS_INFO: {
     ///////////////////////new one expiring after 1 day
     // old
     {
-      tokens: [NIOX, USDC],
-      stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
+      tokens: [ALOHA, NIOX],
+      stakingRewardAddress: '0x317875cBE5f64f14D7e9343703CaC9c1501Ddb05',
       ended: false,
 
       name: '',
       lp: '',
-      baseToken: USDC
-      //STAKINGREWARDSFACTORY- 0x1CdbA3EdFe9Eb9Fb42dcB409b49e633bC4ea95e7 mainnet matic
+      baseToken: NIOX
+      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
     }
     // {
     //   tokens: [GLQ, MaticWETH],
