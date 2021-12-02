@@ -134,6 +134,16 @@ export const OLD_STAKING_REWARDS_INFO: {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
+      tokens: [ALOHA, NIOX],
+      stakingRewardAddress: '0x317875cBE5f64f14D7e9343703CaC9c1501Ddb05',
+      ended: false,
+
+      name: '',
+      lp: '',
+      baseToken: NIOX
+      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
+    },
+    {
       tokens: [NIOX, USDC],
       stakingRewardAddress: '0x7a1137cee3714d8b31bf2e9ba460e61ccd54fab4',
       ended: false,
@@ -354,16 +364,7 @@ export const SINGLE_STAKING_REWARDS_INFO: {
   [ChainId.MATIC]: [
     ///////////////////////new one expiring after 1 day
     // old
-    {
-      tokens: [ALOHA, NIOX],
-      stakingRewardAddress: '0x317875cBE5f64f14D7e9343703CaC9c1501Ddb05',
-      ended: false,
 
-      name: '',
-      lp: '',
-      baseToken: NIOX
-      //STAKINGREWARDSFACTORY- 0xb43095432C268a01Efe7033Cfd84c8Ea9B3d1C18 mainnet matic
-    }
     // {
     //   tokens: [GLQ, MaticWETH],
     //   stakingRewardAddress: '0x96d287d25bbbd87910fd28f21fbfa590dfb33b96',
